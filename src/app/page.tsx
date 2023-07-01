@@ -13,7 +13,6 @@ async function getMovies() {
   return movies;
 }
 
-// Home component
 export default async function Home() {
   // Fetch movies data
   const movies = await getMovies();
@@ -61,8 +60,7 @@ export default async function Home() {
       </div>
 
       {/* Display movies currently showing in cinemas */}
-      {moviesNow.length > 0 ||
-        (moviesNow && (
+      {moviesNow.length > 0  && (
           <div className="w-full flex px-20 gap-10 flex-col">
             {/* Title Showing Now Cinemas Section */}
             <h3 className="text-red text-[45px] font-montserrat-b text-left">
@@ -79,7 +77,7 @@ export default async function Home() {
               ))}
             </div>
           </div>
-        ))}
+        )}
     </main>
   );
 }
