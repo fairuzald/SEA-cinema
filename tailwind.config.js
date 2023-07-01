@@ -23,7 +23,8 @@ module.exports = {
         "soft-black": "#171717",
         background: "#212121",
         "gray":"#ACACAC",
-        "red":"#FF0000"
+        "red":"#FF0000",
+        "red-hover":"#E55050"
       },
     },
   },

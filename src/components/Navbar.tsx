@@ -7,7 +7,7 @@ import Avatar from "./Avatar";
 
 const Navbar = () => {
   return (
-    <nav className="flex w-full h-[100px] bg-soft-black">
+    <nav className="fixed z-20 inset-0 flex w-full h-[100px] bg-soft-black">
       {/* container */}
       <div className="flex items-center justify-around px-[50px] py-8 w-full">
         <ul className="flex items-center justify-around gap-8 w-full">
