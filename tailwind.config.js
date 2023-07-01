@@ -12,6 +12,13 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      fontFamily: {
+        "montserrat-b": ["Montserrat Bold", "sans-serif"],
+        "montserrat-md": ["Montserrat Medium", "sans-serif"],
+        "montserrat-sb": ["Montserrat SemiBold", "sans-serif"],
+        "montserrat-r": ["Montserrat Regular", "sans-serif"],
+        "montserrat-eb": ["Montserrat ExtraBold", "sans-serif"],
+      },
     },
   },
   plugins: [],
