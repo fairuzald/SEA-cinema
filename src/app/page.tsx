@@ -71,8 +71,7 @@ export default async function Home() {
                 <Cards
                   key={movie.id}
                   size="large"
-                  imageUrl={movie.poster_url}
-                  title={movie.title}
+                  data={movie}
                 />
               ))}
             </div>

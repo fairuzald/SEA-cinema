@@ -10,6 +10,13 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Montserrat Light";
+  src: url("/fonts/Montserrat-Light.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: "Montserrat SemiBold";

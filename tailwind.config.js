@@ -18,13 +18,15 @@ module.exports = {
         "montserrat-r": ["Montserrat Regular", "sans-serif"],
         "montserrat-eb": ["Montserrat ExtraBold", "sans-serif"],
         "montserrat-b": ["Montserrat Bold", "sans-serif"],
+        "montserrat-l": ["Montserrat Light", "sans-serif"],
       },
       colors: {
         "soft-black": "#171717",
         background: "#212121",
         "gray":"#ACACAC",
         "red":"#FF0000",
-        "red-hover":"#E55050"
+        "red-hover":"#E55050",
+        "red-heart":"#C93D3D"
       },
     },
   },
