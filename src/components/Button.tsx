@@ -1,6 +1,6 @@
 import React from "react";
 interface ButtonProps {
-  color: "trans-red"|"red";
+  color: "trans-red"|"red"|"gray";
   children: JSX.Element | string;
   onClick?: () => void;
   size?:"medium"|"large"
@@ -10,11 +10,12 @@ const Button: React.FC<ButtonProps> = ({ color, children, onClick, size = "mediu
   const colorEffect = {
     "trans-red":
       "border border-red text-red bg-transparent hover:bg-red hover:text-white",
-      "red":"bg-red hover:bg-red-hover text-white"
+      "red":"bg-red hover:bg-red-hover text-white",
+      "gray":"bg-gray hover:bg-neutral-200 text-white"
   };
   const sizeEffect = {
     "medium":
-      "px-3 py-2 text-base",
+      "px-5 py-2 text-base",
       "large":"px-6 py-3 text-lg"
   };
   return (
