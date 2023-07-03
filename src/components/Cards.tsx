@@ -26,11 +26,14 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
     medium: "w-[274px] h-[408px]",
   };
   return (
-      <button
+
+    <Link href={`/movies/${data.id}`} replace>
+
+      <div
         className={`${sizeEffect[size]} relative overflow-hidden rounded-2xl`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onClick={()=>router.push(`/movies/${data.id}`)}
+        
       >
         {/* Image */}
         <Image
@@ -76,7 +79,9 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
             Release Date: {data.release_date}
           </p>
         </div>
-      </button>
+      </div>
+    </Link>
+
   );
 };
 

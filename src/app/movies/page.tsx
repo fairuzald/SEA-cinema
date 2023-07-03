@@ -14,7 +14,7 @@ async function getMovies() {
 }
 
 // Movies Page
-const MoviesPage = async () => {
+export default async function Page() {
   const movies = await getMovies();
   return (
     <main className="w-full min-h-screen flex bg-background">
@@ -26,19 +26,11 @@ const MoviesPage = async () => {
         <div className="w-full flex flex-wrap gap-10 justify-center">
           {movies.map((movie: any) => {
             return (
-              <Cards
-                key={movie.id}
-                size="medium"
-                isFavorited
-                data={movie}
-                
-              />
+              <Cards key={movie.id} size="medium" isFavorited data={movie} />
             );
           })}
         </div>
       </div>
     </main>
   );
-};
-
-export default MoviesPage;
+}

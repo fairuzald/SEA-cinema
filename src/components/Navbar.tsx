@@ -32,17 +32,17 @@ const Navbar = () => {
           </li>
           <div className="flex items-center justify-center gap-7">
             <li>
-              <Link href="/" className="text-white font-montserrat-b">
+              <Link href="/movies" className="text-white font-montserrat-b">
                 Movies
               </Link>
             </li>
             <li>
-              <Link href="/" className="text-white font-montserrat-b">
+              <Link href="/transactions" className="text-white font-montserrat-b">
                 Transaction
               </Link>
             </li>
             <li>
-              <Link href="/" className="text-white font-montserrat-b">
+              <Link href="/watchlist" className="text-white font-montserrat-b">
                 Watchlist
               </Link>
             </li>

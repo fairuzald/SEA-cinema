@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import Cards from "@/components/Cards";
 import Image from "next/image";
+import Link from "next/link";
 
 // Function to fetch movies data from the API
 async function getMovies() {
@@ -50,7 +51,7 @@ export default async function Home() {
           {/* Text Content */}
           <h2 className="text-center text-white font-montserrat-eb text-[42px] leading-[49px] tracking-wider w-[750px]">
             Don&apos;t miss out on the hottest movies of the season. Get your
-            tickets today
+            tickets today <Link href="/movies">Tes</Link>
           </h2>
           {/* Button Order */}
           <Button size="large" color="red">
