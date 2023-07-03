@@ -30,7 +30,9 @@ const MovieClient = ({ data: movie }: { data: any }) => {
             height={1080}
             className="object-center object-cover w-[518px] h-[632px] rounded-xl"
           />
-          <p className="text-white text-lg font-medium w-[calc(100%-100px)] text-center">Select schedule and location and then click below to order</p>
+          <p className="text-white text-lg font-medium w-[calc(100%-100px)] text-center">
+            Select schedule and location and then click below to order
+          </p>
           <Button color="red" onClick={seatModal.onOpen}>
             Order Ticket Now
           </Button>
