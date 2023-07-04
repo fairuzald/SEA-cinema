@@ -10,7 +10,7 @@ const SearchBar = () => {
       <p className="px-16 hidden text-white font-montserrat-sb items-center justify-center lg:flex border-r border-gray">
         Title
       </p>
-      <div className="px-8 lg:px-12 text-white text-sm lg:text-base font-semibold items-center justify-center flex lg:gap-6 gap-4">
+      <div className="px-10 lg:px-12 text-white text-sm lg:text-base font-semibold items-center justify-center flex lg:gap-6 gap-4">
         <p className="hidden lg:flex">Price</p>
         <p className="lg:hidden flex">Search</p>
         <SearchIcon style="fill-white w-4 h-4 lg:w-5 lg:h-5" />

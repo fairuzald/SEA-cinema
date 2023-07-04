@@ -13,7 +13,7 @@ const Navbar = () => {
     <nav className="fixed z-20 inset-0 flex w-full h-[60px] lg:h-[100px] bg-soft-black">
       {/* container */}
       <div className="flex items-center justify-around px-2 lg:px-[50px] py-3 lg:py-8 w-full">
-        <ul className="flex items-center justify-around gap-2 lg:gap-8 w-full">
+        <ul className="flex items-center justify-around gap-1 lg:gap-8 w-full">
           {/* Logo */}
           <li>
             <Link href="/" className="flex  items-center justify-between gap-4">
