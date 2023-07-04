@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import Cards from "@/components/Cards";
+import Carousel from "@/components/Carousel";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -61,23 +62,17 @@ export default async function Home() {
       </div>
 
       {/* Display movies currently showing in cinemas */}
-      {moviesNow.length > 0  && (
-          <div className="w-full flex px-20 gap-10 flex-col">
-            {/* Title Showing Now Cinemas Section */}
-            <h3 className="text-red text-[45px] font-montserrat-b text-left">
-              Now Showing In Cinemas
-            </h3>
-            <div className="flex flex-wrap items-center justify-center">
-              {moviesNow.map((movie: any) => (
-                <Cards
-                  key={movie.id}
-                  size="large"
-                  data={movie}
-                />
-              ))}
-            </div>
+      {movies.length > 0 && (
+        <div className="w-full flex px-20 gap-10 flex-col py-10">
+          {/* Title Showing Now Cinemas Section */}
+          <h3 className="text-red text-3xl font-montserrat-b text-left">
+            Now Showing In Cinemas
+          </h3>
+          <div className="w-full px-[200px] overflow-hidden">
+            <Carousel data={movies} />
           </div>
-        )}
+        </div>
+      )}
     </main>
   );
 }
