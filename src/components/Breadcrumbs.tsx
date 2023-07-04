@@ -18,20 +18,21 @@ const Breadcrumbs = ({ currentText }: { currentText: string }) => {
 
   // Taking data url and changing for first time rendering
   useEffect(() => {
-    setTitlePages(pathname.split("/").filter((title) => title !== ""));
-    const newDataUrls = titlePages.reduce(
-      (array: string[], current: string, index: number) => {
-        if (index === 0) {
-          return ["/" + current];
-        } else {  
-          const prev = array[index - 1];
-          return [...array, `${prev}/${current}`];
-        }
-      },
-      []
-    );
+    const newTitlePages = pathname.split("/").filter((title) => title !== "");
+    setTitlePages(newTitlePages);
+  
+    const newDataUrls = newTitlePages.reduce((array: string[], current: string, index: number) => {
+      if (index === 0) {
+        return ["/" + current];
+      } else {
+        const prev = array[index - 1];
+        return [...array, `${prev}/${current}`];
+      }
+    }, []);
+  
     setDataUrls(newDataUrls);
-  }, [titlePages, pathname]);
+  }, [pathname]);
+  
 
   return (
     <>
