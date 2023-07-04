@@ -36,7 +36,7 @@ const Breadcrumbs = ({ currentText }: { currentText: string }) => {
 
   return (
     <>
-      <nav className="flex items-center gap-4 font-gantari-md  capitalize font-montserrat-sb text-lg text-white">
+      <nav className="hidden lg:flex items-center gap-4 font-gantari-md  capitalize font-montserrat-sb text-lg text-white">
         {/* Homepage */}
         <Link
           href="/"

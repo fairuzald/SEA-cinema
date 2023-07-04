@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({ color, children, onClick, size = "mediu
   };
   const sizeEffect = {
     "medium":
-      "px-5 py-2 text-base",
+      "px-4 lg:px-5 py-1.5 lg:py-2 text-sm lg:text-base",
       "large":"px-6 py-3 text-lg"
   };
   return (

@@ -12,7 +12,6 @@ interface CardsProps {
 }
 const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const router = useRouter()
 
   const handleMouseEnter = () => {
     setIsHovered(true);
