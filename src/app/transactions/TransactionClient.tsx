@@ -2,13 +2,12 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
-import CalendarIcon from "@/components/icons/CalendarIcon";
 import LocationIcon from "@/components/icons/LocationIcon";
 import TicketIcon from "@/components/icons/TicketIcon";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Range } from "react-date-range";
-import Calendar from "./Calendar";
+import Calendar from "../../components/icons/Calendar";
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
