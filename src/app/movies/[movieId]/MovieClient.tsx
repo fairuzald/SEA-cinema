@@ -72,13 +72,13 @@ const MovieClient = ({ data: movie }: { data: any }) => {
   }
   
   return (
-    <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 pt-[20px] lg:pt-[60px] flex flex-col gap-10">
+    <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {step !== STEPS.PAYMENT ? (
         <>
           <Breadcrumbs currentText={movie.title} />
           <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
             {/* Left Side for Poster and Button*/}
-            <div className="flex flex-col items-center gap-14">
+            <div className="flex flex-col items-center gap-5 lg:gap-14">
               <h2 className="font-bold flex lg:hidden text-3xl lg:text-4xl text-white">
                 {movie.title}
               </h2>
