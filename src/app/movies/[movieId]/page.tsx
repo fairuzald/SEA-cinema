@@ -1,4 +1,3 @@
-
 import MovieClient from "./MovieClient";
 
 export const dynamicParams = false;
@@ -37,10 +36,10 @@ export default async function MovieDetailsPage({
   const { movieId } = params;
   const movies = await getMovies(movieId);
   const movie = movies[0];
-  
+
   return (
     <main className="w-full min-h-screen flex bg-background">
-    <MovieClient data={movie}/>
+      <MovieClient data={movie} />
     </main>
   );
 }

@@ -16,12 +16,12 @@ const Button: React.FC<ButtonProps> = ({ color, children, onClick, size = "mediu
   const sizeEffect = {
     "medium":
       "px-4 lg:px-5 py-1.5 lg:py-2 text-sm lg:text-base",
-      "large":"px-6 py-3 text-lg"
+      "large":"px-5 lg:px-6 py-2 lg:py-3 text-base lg:text-lg"
   };
   return (
     <button
       onClick={onClick}
-      className={`${colorEffect[color]} ${sizeEffect[size]}  font-montserrat-b rounded-xl  transition duration-300`}
+      className={`${colorEffect[color]} ${sizeEffect[size]} font-bold rounded-lg  transition duration-300`}
     >
       {children}
     </button>
