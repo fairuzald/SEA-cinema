@@ -1,13 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import Modal from "./Modal";
 import ArrowIcon from "../icons/ArrowIcon";
 import useSeatModal from "@/app/hooks/useSeatModal";
 import Seat from "../Seat";
 import Button from "../Button";
 
-const SeatModal = () => {
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+const SeatModal = ({
+  selectedSeats,
+  setSelectedSeats,
+}: {
+  selectedSeats: string[];
+  setSelectedSeats: React.Dispatch<SetStateAction<string[]>>;
+}) => {
 
   const seatModal = useSeatModal();
   const header = (
@@ -17,7 +22,9 @@ const SeatModal = () => {
       </button>
       <div className="flex flex-col">
         <p className="text-white font-bold text-base lg:text-xl">XX7 Mall A</p>
-        <p className="text-white font-medium text-xs lg:text-base">06 Jul | 15.50</p>
+        <p className="text-white font-medium text-xs lg:text-base">
+          06 Jul | 15.50
+        </p>
       </div>
     </div>
   );
@@ -39,7 +46,9 @@ const SeatModal = () => {
           <p className="text-center rounded-lg text-xs lg:text-sm font-bold px-1.5 py-1 lg:px-2.5 lg:py-2 bg-[#D9D9D9] text-black">
             A1
           </p>
-          <p className="text-white font-semibold text-xs lg:text-base text-center">Available</p>
+          <p className="text-white font-semibold text-xs lg:text-base text-center">
+            Available
+          </p>
         </div>
         <div className="flex gap-1.5 lg:gap-2 items-center">
           <p className="text-center rounded-lg text-xs lg:text-sm font-bold px-1.5 py-1 lg:px-2.5 lg:py-2 bg-[#D9D9D9] text-white">

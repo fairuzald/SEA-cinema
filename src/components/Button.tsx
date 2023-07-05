@@ -4,9 +4,10 @@ interface ButtonProps {
   children: JSX.Element | string;
   onClick?: () => void;
   size?:"medium"|"large"
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ color, children, onClick, size = "medium" }) => {
+const Button: React.FC<ButtonProps> = ({ disabled, color, children, onClick, size = "medium" }) => {
   const colorEffect = {
     "trans-red":
       "border border-red text-red bg-transparent hover:bg-red hover:text-white",
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({ color, children, onClick, size = "mediu
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={`${colorEffect[color]} ${sizeEffect[size]} font-bold rounded-lg  transition duration-300`}
     >
       {children}
