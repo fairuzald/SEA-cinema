@@ -35,11 +35,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, body, footer, header }) => {
                     ? "opacity-100 -translate-y-1/2"
                     : "translate-y-0 pointer-events-none opacity-0"
                 } left-1/2 top-1/2 z-50 flex h-fit w-[90vw] translate
-               max-w-[320px] -translate-x-1/2 translate transform flex-col items-center justify-center  rounded-xl overflow-hidden transition duration-300  sm:w-[60vw] sm:max-w-[750px] sm:items-start`}
+               max-w-[420px] -translate-x-1/2 translate transform flex-col items-center justify-center  rounded-xl overflow-x-hidden overflow-y-auto transition duration-300  sm:w-[65vw] sm:max-w-[750px] sm:items-start`}
               >
                 {/* Main content */}
                 {header}
-                <div className="flex w-full  p-6 flex-col gap-8 sm:w-full bg-[#333333]">
+                <div className="flex w-full  p-6 flex-col gap-8 bg-[#333333]">
                   {/* Content */}
                   {body}
                   {footer}

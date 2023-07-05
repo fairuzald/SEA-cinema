@@ -31,7 +31,7 @@ const Seat = ({
         seats.push(
           <button
             key={`${key}-${row}-${col}`}
-            className={`text-center hover:bg-red-hover hover:text-white transition rounded-lg text-sm  font-montserrat-b p-2 ${
+            className={`text-center hover:bg-red-hover hover:text-white transition rounded-lg text-xs lg:text-sm font-montserrat-b p-1 lg:p-2 ${
               selectedSeats.includes(seatNumber)
                 ? "bg-red text-white"
                 : "bg-[#D9D9D9] text-black "
@@ -52,19 +52,19 @@ const Seat = ({
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex gap-20">
+    <div className="flex flex-col gap-5 w-full">
+      <div className="flex gap-6  w-full items-center justify-center">
         {/* Right side */}
-        <div className="w-[220px] grid grid-cols-4 gap-2 ">
+        <div className=" grid grid-cols-4 gap-2">
           {renderSeats("left")}
         </div>
         {/* Left Side */}
-        <div className="w-[220px] grid grid-cols-4 gap-2">
+        <div className=" grid grid-cols-4 gap-2">
           {renderSeats("right")}
         </div>
       </div>
 
-      <p className="text-white text-sm font-montserrat-m">
+      <p className="text-white text-xs lg:text-sm font-montserrat-m">
         {selectedSeats.length < 6
           ? "Maximum Seats per payout is 6"
           : "The maximum reserved seat limit has been reached"}

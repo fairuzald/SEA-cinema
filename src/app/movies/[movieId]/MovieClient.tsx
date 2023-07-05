@@ -22,7 +22,7 @@ const MovieClient = ({ data: movie }: { data: any }) => {
       <Breadcrumbs currentText={movie.title} />
       <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
         {/* Left Side for Poster and Button*/}
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-14">
           <h2 className="font-bold flex lg:hidden text-3xl lg:text-4xl text-white">
             {movie.title}
           </h2>
@@ -80,31 +80,31 @@ const MovieClient = ({ data: movie }: { data: any }) => {
             <h2 className="font-bold text-lg lg:text-xl text-red">Schedule</h2>
             <div className="flex gap-5">
               <Button color="red">
-                <div className="flex flex-col w-[55px] lg:w-[50px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
+                <div className="flex flex-col w-[55px] lg:w-[60px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
                   <p>06 July</p>
                   <p>KAMIS</p>
                 </div>
               </Button>
               <Button color="gray">
-                <div className="flex flex-col w-[55px] lg:w-[50px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
+                <div className="flex flex-col w-[55px] lg:w-[60px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
                   <p>06 July</p>
                   <p>KAMIS</p>
                 </div>
               </Button>
               <Button color="gray">
-                <div className="flex flex-col w-[55px] lg:w-[50px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
+                <div className="flex flex-col w-[55px] lg:w-[60px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
                   <p>06 July</p>
                   <p>KAMIS</p>
                 </div>
               </Button>
               <Button color="gray">
-                <div className="flex flex-col w-[55px] lg:w-[50px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
+                <div className="flex flex-col w-[55px] lg:w-[60px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
                   <p>06 July</p>
                   <p>KAMIS</p>
                 </div>
               </Button>
               <Button color="gray">
-                <div className="flex flex-col w-[55px] lg:w-[50px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
+                <div className="flex flex-col w-[55px] lg:w-[60px] xl:w-[65px] text-xs lg:text-sm items-center justify-center">
                   <p>06 July</p>
                   <p>KAMIS</p>
                 </div>
