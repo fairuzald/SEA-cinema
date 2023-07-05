@@ -44,7 +44,7 @@ const Navbar = () => {
               popUp
                 ? "scale-100 opacity-100"
                 : "scale-0 opacity-0 pointer-events-none"
-            } transition duration-300 lg:flex-row bg-black lg:bg-transparent absolute top-16 pt-2.5 pb-5 px-5 lg:p-0 lg:scale-100  lg:opacity-100 rounded-xl text-center right-6 lg:static lg:flex items-center justify-center gap-7 text-sm lg:text-xl`}
+            } transition duration-300 lg:flex-row bg-black lg:pointer-events-auto lg:bg-transparent absolute top-16 pt-2.5 pb-5 px-5 lg:p-0 lg:scale-100  lg:opacity-100 rounded-xl text-center right-6 lg:static lg:flex items-center justify-center gap-7 text-sm lg:text-base`}
           >
             <li className="py-2.5">
               <Link href="/movies" className="text-white font-montserrat-b">
