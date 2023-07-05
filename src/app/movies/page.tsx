@@ -1,17 +1,9 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Cards from "@/components/Cards";
 import React from "react";
+import getMovies from "../actions/getMovies";
 
-// Fetch movies all movies data
-async function getMovies() {
-  const movies = await (
-    await fetch("https://seleksi-sea-2023.vercel.app/api/movies")
-  ).json();
-  if (!movies) {
-    return null;
-  }
-  return movies;
-}
+
 
 // Movies Page
 export default async function Page() {
