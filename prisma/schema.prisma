@@ -44,6 +44,7 @@ model User {
     name            String
     age             Int
     balance         Int
+    telephoneNumber String?
     createdAt       DateTime      @default(now())
     updatedAt       DateTime      @updatedAt
     favoritedMovies String[]      @db.ObjectId
