@@ -1,0 +1,77 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Movie {
+    id           String        @id @default(auto()) @map("_id") @db.ObjectId
+    title        String        @unique
+    description  String
+    release_date DateTime
+    poster_url   String
+    age_rating   Int
+    ticket_price Int
+    Transaction  Transaction[]
+}
+
+model Account {
+    id                String  @id @default(auto()) @map("_id") @db.ObjectId
+    userId            String  @db.ObjectId
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.String
+    access_token      String? @db.String
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.String
+    session_state     String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model User {
+    id              String        @id @default(auto()) @map("_id") @db.ObjectId
+    username        String        @unique
+    hashedPassword  String
+    name            String
+    age             Int
+    balance         Int
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
+    favoritedMovies String[]      @db.ObjectId
+    transactions    Transaction[] @relation("UserTransactions")
+    accounts        Account[]
+}
+
+model Location {
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
+    mall        String
+    address     String
+    Transaction Transaction[]
+}
+
+model Transaction {
+    id            String   @id @default(auto()) @map("_id") @db.ObjectId
+    bookingNumber String   @unique
+    userId        String   @db.ObjectId
+    movieTitle    String
+    locationId    String   @db.ObjectId
+    watchDate     DateTime
+    watchTime     String
+    totalPrice    Int
+    seat          String[]
+    status        String   @default("pending")
+    createdAt     DateTime @default(now())
+
+    user     User     @relation("UserTransactions", fields: [userId], references: [id], onDelete: Cascade)
+    movie    Movie    @relation(fields: [movieTitle], references: [title], onDelete: Cascade)
+    location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
