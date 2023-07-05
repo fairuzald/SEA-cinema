@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import ClientOnly from "@/components/ClientOnly";
-import SeatModal from "@/components/modals/SeatModals";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -21,7 +20,6 @@ export default function RootLayout({
       <body className={montserrat.className}>
         <ClientOnly>
           <Navbar />
-          <SeatModal />
           <div>{children}</div>
           <div id="portals"></div>
         </ClientOnly>
