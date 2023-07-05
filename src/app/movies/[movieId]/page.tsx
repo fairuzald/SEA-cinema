@@ -38,7 +38,7 @@ export default async function MovieDetailsPage({
   const movie = movies[0];
 
   return (
-    <main className="w-full min-h-screen flex bg-background">
+    <main className="w-full min-h-screen overflow-hidden flex bg-background">
       <MovieClient data={movie} />
     </main>
   );

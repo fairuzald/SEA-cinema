@@ -5,15 +5,35 @@ import ArrowIcon from "../icons/ArrowIcon";
 import useSeatModal from "@/app/hooks/useSeatModal";
 import Seat from "../Seat";
 import Button from "../Button";
+import { STEPS } from "@/app/movies/[movieId]/MovieClient";
+import { toast } from "react-hot-toast";
+
 
 const SeatModal = ({
   selectedSeats,
   setSelectedSeats,
+  step,
+  setStep,
+  requirement,
 }: {
   selectedSeats: string[];
   setSelectedSeats: React.Dispatch<SetStateAction<string[]>>;
+  step: STEPS;
+  setStep: React.Dispatch<SetStateAction<STEPS>>;
+  requirement: boolean;
 }) => {
-
+  function onNext() {
+    if (step === STEPS.SEAT_SELECTION) {
+      if (requirement) {
+        toast(
+          "Please select seats, date, and time before proceeding to payment."
+        );
+        return;
+      }
+      seatModal.onClose();
+      setStep(STEPS.PAYMENT);
+    }
+  }
   const seatModal = useSeatModal();
   const header = (
     <div className="flex gap-7 items-center bg-soft-black px-5 lg:px-10 w-full py-2">
@@ -90,7 +110,9 @@ const SeatModal = ({
         </div>
       </div>
       <div className="mt-3">
-        <Button color="red">Go to payment</Button>
+        <Button color="red" onClick={onNext}>
+          Go to payment
+        </Button>
       </div>
     </div>
   );

@@ -9,7 +9,6 @@ const DateSelection = ({
   selectedDate: undefined | Date;
   setSelectedDate: React.Dispatch<SetStateAction<Date | undefined>>;
 }) => {
-  console.log(selectedDate);
 
   const isDateSelected = (date: Date) => {
     return selectedDate && selectedDate.toISOString() === date.toISOString();
