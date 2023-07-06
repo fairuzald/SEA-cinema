@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Modal from "./Modal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import Button from "../Button";
@@ -65,7 +65,7 @@ const RegisterModals = () => {
       >
         <CrossIcon style="w-4 h-4 fill-white" />
       </button>
-      <p className="text-black font-bold text-lg flex-1 flex items-center justify-center">
+      <p className="text-white font-bold text-lg flex-1 flex items-center justify-center">
         Register
       </p>
     </div>
@@ -73,10 +73,10 @@ const RegisterModals = () => {
   const body = (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
-        <h4 className="text-xl font-semibold text-black">
+        <h4 className="text-xl font-semibold text-white">
           Welcome to SEA CINEMA
         </h4>
-        <p className="text-bnb-soft-gray"> Create an account</p>
+        <p className="text-white"> Create an account</p>
         <TextFields
           type="text"
           disabled={isLoading}
@@ -128,7 +128,14 @@ const RegisterModals = () => {
       </div>
     </div>
   );
-  return <Modal header={header} isOpen={registerModal.isOpen} body={body} />;
+  const footer = (
+    <p className="flex items-center justify-center w-full text-white font-medium">
+      Create an account{" "}
+      <button onClick={onToggle} className="ml-3 text-red font-bold">
+        Sign Up
+      </button>
+    </p>)
+  return <Modal header={header} isOpen={registerModal.isOpen} body={body} size="medium" footer={footer} />;
 };
 
 export default RegisterModals;

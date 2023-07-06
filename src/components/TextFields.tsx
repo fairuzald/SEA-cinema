@@ -42,38 +42,37 @@ const TextFields: React.FC<TextFieldsProps> = ({
 
   return (
     <div className="relative w-full">
-       (
-        <div
-          className={`w-full flex ${
-            errors[id] ? "border-red" : "border-neutral-300"
-          } ${
-            errors[id] ? "focus:border-red text-red" : "focus:border-black text-zinc-400"
-          } border-gray border rounded-lg items-center justify-center pl-4 pr-5 gap-2`}
+      <div
+        className={`w-full flex ${
+          errors[id] ? "border-red" : "border-neutral-300"
+        } ${
+          errors[id]
+            ? "focus:border-red text-red"
+            : "focus:border-white text-white"
+        } border-gray border rounded-lg items-center justify-center pl-4 pr-5 gap-2`}
+      >
+        <input
+          id={id}
+          {...register(id, { required })}
+          type={type}
+          placeholder=""
+          disabled={disabled}
+          value={value}
+          onChange={handleChange}
+          className={`peer rounded-lg w-full disabled:opacity-70 font-medium disabled:cursor-not-allowed pt-[22px] pb-[10px] text-white bg-transparent outline-none`}
+        />
+        <label
+          className={`absolute text-md ${
+            formatPrice ? "left-12" : "left-4"
+          } duration-150 transform  -translate-y-1 top-5 z-10 origin-[0] ${
+            value && "-translate-y-4 scale-75"
+          } peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 font-medium peer-focus:-translate-y-4 ${
+            errors[id] ? "text-red" : "text-white"
+          }`}
         >
-        
-          <input
-            id={id}
-            {...register(id, { required })}
-            type={type}
-            placeholder=""
-            disabled={disabled}
-            value={value}
-            onChange={handleChange}
-            className={`peer rounded-lg w-full disabled:opacity-70 disabled:cursor-not-allowed bg-white pt-[22px] pb-[10px] text-black bg-transparent outline-none`}
-          />
-          <label
-            className={`absolute text-md ${
-              formatPrice ? "left-12" : "left-4"
-            } duration-150 transform  -translate-y-1 top-5 z-10 origin-[0] ${
-              value && "-translate-y-4 scale-75"
-            } peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 ${
-              errors[id] ? "text-red" : "text-zinc-400"
-            }`}
-          >
-            {label}
-          </label>
-        </div>
-      )
+          {label}
+        </label>
+      </div>
     </div>
   );
 };

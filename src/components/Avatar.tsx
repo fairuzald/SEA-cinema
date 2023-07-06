@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 const Avatar = ({
   currentUser,
-  size ="small",
+  size = "small",
 }: {
   currentUser?: any;
   size?: "small" | "medium" | "large" | "base";
@@ -19,7 +19,7 @@ const Avatar = ({
       className={`${sizeStyle[size]} overflow-hidden rounded-full object-cover object-center`}
     >
       <Image
-        src={currentUser ? currentUser.imageUrl : "/defaultpp.jpg"}
+        src={currentUser.imageUrl || "/defaultpp.jpg"}
         alt={"Avatar Profile"}
         width={1920}
         height={1080}
