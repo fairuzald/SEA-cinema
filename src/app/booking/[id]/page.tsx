@@ -7,14 +7,6 @@ import Image from "next/image";
 export const dynamicParams = false;
 export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  const booking = await getBooking();
-
-  return booking.map((book: any) => ({
-    id: book.id.toString(),
-  }));
-}
-
 // Page Movie Details
 export default async function MovieDetailsPage({
   params,

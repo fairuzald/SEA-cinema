@@ -67,6 +67,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
+              <Link href="/profile?topup" className="text-white font-bold">
+                Topup
+              </Link>
+            </li>
+            <li className="py-2.5 md:py-3 lg:py-4">
               <Link href="/watchlist" className="text-white font-bold">
                 Watchlist
               </Link>
