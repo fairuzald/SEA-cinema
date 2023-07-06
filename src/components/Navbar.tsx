@@ -70,7 +70,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/watchlist" className="text-white font-bold">
+              <Link href="/profile?dashboard" className="text-white font-bold">
                 Profile
               </Link>
             </li>

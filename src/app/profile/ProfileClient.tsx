@@ -8,8 +8,9 @@ import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import TextInput from "@/components/TextInput";
+import { User } from "@prisma/client";
 
-const ProfileClient = () => {
+const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
   const pathname = usePathname();
   const params = useSearchParams();
   const router = useRouter();
@@ -21,10 +22,10 @@ const ProfileClient = () => {
   const prices = [
     50000, 100000, 150000, 200000, 300000, 500000, 700000, 1000000,
   ];
-  const handlePriceSelection = (price:number) => {
+  const handlePriceSelection = (price: number) => {
     if (parseInt(topupNominals) === price) {
       // Deselect jika harga sudah dipilih sebelumnya
-      setTopupNominals("")
+      setTopupNominals("");
     } else {
       setTopupNominals(price.toString());
     }
@@ -39,7 +40,7 @@ const ProfileClient = () => {
   //   ) {
   //     router.push("/profile?dashboard");
   //   }
-    
+
   // }, [pathname,params]);
   return (
     <div className="w-full px-6 py-10 md:px-20 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
@@ -96,7 +97,7 @@ const ProfileClient = () => {
         /> */}
                 {/* Display the user's avatar */}
                 <div className="absolute -bottom-11 lg:-bottom-16 left-4">
-                  <Avatar size="large" />
+                  <Avatar size="large" currentUser={currentUser} />
                 </div>
               </div>
               {/* User Bio */}
