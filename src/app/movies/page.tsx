@@ -4,7 +4,6 @@ import React from "react";
 import getMovies from "../actions/getMovies";
 
 
-
 // Movies Page
 export default async function Page() {
   const movies = await getMovies();

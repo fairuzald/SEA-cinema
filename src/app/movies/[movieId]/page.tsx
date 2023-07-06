@@ -1,31 +1,21 @@
+import getMovies from "@/app/actions/getMovies";
 import MovieClient from "./MovieClient";
+import getmovieById from "@/app/actions/getMovieById";
+import getLocations from "@/app/actions/getLocations";
+import { SafeMovie } from "@/app/types";
+import { Location } from "@prisma/client";
 
 export const dynamicParams = false;
 
 // Fallback blocking to make static page allowed based on id movie data
 export async function generateStaticParams() {
-  const movies = await fetch(
-    "https://seleksi-sea-2023.vercel.app/api/movies"
-  ).then((res) => res.json());
+  const movies = await getMovies();
 
   return movies.map((movie: any) => ({
     movieId: movie.id.toString(),
   }));
 }
 
-// Fetch specified movie data based on id
-async function getMovies(id: string) {
-  const movies = await (
-    await fetch("https://seleksi-sea-2023.vercel.app/api/movies")
-  ).json();
-  if (!movies) {
-    return null;
-  }
-  const specifiedMovie = movies.filter((movie: any) => {
-    return movie.id === parseInt(id);
-  });
-  return specifiedMovie;
-}
 
 // Page Movie Details
 export default async function MovieDetailsPage({
@@ -33,13 +23,12 @@ export default async function MovieDetailsPage({
 }: {
   params: { movieId: string };
 }) {
-  const { movieId } = params;
-  const movies = await getMovies(movieId);
-  const movie = movies[0];
+  const movie = await getmovieById(params);
+  const locations = await getLocations()
 
   return (
     <main className="w-full min-h-screen overflow-hidden flex bg-background">
-      <MovieClient data={movie} />
+      <MovieClient data={movie as SafeMovie} locations={locations}/>
     </main>
   );
 }

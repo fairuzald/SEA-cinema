@@ -5,10 +5,12 @@ const Location = ({
   data ,
   selectedTime,
   setSelectedTime,
+  price
 }: {
   data?: any;
   selectedTime: any;
   setSelectedTime: React.Dispatch<SetStateAction<any>>;
+  price : number
 }) => {
   const handleTimeSelect = (price: number, mall: string, address: string, time: string) => {
     if (selectedTime && selectedTime.time === time) {
@@ -33,7 +35,7 @@ const Location = ({
             {location.address}
           </p>
           <p className="text-gray font-medium text-sm lg:text-base">
-            Rp. {location.price}
+            Rp. {price}
           </p>
           <div className="flex gap-4 mt-2">
             {location.times.map((time: any, index: number) => (
@@ -44,7 +46,7 @@ const Location = ({
                 }
                 onClick={() =>
                   handleTimeSelect(
-                    location.price,
+                    price,
                     location.mall,
                     location.address,
                     time

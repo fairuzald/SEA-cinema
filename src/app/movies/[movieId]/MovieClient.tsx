@@ -1,5 +1,6 @@
 "use client";
 import useSeatModal from "@/app/hooks/useSeatModal";
+import { SafeMovie } from "@/app/types";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import DateSelection from "@/components/DateSelection";
@@ -7,6 +8,7 @@ import Location from "@/components/Location";
 import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
+import { Location as LocationType } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -17,31 +19,12 @@ export enum STEPS {
   PAYMENT = 3,
 }
 
-const MovieClient = ({ data: movie }: { data: any }) => {
+const MovieClient = ({ data: movie, locations }: { data: SafeMovie, locations:LocationType[] }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-  const data = [
-    {
-      mall: "XX7 Mall A",
-      address: "Jl. Raya ABC",
-      price: 35000,
-      times: ["13.00", "14.00", "15.00"],
-    },
-    {
-      mall: "XX7 Mall B",
-      address: "Jl. Raya DEF",
-      price: 45000,
-      times: ["16.00", "17.00", "18.00"],
-    },
-    {
-      mall: "XX7 Mall C",
-      address: "Jl. Raya GHI",
-      price: 55000,
-      times: ["19.00", "20.00", "21.00"],
-    },
-  ];
+ 
   // Handle formatting date
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -148,9 +131,10 @@ const MovieClient = ({ data: movie }: { data: any }) => {
                 </h2>
                 <div></div>
                 <Location
+                price={movie.ticket_price}
                   selectedTime={selectedTime}
                   setSelectedTime={setSelectedTime}
-                  data={data}
+                  data={locations}
                 ></Location>
               </div>
             </div>
