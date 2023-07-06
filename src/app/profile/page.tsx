@@ -2,7 +2,6 @@
 import React from "react";
 import ProfileClient from "./ProfileClient";
 import getCurrentUser from "../actions/getCurrentuser";
-import { User } from "@prisma/client";
 import getUsers from "../actions/getUsers";
 export const dynamic = 'force-dynamic'
 

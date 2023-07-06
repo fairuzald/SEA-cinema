@@ -12,6 +12,7 @@ import { User } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import UserFilter from "@/components/UserFilter";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 enum BALANCES {
   TOPUP = 1,
   SHARE = 2,
@@ -24,11 +25,15 @@ const ProfileClient = ({
   currentUser?: User | null;
   allUsers?: User[];
 }) => {
+  const { data: session } = useSession();
+
   const params = useSearchParams();
   const router = useRouter();
   const [name, setName] = useState(currentUser?.name as string);
   const [username, setUsername] = useState(currentUser?.username as string);
-  const [telephoneNumber, setTelephoneNumber] = useState(currentUser?.telephoneNumber as string);
+  const [telephoneNumber, setTelephoneNumber] = useState(
+    currentUser?.telephoneNumber as string
+  );
   const [topupNominals, setTopupNominals] = useState("");
   const [shareNominals, setShareNominals] = useState("");
   const [search, setSearch] = useState("");
@@ -67,10 +72,10 @@ const ProfileClient = ({
             name,
             username,
             telephone: telephoneNumber,
-            age:parseInt(age),
+            age: parseInt(age),
           }),
         });
-  
+
         if (response.ok) {
           router.refresh();
           toast.success(`Successfully Update Data User`);
@@ -84,7 +89,7 @@ const ProfileClient = ({
       toast("Your data is empty");
     }
   }, [router, name, username, telephoneNumber, age]);
-    
+
   const handleSubmitNonShare = useCallback(
     async (amount: string, postUrl: string) => {
       if (parseInt(amount) >= 0) {
@@ -302,7 +307,9 @@ const ProfileClient = ({
                 </div>
               </div>
               <div className="w-[300px] mt-7">
-                <Button color="red" onClick={updateUser}>Confirm Changes</Button>
+                <Button color="red" onClick={updateUser}>
+                  Confirm Changes
+                </Button>
               </div>
             </div>
           </>
