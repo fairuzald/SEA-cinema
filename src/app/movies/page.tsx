@@ -11,12 +11,8 @@ export const dynamic = "force-dynamic";
 // Movies Page
 export default async function Page() {
   const movies = await getMovies();
-  const session = await getSession();
-  let currentUser:any = null; // Initialize currentUser to null
 
-  if (session) {
-    currentUser = await getCurrentUser(); // Assign currentUser if session exists
-  }
+    const currentUser = await getCurrentUser(); 
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
