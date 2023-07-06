@@ -19,12 +19,18 @@ export enum STEPS {
   PAYMENT = 3,
 }
 
-const MovieClient = ({ data: movie, locations }: { data: SafeMovie, locations:LocationType[] }) => {
+const MovieClient = ({
+  data: movie,
+  locations,
+}: {
+  data: SafeMovie;
+  locations: LocationType[];
+}) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
- 
+
   // Handle formatting date
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -34,26 +40,31 @@ const MovieClient = ({ data: movie, locations }: { data: SafeMovie, locations:Lo
 
     return `${month} ${day}, ${year}`;
   }
-  const isFillAll = selectedSeats.length === 0 || !selectedDate || !selectedTime
+  const isFillAll =
+    selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
-        toast("Please select seats, date, and time before proceeding to payment.");
+        toast(
+          "Please select seats, date, and time before proceeding to payment."
+        );
         return;
       }
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
     } else {
       if (!selectedDate || !selectedTime) {
-        toast("Please select date and time before proceeding to seat selection.");
+        toast(
+          "Please select date and time before proceeding to seat selection."
+        );
         return;
       }
       setStep(STEPS.SEAT_SELECTION);
       seatModal.onOpen();
     }
   }
-  
+
   return (
     <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {step !== STEPS.PAYMENT ? (
@@ -131,7 +142,7 @@ const MovieClient = ({ data: movie, locations }: { data: SafeMovie, locations:Lo
                 </h2>
                 <div></div>
                 <Location
-                price={movie.ticket_price}
+                  price={movie.ticket_price}
                   selectedTime={selectedTime}
                   setSelectedTime={setSelectedTime}
                   data={locations}

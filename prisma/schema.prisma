@@ -47,7 +47,7 @@ model User {
     telephoneNumber String?
     createdAt       DateTime      @default(now())
     updatedAt       DateTime      @updatedAt
-    favoritedMovies String[]      @db.ObjectId
+    favoritedIds    String[]      @db.ObjectId
     transactions    Transaction[] @relation("UserTransactions")
     accounts        Account[]
 }

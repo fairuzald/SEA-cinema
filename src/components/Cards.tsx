@@ -1,18 +1,25 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useState } from "react";
 import HeartIcon from "./icons/HeartIcon";
 import { useRouter } from "next/navigation";
+import useFavorites from "@/app/hooks/useFavorites";
+import getCurrentUser from "@/app/actions/getCurrentuser";
+import { User } from "@prisma/client";
 interface CardsProps {
   size: "medium" | "large";
   isFavorited?: boolean;
   isAge?: boolean;
   data: any;
+  currentUser?: User|null;
 }
-const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
+const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data, currentUser }) => {
   const [isHovered, setIsHovered] = useState(false);
-
+  const router = useRouter();
+  const { hasFavorited, toggleFavorite } = useFavorites({
+    currentUser: currentUser , 
+    movieId: data.id,
+  });
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -22,10 +29,11 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
   };
   const sizeEffect = {
     large: "w-[358px] h-[480px]",
-    medium: "w-[130px] md:w-[230px] md:h-[300px] lg:w-[274px] h-[220px] lg:h-[408px]",
+    medium:
+      "w-[130px] md:w-[230px] md:h-[300px] lg:w-[274px] h-[220px] lg:h-[408px]",
   };
   return (
-    <Link href={`/movies/${data.id}`} replace>
+    <button onClick={() => router.push(`/movies/${data.id}`)}>
       <div
         className={`w-fit relative flex lg:block gap-6 md:gap-10 lg:gap-0 lg:items-start lg:justify-start overflow-hidden `}
         onMouseEnter={handleMouseEnter}
@@ -37,14 +45,18 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
           alt={data.title}
           width={1920}
           height={1080}
-          className={`object-center object-cover ${
-            isHovered && "scale-110"
-          } ${sizeEffect[size]} transition duration-300 rounded-2xl`}
+          className={`object-center object-cover ${isHovered && "scale-110"} ${
+            sizeEffect[size]
+          } transition duration-300 rounded-2xl`}
         />
         {/* Watchlist button */}
         {isFavorited && (
-          <button className="absolute top-4 lg:top-5 left-24 md:left-40 lg:left-56">
-            <HeartIcon style="w-5 h-5 lg:w-6 lg:h-6 fill-gray hover:fill-red-heart transition duration-300" />
+          <button className="absolute top-4 lg:top-5 left-24 md:left-40 lg:left-56" onClick={toggleFavorite}>
+            <HeartIcon style={`w-5 h-5 lg:w-6 lg:h-6 ${
+              hasFavorited
+                ? "fill-rose-500 text-rose-500"
+                : "fill-neutral-500/70"
+            } hover:fill-red-heart transition duration-300`} />
           </button>
         )}
         {/* When  link hovered will be appear */}
@@ -54,7 +66,9 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
           } transition-transform duration-300`}
         >
           {/* Title */}
-          <p className="font-bold text-red lg:text-center  text-lg lg:text-xl">{data.title}</p>
+          <p className="font-bold text-red lg:text-center  text-lg lg:text-xl">
+            {data.title}
+          </p>
           {/* Containter age and price */}
           <div className="flex lg:mx-auto mr-auto">
             {/* Age */}
@@ -76,7 +90,7 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data }) => {
           </p>
         </div>
       </div>
-    </Link>
+    </button>
   );
 };
 
