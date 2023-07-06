@@ -1,10 +1,9 @@
-import getBooking from "@/app/actions/getBooking";
 import getBookingById from "@/app/actions/getBookingById";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import { format } from "date-fns";
 import Image from "next/image";
-export const dynamicParams = false;
+export const dynamicParams = true;
 export const dynamic = "force-dynamic";
 
 // Page Movie Details

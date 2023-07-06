@@ -6,6 +6,7 @@ import getCurrentUser from "../actions/getCurrentuser";
 import { SafeMovie } from "../types";
 import { getSession } from "next-auth/react";
 import { User } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 // Movies Page
 export default async function Page() {

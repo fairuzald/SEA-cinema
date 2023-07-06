@@ -7,7 +7,6 @@ import getCurrentUser from "../actions/getCurrentuser";
 import Link from "next/link";
 import Button from "@/components/Button";
 export const dynamic = "force-dynamic";
-
 // Movies Page
 export default async function Page() {
   const movies = await getFavoriteMovies();
