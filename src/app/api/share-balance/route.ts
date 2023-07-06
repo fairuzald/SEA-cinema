@@ -53,3 +53,29 @@ export async function POST(req: Request) {
     updateSenderBalance,
   });
 }
+
+export async function DELETE(req: Request) {
+  const body = await req.json();
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
+  }
+
+  const { sharedBalanceId } = body;
+
+  if (!sharedBalanceId || typeof sharedBalanceId !== "string") {
+    return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
+  }
+
+  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
+
+  // Hapus data sharedBalance dari database
+  const deletedSharedBalance = await prisma.shareBalance.delete({
+    where: {
+      id: sharedBalanceId,
+    },
+  });
+
+  return NextResponse.json({ deletedSharedBalance });
+}

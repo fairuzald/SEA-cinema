@@ -23,7 +23,7 @@ const CardBalance = ({
     return format(new Date(dateTime), "EEEE, dd MMM yyyy | HH.mm");
   };
   const router = useRouter();
-  const onDelete = useCallback(async () => {
+  const onDeleteTopUp = useCallback(async () => {
     try {
       const response = await fetch(`/api/topup/${id}`, {
         method: "DELETE",
@@ -39,6 +39,43 @@ const CardBalance = ({
       toast.error("Something went wrong");
     }
   }, [id, router]);
+  const onDeleteWithdrawal = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/withdrawal/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        router.refresh();
+        toast.success(`Withdrawal History Deleted`);
+      } else {
+        throw new Error("Request failed");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  }, [id, router]);
+  const onDeleteSharedBalance = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/shared-balance`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sharedBalanceId: id }),
+      });
+
+      if (response.ok) {
+        router.refresh();
+        toast.success(`Shared Balance Deleted`);
+      } else {
+        throw new Error("Request failed");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  }, [id, router]);
+
   return (
     <div className="flex border items-center justify-center md:items-start md:justify-start border-gray gap-8 lg:gap-10 2xl:gap-14 px-4 md:px-8 lg:px-10 2xl:px-24 py-4 lg:py-10">
       <div className="flex justify-between w-full gap-8 lg:flex-1 ">
@@ -86,7 +123,16 @@ const CardBalance = ({
           >
             {title === "Received Balance" ? "+" : "-"} {amount}
           </p>
-          <Button color="red" onClick={onDelete}>
+          <Button
+            color="red"
+            onClick={
+              title === "Top Up"
+                ? onDeleteTopUp
+                : title === "Withdrawal"
+                ? onDeleteWithdrawal
+                : onDeleteSharedBalance
+            }
+          >
             Delete
           </Button>
         </div>

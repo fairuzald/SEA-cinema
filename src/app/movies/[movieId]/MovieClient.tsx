@@ -111,10 +111,10 @@ const MovieClient = ({
           router.refresh();
           toast.success(`Booking success`);
           setStep(STEPS.DATE_SELECTION);
-          return router.push("/transactions");
+          return router.push("/booking?active");
         } else {
+          setStep(STEPS.DATE_SELECTION);
           throw new Error("Request failed");
-          return setStep(STEPS.DATE_SELECTION);
         }
       } catch (err) {
         toast.error("Something went wrong");
