@@ -1,3 +1,4 @@
+import getCurrentUser from "@/app/actions/getCurrentuser";
 import prisma from "@/app/libs/prismadb";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
@@ -9,7 +10,7 @@ interface BodyRequest {
 }
 export async function POST(req: Request) {
   // Parse the JSON body of the request
-  const body:BodyRequest = await req.json();
+  const body: BodyRequest = await req.json();
   const { username, name, password, age } = body;
 
   // Hash the password using bcrypt with a cost factor of 12
@@ -27,4 +28,28 @@ export async function POST(req: Request) {
   });
   const { hashedPassword, ...result } = user;
   return NextResponse.json(result);
+}
+
+export async function PUT(req: Request) {
+  const body = await req.json();
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
+  }
+
+  const { name, username, telephone, age } = body;
+
+  // Update user data
+  const updatedUser = await prisma.user.update({
+    where: { id: currentUser.id },
+    data: {
+      name,
+      username,
+      telephoneNumber: telephone,
+      age,
+    },
+  });
+
+  return NextResponse.json({ updatedUser });
 }
