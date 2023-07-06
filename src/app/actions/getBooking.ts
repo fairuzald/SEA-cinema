@@ -1,16 +1,14 @@
 import prisma from "@/app/libs/prismadb";
-import getCurrentUser from "./getCurrentuser";
 
-export default async function getBooking() {
+export default async function getBooking(userId: string) {
   try {
-    const currentUser = await getCurrentUser();
-    if (!currentUser) {
-      throw new Error("Invalid current user");
+    if (!userId) {
+      return []
     }
 
     const transactions = await prisma.transaction.findMany({
       where: {
-        userId: currentUser.id,
+        userId: userId,
       },
       include: {
         movie: true,

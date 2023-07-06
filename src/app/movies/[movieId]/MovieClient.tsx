@@ -8,11 +8,11 @@ import Location from "@/components/Location";
 import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
-import { Location as LocationType, User } from "@prisma/client";
+import { Location as LocationType, Transaction, User } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 export enum STEPS {
   DATE_SELECTION = 1,
@@ -24,15 +24,32 @@ const MovieClient = ({
   data: movie,
   locations,
   currentUser,
+  bookings,
 }: {
   data: SafeMovie;
   locations: LocationType[];
   currentUser: User | null;
+  bookings?: Transaction[];
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  // Fetch the transactions for the selected location, date, and time if each component of selectedTime exists
+  const filteredTransactions =
+    selectedTime && selectedDate
+      ? bookings?.filter(
+          (transaction) =>
+            transaction.locationId === selectedTime.id &&
+            transaction.watchDate.getTime() === selectedDate?.getTime() &&
+            transaction.watchTime === selectedTime.time
+        )
+      : [];
+
+  // Extract the seats from the filtered transactions
+  const disabledSeats = filteredTransactions?.flatMap(
+    (transaction) => transaction.seat
+  );
 
   // Handle formatting date
   function formatDate(dateString: string) {
@@ -183,6 +200,7 @@ const MovieClient = ({
                 <DateSelection
                   setSelectedDate={setSelectedDate}
                   selectedDate={selectedDate}
+                  releaseDate={new Date(movie.release_date)}
                 />
               </div>
               {/* Location */}
@@ -216,6 +234,7 @@ const MovieClient = ({
               setStep={setStep}
               requirement={isFillAll}
               totalPrice={selectedSeats.length * movie.ticket_price}
+              disabledSeats={disabledSeats}
             />
           </div>
         </>

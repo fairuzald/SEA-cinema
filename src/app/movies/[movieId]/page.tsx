@@ -5,6 +5,7 @@ import getLocations from "@/app/actions/getLocations";
 import { SafeMovie } from "@/app/types";
 import { Location, User } from "@prisma/client";
 import getCurrentUser from "@/app/actions/getCurrentuser";
+import getBooking from "@/app/actions/getBooking";
 export const dynamicParams = false;
 
 // Fallback blocking to make static page allowed based on id movie data
@@ -25,6 +26,7 @@ export default async function MovieDetailsPage({
   const movie = await getmovieById(params);
   const locations = await getLocations();
   const currentUser = await getCurrentUser();
+  const bookings = await getBooking(currentUser?.id as string);
 
   return (
     <main className="w-full min-h-screen overflow-hidden flex bg-background">
@@ -32,6 +34,7 @@ export default async function MovieDetailsPage({
         data={movie as SafeMovie}
         locations={locations}
         currentUser={currentUser as User}
+        bookings={bookings}
       />
     </main>
   );

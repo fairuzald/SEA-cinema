@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import HeartIcon from "./icons/HeartIcon";
 import { useRouter } from "next/navigation";
 import useFavorites from "@/app/hooks/useFavorites";
-import getCurrentUser from "@/app/actions/getCurrentuser";
 import { User } from "@prisma/client";
 import { format } from "date-fns";
 interface CardsProps {
