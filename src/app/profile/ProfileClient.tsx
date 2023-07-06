@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -9,27 +9,118 @@ import Avatar from "@/components/Avatar";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import TextInput from "@/components/TextInput";
 import { User } from "@prisma/client";
-
-const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
+import { toast } from "react-hot-toast";
+enum BALANCES {
+  TOPUP = 1,
+  SHARE = 2,
+  WITHDRAWAL = 3,
+}
+const ProfileClient = ({
+  currentUser,
+  allUsers,
+}: {
+  currentUser?: User | null;
+  allUsers?: User[];
+}) => {
   const pathname = usePathname();
   const params = useSearchParams();
   const router = useRouter();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [telephoneNumber, setTelephoneNumber] = useState("");
+  const [balance, setBalance] = useState(BALANCES.TOPUP);
   const [topupNominals, setTopupNominals] = useState("");
-  const [age, setAge] = useState("");
+  const [shareNominals, setShareNominals] = useState("");
+  const [search, setSearch] = useState("");
   const prices = [
     50000, 100000, 150000, 200000, 300000, 500000, 700000, 1000000,
   ];
+  const [withDrawalNominals, setWithDrawalNominals] = useState("");
+  const [age, setAge] = useState("");
+  const [selectedUser, setSelectedUser] = useState<User | undefined | null>(
+    undefined
+  );
+  const handleSelect = (event: any) => {
+    const selectedName = event.target.value;
+    const newSelectedUser = allUsers?.find(
+      (user) => user.name === selectedName
+    );
+    setSelectedUser(newSelectedUser as User);
+    setSearch(selectedName);
+  };
   const handlePriceSelection = (price: number) => {
-    if (parseInt(topupNominals) === price) {
+    if (
+      (balance === BALANCES.TOPUP && parseInt(topupNominals) === price) ||
+      (balance === BALANCES.SHARE && parseInt(shareNominals) === price) ||
+      (balance === BALANCES.WITHDRAWAL &&
+        parseInt(withDrawalNominals) === price)
+    ) {
       // Deselect jika harga sudah dipilih sebelumnya
-      setTopupNominals("");
+      switch (balance) {
+        case BALANCES.TOPUP:
+          return setTopupNominals("");
+
+        case BALANCES.SHARE:
+          return setShareNominals("");
+
+        case BALANCES.WITHDRAWAL:
+          return setWithDrawalNominals("");
+
+        default:
+          return;
+      }
     } else {
-      setTopupNominals(price.toString());
+      switch (balance) {
+        case BALANCES.TOPUP:
+          return setTopupNominals(price.toString());
+
+        case BALANCES.SHARE:
+          return setShareNominals(price.toString());
+
+        case BALANCES.WITHDRAWAL:
+          return setWithDrawalNominals(price.toString());
+
+        default:
+          return;
+      }
     }
   };
+  const handleSubmit = useCallback(async () => {
+    if (
+      parseInt(
+        balance === BALANCES.TOPUP ? topupNominals : shareNominals
+      ) >= 0
+    ) {
+      try {
+        const response = await fetch(
+          `/api/${balance === BALANCES.TOPUP ? "topup" : "share-balance"}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Perlu menentukan tipe konten
+            },
+            body: JSON.stringify({
+              amount: parseInt(
+                balance === BALANCES.TOPUP ? topupNominals : shareNominals
+              ),
+              receiverId : selectedUser?.id
+            }), // Perlu mengonversi ke string JSON
+          }
+        );
+
+        if (response.ok) {
+          router.refresh();
+          toast.success(`Successfully Top`);
+        } else {
+          throw new Error("Request failed");
+        }
+      } catch (err) {
+        toast.error("Something went wrong");
+      }
+    } else {
+      return toast("Give correct nominals");
+    }
+  }, [router, topupNominals, balance, withDrawalNominals]);
 
   // useEffect(() => {
   //   if (
@@ -42,6 +133,91 @@ const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
   //   }
 
   // }, [pathname,params]);
+
+  // TOPUP CONTENT
+  const context: {
+    [key in BALANCES]: {
+      title: string;
+      amount: string;
+      body: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+    };
+  } = {
+    [BALANCES.TOPUP]: {
+      title: "Select Topup Nominals",
+      amount: topupNominals,
+      body: (
+        <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
+          <p className="text-red">Or customize your own topup nominal </p>
+          <TextInput
+            type="text"
+            text={topupNominals}
+            setText={setTopupNominals}
+            placeholder={"Withdrawal Nominals"}
+            fullwidth
+          />
+        </div>
+      ),
+    },
+    [BALANCES.SHARE]: {
+      title: "Select Share Nominals",
+      amount: shareNominals,
+      body: (
+        <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
+          <p className="text-red">Or customize your own share nominal </p>
+          <TextInput
+            type="text"
+            text={shareNominals}
+            setText={setShareNominals}
+            placeholder={"Share Nominals"}
+            fullwidth
+          />
+          <div>
+      <div className="relative">
+        <select className="p-2" value={search} onChange={handleSelect}>
+          <option value="">Select a user</option>
+          {allUsers
+            ?.filter(
+              (user) =>
+                user.name.toLowerCase().includes(search.toLowerCase()) ||
+                user.username.includes(search) ||
+                user.telephoneNumber?.includes(search)
+            )
+            .map((user, index) => (
+              <option value={user.name} key={index}>
+                {user.name}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div>
+        {selectedUser && (
+          <p className="p-2">
+            Selected user: {selectedUser.name}
+          </p>
+        )}
+      </div>
+    </div>
+        </div>
+      ),
+    },
+    [BALANCES.WITHDRAWAL]: {
+      title: "Select WITHDRAWAL Nominals",
+      amount: withDrawalNominals,
+      body: (
+        <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
+          <p className="text-red">Or customize your own WITHDRAWAL nominal </p>
+          <TextInput
+            type="text"
+            text={withDrawalNominals}
+            setText={setWithDrawalNominals}
+            placeholder={"WITHDRAWAL Nominals"}
+            fullwidth
+          />
+        </div>
+      ),
+    },
+  };
+
   return (
     <div className="w-full px-6 py-10 md:px-20 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
       {/* Breadcrumbs */}
@@ -197,18 +373,21 @@ const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
               <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
-                <p>Top Up</p>
-                <p>Share Balance</p>
-                <p>Tarik Tunai</p>
+                <p onClick={() => setBalance(BALANCES.TOPUP)}>Top Up</p>
+                <p onClick={() => setBalance(BALANCES.SHARE)}>Share Balance</p>
+                <p onClick={() => setBalance(BALANCES.WITHDRAWAL)}>
+                  Tarik Tunai
+                </p>
               </div>
               {/* Edit content */}
               <div className="flex flex-col gap-4 py-5 lg:py-8">
                 {/* Name */}
                 <p className="text-red font-bold text-lg lg:text-xl">
-                  Your Balance <span className="text-white"> : Rp. 50.000</span>
+                  Your Balance{" "}
+                  <span className="text-white">Rp.{currentUser?.balance}</span>
                 </p>
                 <p className="text-red font-semibold text-base lg:text-lg">
-                  Select Topup Nominal
+                  {context[balance].title}
                 </p>
                 <div className="flex flex-wrap w-full items-center justify-center gap-5 lg:px-10  font-semibold text-white">
                   {prices.map((price, index) => {
@@ -216,7 +395,7 @@ const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
                       <div
                         key={index}
                         className={`border ${
-                          parseInt(topupNominals) === price
+                          parseInt(context[balance].amount) === price
                             ? "bg-red border-red"
                             : "border-gray bg-transparent"
                         } rounded-xl p-5 lg:p-8 cursor-pointer`}
@@ -227,22 +406,11 @@ const ProfileClient = ({ currentUser }: { currentUser?: User | null }) => {
                     );
                   })}
                 </div>
-                <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
-                  <p className="text-red">
-                    Or customize your own topup nominal{" "}
-                  </p>
-                  <TextInput
-                    type="text"
-                    text={topupNominals}
-                    setText={setTopupNominals}
-                    placeholder="TopUp Nominals"
-                    fullwidth
-                  />
-                </div>
+                {context[balance].body}
               </div>
               <div className="w-[300px] mt-7">
-                <Button color="red" size="large">
-                  Topup
+                <Button color="red" size="large" onClick={handleSubmit}>
+                  {balance === BALANCES.TOPUP ? "TopUp" : "Withdraw"}
                 </Button>
               </div>
             </div>
