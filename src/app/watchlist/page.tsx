@@ -4,6 +4,7 @@ import React from "react";
 import getFavoriteMovies from "../actions/getFavoriteMovies";
 import { SafeMovie } from "../types";
 import getCurrentUser from "../actions/getCurrentuser";
+export const dynamic = 'force-dynamic'
 
 // Movies Page
 export default async function Page() {

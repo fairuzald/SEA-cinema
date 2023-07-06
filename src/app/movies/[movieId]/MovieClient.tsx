@@ -8,10 +8,11 @@ import Location from "@/components/Location";
 import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
-import { Location as LocationType } from "@prisma/client";
+import { Location as LocationType, User } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
 export enum STEPS {
   DATE_SELECTION = 1,
@@ -22,9 +23,11 @@ export enum STEPS {
 const MovieClient = ({
   data: movie,
   locations,
+  currentUser,
 }: {
   data: SafeMovie;
   locations: LocationType[];
+  currentUser: User | null;
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
@@ -64,7 +67,54 @@ const MovieClient = ({
       seatModal.onOpen();
     }
   }
+  const router = useRouter();
+  const onSubmit = useCallback(async () => {
+    if (
+      currentUser?.balance &&
+      selectedSeats.length * movie.ticket_price < currentUser?.balance
+    ) {
+      try {
+        const response = await fetch(`/api/booking`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
+          body: JSON.stringify({
+            movieTitle: movie.title,
+            locationId: selectedTime.id,
+            watchDate: selectedDate,
+            watchTime: selectedTime.time,
+            totalPrice: selectedSeats.length * movie.ticket_price,
+            seats: selectedSeats,
+          }),
+        });
 
+        if (response.ok) {
+          router.refresh();
+          toast.success(`Booking success`);
+          setStep(STEPS.DATE_SELECTION);
+          return router.push("/transactions");
+        } else {
+          throw new Error("Request failed");
+          return setStep(STEPS.DATE_SELECTION);
+        }
+      } catch (err) {
+        toast.error("Something went wrong");
+        return setStep(STEPS.DATE_SELECTION);
+      }
+    } else {
+      toast.error("Your balance is not enough, Top Up First");
+      router.push("/profile?topup");
+    }
+  }, [
+    router,
+    movie,
+    selectedDate,
+    selectedSeats,
+    selectedTime,
+    currentUser?.balance,
+  ]);
   return (
     <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {step !== STEPS.PAYMENT ? (
@@ -165,6 +215,7 @@ const MovieClient = ({
               step={step}
               setStep={setStep}
               requirement={isFillAll}
+              totalPrice={selectedSeats.length * movie.ticket_price}
             />
           </div>
         </>
@@ -219,9 +270,7 @@ const MovieClient = ({
                 </div>
               </div>
               {/* Order number */}
-              <p className="flex text-white w-full font-semibold px-5 text-sm text-center lg:text-left md:px-8 lg:text-xl lg:px-24 py-3 lg:py-8  border-y-[2px]">
-                Order Number: 190283018309
-              </p>
+              <hr className="flex text-white w-full font-semibold px-5 text-sm text-center lg:text-left md:px-8 lg:text-xl lg:px-24 border-t-[2px]"></hr>
               {/* Booking Info */}
               <div className="w-full md:px-8 lg:text-xl lg:px-24 lg:py-10 gap-6 flex flex-col ">
                 {/* Transaction Detail subtitle */}
@@ -261,7 +310,15 @@ const MovieClient = ({
           {/* Footer */}
           <div className="w-full 2xl:w-[calc(100%-40px)] pb-32 mx-auto lg:px-10 flex flex-col gap-8 lg:gap-14 border-t-[2px] border-white">
             {/* Total Price */}
-            <div className="flex justify-between py-3 lg:py-8 lg:px-10 2xl:px-20">
+            <div className="flex justify-between pt-3 lg:pt-8 lg:px-10 2xl:px-20">
+              <p className="text-gray font-medium text-sm lg:text-xl">
+                Total Balance
+              </p>
+              <p className="text-white font-bold text-base lg:text-2xl">
+                Rp. {currentUser?.balance || 0}
+              </p>
+            </div>
+            <div className="flex justify-between lg:px-10 2xl:px-20">
               <p className="text-gray font-medium text-sm lg:text-xl">
                 Total Payment
               </p>
@@ -270,7 +327,7 @@ const MovieClient = ({
               </p>
             </div>
             <div className="flex mx-auto">
-              <Button color="red" size="large">
+              <Button color="red" size="large" onClick={onSubmit}>
                 BOOKING NOW
               </Button>
             </div>

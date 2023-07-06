@@ -4,6 +4,7 @@ import ProfileClient from "./ProfileClient";
 import getCurrentUser from "../actions/getCurrentuser";
 import { User } from "@prisma/client";
 import getUsers from "../actions/getUsers";
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const currentUser = await getCurrentUser();

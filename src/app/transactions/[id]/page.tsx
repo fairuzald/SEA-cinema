@@ -1,6 +1,7 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import Image from "next/image";
+export const dynamic = 'force-dynamic'
 
 export const dynamicParams = true;
 

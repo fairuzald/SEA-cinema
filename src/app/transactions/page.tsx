@@ -6,6 +6,7 @@ import getReceivedBalance from "../actions/getReceivedBalance";
 import getSharedBalance from "../actions/getSharedBalance";
 import getTopUp from "../actions/getTopup";
 import getWithdrawal from "../actions/getWithdrawal";
+export const dynamic = 'force-dynamic'
 
 const TransactionsPage = async () => {
   const currentUser = await getCurrentUser();
@@ -13,7 +14,6 @@ const TransactionsPage = async () => {
   const sharedBalances = await getSharedBalance(currentUser?.id as string);
   const topUpBalances = await getTopUp(currentUser?.id as string);
   const withdrawalBalances = await getWithdrawal(currentUser?.id as string);
-  console.log(receivedBalances)
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}

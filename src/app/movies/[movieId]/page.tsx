@@ -3,8 +3,8 @@ import MovieClient from "./MovieClient";
 import getmovieById from "@/app/actions/getMovieById";
 import getLocations from "@/app/actions/getLocations";
 import { SafeMovie } from "@/app/types";
-import { Location } from "@prisma/client";
-
+import { Location, User } from "@prisma/client";
+import getCurrentUser from "@/app/actions/getCurrentuser";
 export const dynamicParams = false;
 
 // Fallback blocking to make static page allowed based on id movie data
@@ -16,7 +16,6 @@ export async function generateStaticParams() {
   }));
 }
 
-
 // Page Movie Details
 export default async function MovieDetailsPage({
   params,
@@ -24,11 +23,16 @@ export default async function MovieDetailsPage({
   params: { movieId: string };
 }) {
   const movie = await getmovieById(params);
-  const locations = await getLocations()
+  const locations = await getLocations();
+  const currentUser = await getCurrentUser();
 
   return (
     <main className="w-full min-h-screen overflow-hidden flex bg-background">
-      <MovieClient data={movie as SafeMovie} locations={locations}/>
+      <MovieClient
+        data={movie as SafeMovie}
+        locations={locations}
+        currentUser={currentUser as User}
+      />
     </main>
   );
 }

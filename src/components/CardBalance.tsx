@@ -1,7 +1,10 @@
-import React from "react";
+"use client";
+import React, { useCallback } from "react";
 import TicketIcon from "./icons/TicketIcon";
 import Button from "./Button";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const CardBalance = ({
   title,
@@ -19,7 +22,23 @@ const CardBalance = ({
   const formattedDate = (dateTime: Date) => {
     return format(new Date(dateTime), "EEEE, dd MMM yyyy | HH.mm");
   };
+  const router = useRouter();
+  const onDelete = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/topup/${id}`, {
+        method: "DELETE",
+      });
 
+      if (response.ok) {
+        router.refresh();
+        toast.success(`Topup History Deleted`);
+      } else {
+        throw new Error("Request failed");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    }
+  }, [id, router]);
   return (
     <div className="flex border items-center justify-center md:items-start md:justify-start border-gray gap-8 lg:gap-10 2xl:gap-14 px-4 md:px-8 lg:px-10 2xl:px-24 py-4 lg:py-10">
       <div className="flex justify-between w-full gap-8 lg:flex-1 ">
@@ -67,7 +86,9 @@ const CardBalance = ({
           >
             {title === "Received Balance" ? "+" : "-"} {amount}
           </p>
-          <Button color="red">Delete</Button>
+          <Button color="red" onClick={onDelete}>
+            Delete
+          </Button>
         </div>
       </div>
     </div>

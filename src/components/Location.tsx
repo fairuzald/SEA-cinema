@@ -1,26 +1,33 @@
+"use client";
 import React, { SetStateAction } from "react";
 import Button from "./Button";
 
 const Location = ({
-  data ,
+  data,
   selectedTime,
   setSelectedTime,
-  price
+  price,
 }: {
   data?: any;
   selectedTime: any;
   setSelectedTime: React.Dispatch<SetStateAction<any>>;
-  price : number
+  price: number;
 }) => {
-  const handleTimeSelect = (price: number, mall: string, address: string, time: string) => {
+  const handleTimeSelect = (
+    id: number,
+    price: number,
+    mall: string,
+    address: string,
+    time: string
+  ) => {
     if (selectedTime && selectedTime.time === time) {
       // Deselect jika waktu yang dipilih sama dengan waktu yang sudah dipilih sebelumnya
       setSelectedTime(null);
     } else {
-      setSelectedTime({ price, mall, address, time });
+      setSelectedTime({ id, price, mall, address, time });
     }
   };
-  
+  console.log(selectedTime);
   return (
     <div className="flex flex-col gap-4 w-full">
       {data.map((location: any, index: number) => (
@@ -38,14 +45,19 @@ const Location = ({
             Rp. {price}
           </p>
           <div className="flex gap-4 mt-2">
-            {location.times.map((time: any, index: number) => (
+            {location.times.map((time: any) => (
               <Button
-                key={index}
+                key={location.id}
                 color={
-                  selectedTime && selectedTime.time === time ? "red" : "gray"
+                  selectedTime &&
+                  selectedTime.mall === location.mall && // Ubah data.mall menjadi location.mall
+                  selectedTime.time === time
+                    ? "red"
+                    : "gray"
                 }
                 onClick={() =>
                   handleTimeSelect(
+                    location.id,
                     price,
                     location.mall,
                     location.address,

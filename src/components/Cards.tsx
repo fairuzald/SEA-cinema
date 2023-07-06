@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import useFavorites from "@/app/hooks/useFavorites";
 import getCurrentUser from "@/app/actions/getCurrentuser";
 import { User } from "@prisma/client";
+import { format } from "date-fns";
 interface CardsProps {
   size: "medium" | "large";
   isFavorited?: boolean;
@@ -26,6 +27,9 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data, currentUs
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+  };
+  const formattedDate = (dateTime: Date) => {
+    return format(new Date(dateTime), "dd MMM yyyy");
   };
   const sizeEffect = {
     large: "w-[358px] h-[480px]",
@@ -86,7 +90,7 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data, currentUs
           </p>
           {/* Release Date */}
           <p className="font-semibold text-white text-xs lg:text-sm">
-            Release Date: {data.release_date}
+            Release Date: {formattedDate(data.release_date)}
           </p>
         </div>
       </div>

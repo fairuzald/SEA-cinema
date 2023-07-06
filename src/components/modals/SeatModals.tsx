@@ -8,19 +8,20 @@ import Button from "../Button";
 import { STEPS } from "@/app/movies/[movieId]/MovieClient";
 import { toast } from "react-hot-toast";
 
-
 const SeatModal = ({
   selectedSeats,
   setSelectedSeats,
   step,
   setStep,
   requirement,
+  totalPrice,
 }: {
   selectedSeats: string[];
   setSelectedSeats: React.Dispatch<SetStateAction<string[]>>;
   step: STEPS;
   setStep: React.Dispatch<SetStateAction<STEPS>>;
   requirement: boolean;
+  totalPrice: number;
 }) => {
   function onNext() {
     if (step === STEPS.SEAT_SELECTION) {
@@ -88,7 +89,7 @@ const SeatModal = ({
             Total Price
           </p>
           <p className="text-center text-sm items-center m-auto lg:text-base  text-white font-bold py-6">
-            Rp. 100.9000
+            Rp. {totalPrice || 0}
           </p>
         </div>
         <div className="flex flex-col flex-1">
