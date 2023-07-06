@@ -37,10 +37,7 @@ const Navbar = () => {
               </p>
             </Link>
           </li>
-          {/* SearchBar */}
-          <li className="flex">
-            <SearchBar />
-          </li>
+        
           <button
             className="flex relative 2xl:hidden"
             onClick={() => setPopUp((prev) => !prev)}
@@ -58,9 +55,14 @@ const Navbar = () => {
               <Link href="/movies" className="text-white font-bold">
                 Movies
               </Link>
+           </li>
+            <li className="py-2.5 md:py-3 lg:py-4">
+              <Link href="/booking" className="text-white font-bold">
+                Booking
+              </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/transactions" className="text-white font-bold">
+              <Link href="/transactions?topup" className="text-white font-bold">
                 Transaction
               </Link>
             </li>

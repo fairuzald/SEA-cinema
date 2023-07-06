@@ -3,14 +3,19 @@ import Cards from "@/components/Cards";
 import React from "react";
 import getMovies from "../actions/getMovies";
 import getCurrentUser from "../actions/getCurrentuser";
-import { Movie } from "@prisma/client";
 import { SafeMovie } from "../types";
+import { getSession } from "next-auth/react";
+import { User } from "@prisma/client";
 
 // Movies Page
 export default async function Page() {
   const movies = await getMovies();
-  const currentUser = await getCurrentUser();
-  console.log(movies)
+  const session = await getSession();
+  let currentUser:any = null; // Initialize currentUser to null
+
+  if (session) {
+    currentUser = await getCurrentUser(); // Assign currentUser if session exists
+  }
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
