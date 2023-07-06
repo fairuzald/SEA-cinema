@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useCallback, useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -8,44 +8,149 @@ import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import TextInput from "@/components/TextInput";
+import { User } from "@prisma/client";
+import { toast } from "react-hot-toast";
+import UserFilter from "@/components/UserFilter";
+import { format } from "date-fns";
+import { useSession } from "next-auth/react";
+enum BALANCES {
+  TOPUP = 1,
+  SHARE = 2,
+  WITHDRAWAL = 3,
+}
+const ProfileClient = ({
+  currentUser,
+  allUsers,
+}: {
+  currentUser?: User | null;
+  allUsers?: User[];
+}) => {
+  const { data: session } = useSession();
 
-const ProfileClient = () => {
-  const pathname = usePathname();
   const params = useSearchParams();
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [telephoneNumber, setTelephoneNumber] = useState("");
+  const [name, setName] = useState(currentUser?.name as string);
+  const [username, setUsername] = useState(currentUser?.username as string);
+  const [telephoneNumber, setTelephoneNumber] = useState(
+    currentUser?.telephoneNumber as string
+  );
   const [topupNominals, setTopupNominals] = useState("");
-  const [age, setAge] = useState("");
+  const [shareNominals, setShareNominals] = useState("");
+  const [search, setSearch] = useState("");
   const prices = [
     50000, 100000, 150000, 200000, 300000, 500000, 700000, 1000000,
   ];
-  const handlePriceSelection = (price:number) => {
-    if (parseInt(topupNominals) === price) {
-      // Deselect jika harga sudah dipilih sebelumnya
-      setTopupNominals("")
+  const [withDrawalNominals, setWithDrawalNominals] = useState("");
+  const [age, setAge] = useState(currentUser?.age.toString() as string);
+  const [selectedUser, setSelectedUser] = useState<User | undefined | null>(
+    undefined
+  );
+
+  const formattedDate = (dateTime: Date) => {
+    return format(new Date(dateTime), "EEEE, dd MMM yyyy");
+  };
+  const handlePriceSelect = (
+    amount: string,
+    setAmount: React.Dispatch<SetStateAction<string>>,
+    price: number
+  ) => {
+    if (parseInt(amount) === price) {
+      return setAmount("");
     } else {
-      setTopupNominals(price.toString());
+      return setAmount(price.toString());
     }
   };
+  const updateUser = useCallback(async () => {
+    if (name && username && telephoneNumber && age) {
+      try {
+        const response = await fetch(`/api/user`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            username,
+            telephone: telephoneNumber,
+            age: parseInt(age),
+          }),
+        });
 
-  // useEffect(() => {
-  //   if (
-  //     pathname === "/profile" &&
-  //     (!params.has("dashboard") ||
-  //       !params.has("settings") ||
-  //       !params.has("topup"))
-  //   ) {
-  //     router.push("/profile?dashboard");
-  //   }
-    
-  // }, [pathname,params]);
+        if (response.ok) {
+          router.refresh();
+          toast.success(`Successfully Update Data User`);
+        } else {
+          throw new Error("Request failed");
+        }
+      } catch (err) {
+        toast.error("Something went wrong");
+      }
+    } else {
+      toast("Your data is empty");
+    }
+  }, [router, name, username, telephoneNumber, age]);
+
+  const handleSubmitNonShare = useCallback(
+    async (amount: string, postUrl: string) => {
+      if (parseInt(amount) >= 0) {
+        try {
+          const response = await fetch(`/api/${postUrl}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              amount: parseInt(amount),
+            }),
+          });
+
+          if (response.ok) {
+            router.refresh();
+            toast.success(`Successfully ${postUrl}`);
+          } else {
+            throw new Error("Request failed");
+          }
+        } catch (err) {
+          toast.error("Something went wrong");
+        }
+      } else {
+        return toast("Give correct nominals");
+      }
+    },
+    [router]
+  );
+  const handleSubmitShare = useCallback(async () => {
+    if (parseInt(shareNominals) >= 0) {
+      try {
+        const response = await fetch(`/api/share-balance`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: parseInt(shareNominals),
+            receiverId: selectedUser?.id,
+          }),
+        });
+
+        if (response.ok) {
+          router.refresh();
+          toast.success(`Successfully Share`);
+        } else {
+          throw new Error("Request failed");
+        }
+      } catch (err) {
+        toast.error("Something went wrong");
+      }
+    } else {
+      return toast("Give correct nominals");
+    }
+  }, [router, selectedUser?.id, shareNominals]);
+
   return (
     <div className="w-full px-6 py-10 md:px-20 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
       {/* Breadcrumbs */}
       <Breadcrumbs />
-
       <div className="w-full flex flex-col md:flex-row gap-10 lg:gap-14 xl:gap-16 2xl:gap-20  sm:px-10 md:px-0">
         {/* params settings */}
         <div className="w-full flex px-10 md:w-fit md:px-0 md:justify-start md:items-start items-center justify-center">
@@ -73,6 +178,20 @@ const ProfileClient = () => {
                 <Link href="?topup">Topup</Link>
               </li>
               <li
+                className={`w-full px-4 ${
+                  params.has("share-balance") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
+              >
+                <Link href="?share-balance">Share Balance</Link>
+              </li>
+              <li
+                className={`w-full px-4 ${
+                  params.has("withdrawal") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
+              >
+                <Link href="?withdrawal">Withdrawal</Link>
+              </li>
+              <li
                 className={`w-full px-4 py-2 font-semibold text-base lg:text-lg`}
               >
                 <Button color="red">Sign Out</Button>
@@ -96,7 +215,7 @@ const ProfileClient = () => {
         /> */}
                 {/* Display the user's avatar */}
                 <div className="absolute -bottom-11 lg:-bottom-16 left-4">
-                  <Avatar size="large" />
+                  <Avatar size="large" currentUser={currentUser} />
                 </div>
               </div>
               {/* User Bio */}
@@ -107,26 +226,28 @@ const ProfileClient = () => {
                   <div>
                     {/* Display user's name */}
                     <h3 className="text-xl lg:text-2xl font-semibold text-white">
-                      daslkdjkladjad
+                      {currentUser?.name}
                     </h3>
 
                     {/* Display user's username */}
                     <p className="text-sm lg:text-base text-gray">
-                      dasdklhjasjkdha
+                      {currentUser?.username}
                     </p>
                   </div>
 
                   {/* Display user's bio if available */}
                   <p className="text-sm lg:text-base text-gray">
-                    asdiklpakdal;sdkl;aks;d kj kj kllk
+                    {currentUser?.telephoneNumber}
                   </p>
 
                   {/* Date Joined */}
                   <div className="flex items-center gap-2">
                     <CalendarIcon style="fill-gray w-3 h-3 lg:w-4 lg:h-4" />
-                    <p className="text-sm lg:text-base text-gray">
-                      Joined jh jg higkhjghjgjhiy
-                    </p>
+                    {currentUser?.createdAt && (
+                      <p className="text-sm lg:text-base text-gray">
+                        Joined at {formattedDate(currentUser?.createdAt)}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -186,7 +307,9 @@ const ProfileClient = () => {
                 </div>
               </div>
               <div className="w-[300px] mt-7">
-                <Button color="red">Confirm Changes</Button>
+                <Button color="red" onClick={updateUser}>
+                  Confirm Changes
+                </Button>
               </div>
             </div>
           </>
@@ -196,18 +319,18 @@ const ProfileClient = () => {
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
               <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
-                <p>Top Up</p>
-                <p>Share Balance</p>
-                <p>Tarik Tunai</p>
+                <p>Top up</p>
               </div>
               {/* Edit content */}
               <div className="flex flex-col gap-4 py-5 lg:py-8">
                 {/* Name */}
                 <p className="text-red font-bold text-lg lg:text-xl">
-                  Your Balance <span className="text-white"> : Rp. 50.000</span>
+                  Your Balance{" "}
+                  <span className="text-white">Rp.{currentUser?.balance}</span>
                 </p>
+
                 <p className="text-red font-semibold text-base lg:text-lg">
-                  Select Topup Nominal
+                  Select Top Up Nominals
                 </p>
                 <div className="flex flex-wrap w-full items-center justify-center gap-5 lg:px-10  font-semibold text-white">
                   {prices.map((price, index) => {
@@ -219,7 +342,13 @@ const ProfileClient = () => {
                             ? "bg-red border-red"
                             : "border-gray bg-transparent"
                         } rounded-xl p-5 lg:p-8 cursor-pointer`}
-                        onClick={() => handlePriceSelection(price)}
+                        onClick={() =>
+                          handlePriceSelect(
+                            topupNominals,
+                            setTopupNominals,
+                            price
+                          )
+                        }
                       >
                         Rp. {price}
                       </div>
@@ -234,14 +363,154 @@ const ProfileClient = () => {
                     type="text"
                     text={topupNominals}
                     setText={setTopupNominals}
-                    placeholder="TopUp Nominals"
+                    placeholder={"Withdrawal Nominals"}
                     fullwidth
                   />
                 </div>
               </div>
               <div className="w-[300px] mt-7">
-                <Button color="red" size="large">
-                  Topup
+                <Button
+                  color="red"
+                  size="large"
+                  onClick={() => handleSubmitNonShare(topupNominals, "topup")}
+                >
+                  Top Up
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+        {params.has("share-balance") && (
+          <>
+            <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
+              {/* Header */}
+              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+                <p>Share Balance</p>
+              </div>
+              {/* Edit content */}
+              <div className="flex flex-col gap-4 py-5 lg:py-8">
+                {/* Name */}
+                <p className="text-red font-bold text-lg lg:text-xl">
+                  Your Balance{" "}
+                  <span className="text-white">Rp.{currentUser?.balance}</span>
+                </p>
+                <div className="relative flex flex-col py-7 items-center w-full justify-center">
+                  <UserFilter
+                    value={selectedUser}
+                    setValue={setSelectedUser}
+                    options={allUsers}
+                  />
+                </div>
+                <p className="text-red font-semibold text-base lg:text-lg">
+                  Select Your Nominals to Share
+                </p>
+                <div className="flex flex-wrap w-full items-center justify-center gap-5 lg:px-10  font-semibold text-white">
+                  {prices.map((price, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`border ${
+                          parseInt(shareNominals) === price
+                            ? "bg-red border-red"
+                            : "border-gray bg-transparent"
+                        } rounded-xl p-5 lg:p-8 cursor-pointer`}
+                        onClick={() =>
+                          handlePriceSelect(
+                            shareNominals,
+                            setShareNominals,
+                            price
+                          )
+                        }
+                      >
+                        Rp. {price}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
+                  <p className="text-red">
+                    Or customize your own share nominals{" "}
+                  </p>
+                  <TextInput
+                    type="text"
+                    text={shareNominals}
+                    setText={setShareNominals}
+                    placeholder={"Share Nominals"}
+                    fullwidth
+                  />
+                </div>
+              </div>
+              <div className="w-[300px] mt-7">
+                <Button color="red" size="large" onClick={handleSubmitShare}>
+                  Share
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+        {params.has("withdrawal") && (
+          <>
+            <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
+              {/* Header */}
+              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+                <p>Withdrawal</p>
+              </div>
+              {/* Edit content */}
+              <div className="flex flex-col gap-4 py-5 lg:py-8">
+                {/* Name */}
+                <p className="text-red font-bold text-lg lg:text-xl">
+                  Your Balance{" "}
+                  <span className="text-white">Rp.{currentUser?.balance}</span>
+                </p>
+
+                <p className="text-red font-semibold text-base lg:text-lg">
+                  Select Withdrawal Nominals
+                </p>
+                <div className="flex flex-wrap w-full items-center justify-center gap-5 lg:px-10  font-semibold text-white">
+                  {prices.map((price, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={`border ${
+                          parseInt(withDrawalNominals) === price
+                            ? "bg-red border-red"
+                            : "border-gray bg-transparent"
+                        } rounded-xl p-5 lg:p-8 cursor-pointer`}
+                        onClick={() =>
+                          handlePriceSelect(
+                            withDrawalNominals,
+                            setWithDrawalNominals,
+                            price
+                          )
+                        }
+                      >
+                        Rp. {price}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
+                  <p className="text-red">
+                    Or customize your own topup nominal{" "}
+                  </p>
+                  <TextInput
+                    type="text"
+                    text={withDrawalNominals}
+                    setText={setWithDrawalNominals}
+                    placeholder={"Withdrawal Nominals"}
+                    fullwidth
+                  />
+                </div>
+              </div>
+              <div className="w-[300px] mt-7">
+                <Button
+                  color="red"
+                  size="large"
+                  onClick={() =>
+                    handleSubmitNonShare(withDrawalNominals, "withdrawal")
+                  }
+                >
+                  Submit
                 </Button>
               </div>
             </div>

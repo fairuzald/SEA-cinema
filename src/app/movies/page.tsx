@@ -1,21 +1,22 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Cards from "@/components/Cards";
 import React from "react";
-
-// Fetch movies all movies data
-async function getMovies() {
-  const movies = await (
-    await fetch("https://seleksi-sea-2023.vercel.app/api/movies")
-  ).json();
-  if (!movies) {
-    return null;
-  }
-  return movies;
-}
+import getMovies from "../actions/getMovies";
+import getCurrentUser from "../actions/getCurrentuser";
+import { SafeMovie } from "../types";
+import { getSession } from "next-auth/react";
+import { User } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
 // Movies Page
 export default async function Page() {
   const movies = await getMovies();
+  const session = await getSession();
+  let currentUser:any = null; // Initialize currentUser to null
+
+  if (session) {
+    currentUser = await getCurrentUser(); // Assign currentUser if session exists
+  }
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
@@ -24,9 +25,15 @@ export default async function Page() {
         <Breadcrumbs />
         {/* Mapping movie data into cards component */}
         <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
-          {movies.map((movie: any) => {
+          {movies.map((movie: SafeMovie) => {
             return (
-              <Cards key={movie.id} size="medium" isFavorited data={movie} />
+              <Cards
+                key={movie.id}
+                size="medium"
+                currentUser={currentUser}
+                isFavorited
+                data={movie}
+              />
             );
           })}
         </div>
