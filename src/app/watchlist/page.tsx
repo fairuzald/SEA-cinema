@@ -4,12 +4,28 @@ import React from "react";
 import getFavoriteMovies from "../actions/getFavoriteMovies";
 import { SafeMovie } from "../types";
 import getCurrentUser from "../actions/getCurrentuser";
-export const dynamic = 'force-dynamic'
+import Link from "next/link";
+import Button from "@/components/Button";
+export const dynamic = "force-dynamic";
 
 // Movies Page
 export default async function Page() {
   const movies = await getFavoriteMovies();
   const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return (
+      <main className="w-full min-h-screen flex bg-background">
+        <div className="flex w-full items-center flex-col gap-10 justify-center flex-auto font-bold text-white text-3xl">
+          Your are not logged in
+          <Link href="/">
+            <Button color="trans-red" size="large">
+              Home Page
+            </Button>
+          </Link>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
@@ -17,19 +33,30 @@ export default async function Page() {
         {/* Breadcrumbs */}
         <Breadcrumbs />
         {/* Mapping movie data into cards component */}
-        <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
-          {movies.map((movie: SafeMovie) => {
-            return (
-              <Cards
-                key={movie.id}
-                size="medium"
-                currentUser={currentUser}
-                isFavorited
-                data={movie}
-              />
-            );
-          })}
-        </div>
+        {movies.length > 0 ? (
+          <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
+            {movies.map((movie: SafeMovie) => {
+              return (
+                <Cards
+                  key={movie.id}
+                  size="medium"
+                  currentUser={currentUser}
+                  isFavorited
+                  data={movie}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex w-full items-center flex-col gap-10 justify-center flex-auto font-bold text-white text-3xl">
+            Not found your Watchlist Movie
+            <Link href="/movies">
+              <Button color="trans-red" size="large">
+                Go Movie Page
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </main>
   );
