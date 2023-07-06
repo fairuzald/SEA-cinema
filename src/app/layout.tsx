@@ -2,7 +2,10 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import ClientOnly from "@/components/ClientOnly";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import RegisterModals from "@/components/modals/RegisterModals";
+import LoginModals from "@/components/modals/LoginModals";
+import { NextAuthProvider } from "@/components/NextAuthProvider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -20,10 +23,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         <ClientOnly>
-          <Navbar />
-          <Toaster/>
-          <div>{children}</div>
-          <div id="portals"></div>
+          <NextAuthProvider>
+            <Navbar />
+            <Toaster />
+            <RegisterModals />
+            <LoginModals />
+            <div>{children}</div>
+            <div id="portals"></div>
+          </NextAuthProvider>
         </ClientOnly>
       </body>
     </html>

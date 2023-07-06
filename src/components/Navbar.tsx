@@ -6,9 +6,18 @@ import SearchBar from "./SearchBar";
 import Button from "./Button";
 import Avatar from "./Avatar";
 import HamburgerIcon from "./icons/HamburgerIcon";
+import useLoginModal from "@/app/hooks/useLoginModal";
+import getCurrentUser from "@/app/actions/getCurrentUser";
+import { useSession } from "next-auth/react";
+
 
 const Navbar = () => {
   const [popUp, setPopUp] = useState(false);
+  const LoginModal = useLoginModal()
+  // const user = getCurrentUser()
+  const {data:session} = useSession()
+
+  console.log(session)  
   return (
     <nav className="fixed z-20 inset-0 flex w-full h-[60px] lg:h-[100px] bg-soft-black">
       {/* container */}
@@ -62,7 +71,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="py-1">
-              <Button color="trans-red">
+              <Button color="trans-red" onClick={()=>LoginModal.onOpen()}>
                 <div className="flex items-center gap-2">
                   <p>Sign Out</p>
                   <Avatar />

@@ -2,8 +2,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../../../libs/prismadb";
 import NextAuth, { AuthOptions } from "next-auth";
+import bcrypt from "bcrypt";
 
-const authOptions = {
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -17,25 +18,27 @@ const authOptions = {
         if (!credentials?.username || !credentials?.password) {
           throw new Error("Invalid credentials");
         }
-        const res = await fetch("/api/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+
+        const user = await prisma.user.findUnique({
+          where: {
             username: credentials.username,
-            password: credentials.password,
-          }),
+          },
         });
 
-        const user = await res.json();
-
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user;
+        if (!user || !user?.hashedPassword) {
+          throw new Error("Invalid credentials");
         }
-        // Return null if user data could not be retrieved
-        return null;
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password,
+          user.hashedPassword
+        );
+
+        if (!isCorrectPassword) {
+          return null;
+        }
+
+        return user;
       },
     }),
   ],
