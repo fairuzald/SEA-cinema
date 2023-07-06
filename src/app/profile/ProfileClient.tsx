@@ -10,6 +10,8 @@ import CalendarIcon from "@/components/icons/CalendarIcon";
 import TextInput from "@/components/TextInput";
 import { User } from "@prisma/client";
 import { toast } from "react-hot-toast";
+import UserFilter from "@/components/UserFilter";
+import { format } from "date-fns";
 enum BALANCES {
   TOPUP = 1,
   SHARE = 2,
@@ -47,6 +49,9 @@ const ProfileClient = ({
     );
     setSelectedUser(newSelectedUser as User);
     setSearch(selectedName);
+  };
+  const formattedDate = (dateTime: Date) => {
+    return format(new Date(dateTime), "EEEE, dd MMM yyyy");
   };
   const handlePriceSelection = (price: number) => {
     if (
@@ -87,9 +92,7 @@ const ProfileClient = ({
   };
   const handleSubmit = useCallback(async () => {
     if (
-      parseInt(
-        balance === BALANCES.TOPUP ? topupNominals : shareNominals
-      ) >= 0
+      parseInt(balance === BALANCES.TOPUP ? topupNominals : shareNominals) >= 0
     ) {
       try {
         const response = await fetch(
@@ -103,7 +106,7 @@ const ProfileClient = ({
               amount: parseInt(
                 balance === BALANCES.TOPUP ? topupNominals : shareNominals
               ),
-              receiverId : selectedUser?.id
+              receiverId: selectedUser?.id,
             }), // Perlu mengonversi ke string JSON
           }
         );
@@ -120,7 +123,7 @@ const ProfileClient = ({
     } else {
       return toast("Give correct nominals");
     }
-  }, [router, topupNominals, balance, withDrawalNominals]);
+  }, [router, topupNominals, balance, withDrawalNominals, selectedUser]);
 
   // useEffect(() => {
   //   if (
@@ -171,32 +174,6 @@ const ProfileClient = ({
             placeholder={"Share Nominals"}
             fullwidth
           />
-          <div>
-      <div className="relative">
-        <select className="p-2" value={search} onChange={handleSelect}>
-          <option value="">Select a user</option>
-          {allUsers
-            ?.filter(
-              (user) =>
-                user.name.toLowerCase().includes(search.toLowerCase()) ||
-                user.username.includes(search) ||
-                user.telephoneNumber?.includes(search)
-            )
-            .map((user, index) => (
-              <option value={user.name} key={index}>
-                {user.name}
-              </option>
-            ))}
-        </select>
-      </div>
-      <div>
-        {selectedUser && (
-          <p className="p-2">
-            Selected user: {selectedUser.name}
-          </p>
-        )}
-      </div>
-    </div>
         </div>
       ),
     },
@@ -284,26 +261,28 @@ const ProfileClient = ({
                   <div>
                     {/* Display user's name */}
                     <h3 className="text-xl lg:text-2xl font-semibold text-white">
-                      daslkdjkladjad
+                      {currentUser?.name}
                     </h3>
 
                     {/* Display user's username */}
                     <p className="text-sm lg:text-base text-gray">
-                      dasdklhjasjkdha
+                      {currentUser?.username}
                     </p>
                   </div>
 
                   {/* Display user's bio if available */}
                   <p className="text-sm lg:text-base text-gray">
-                    asdiklpakdal;sdkl;aks;d kj kj kllk
+                    {currentUser?.telephoneNumber}
                   </p>
 
                   {/* Date Joined */}
                   <div className="flex items-center gap-2">
                     <CalendarIcon style="fill-gray w-3 h-3 lg:w-4 lg:h-4" />
-                    <p className="text-sm lg:text-base text-gray">
-                      Joined jh jg higkhjghjgjhiy
-                    </p>
+                    {currentUser?.createdAt && (
+                      <p className="text-sm lg:text-base text-gray">
+                        Joined at {formattedDate(currentUser?.createdAt)}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -386,6 +365,15 @@ const ProfileClient = ({
                   Your Balance{" "}
                   <span className="text-white">Rp.{currentUser?.balance}</span>
                 </p>
+                {balance === BALANCES.SHARE && (
+                  <div className="relative flex flex-col py-7 items-center w-full justify-center">
+                    <UserFilter
+                      value={selectedUser}
+                      setValue={setSelectedUser}
+                      options={allUsers}
+                    />
+                  </div>
+                )}
                 <p className="text-red font-semibold text-base lg:text-lg">
                   {context[balance].title}
                 </p>

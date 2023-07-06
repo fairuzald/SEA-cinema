@@ -8,12 +8,28 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Range } from "react-date-range";
 import Calendar from "../../components/icons/Calendar";
+import { ShareBalance, Topup, User, Withdrawal } from "@prisma/client";
+import CardTransaction from "@/components/CardTransaction";
+import CardBalance from "@/components/CardBalance";
+
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
   key: "selection",
 };
-const TransactionClient = () => {
+const TransactionClient = ({
+  currentUser,
+  topUpBalances,
+  withdrawalBalances,
+  sharedBalances,
+  receivedBalances,
+}: {
+  currentUser: User | null;
+  topUpBalances: any;
+  withdrawalBalances: any;
+  sharedBalances: any;
+  receivedBalances: any;
+}) => {
   const [codeBooking, setCodeBooking] = useState("");
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
@@ -25,7 +41,6 @@ const TransactionClient = () => {
     };
     return date.toLocaleDateString("en-US", options);
   };
-  console.log(dateRange);
   return (
     <div className="w-full px-4 md:px-20 lg:px-24 xl:px-28 2xl:px-32 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
       {/* Breadcrumbs */}
@@ -88,56 +103,56 @@ const TransactionClient = () => {
             </div>
           </div>
           {/* Mapping */}
-          <div className="flex border items-center justify-center md:items-start md:justify-start border-gray gap-8 lg:gap-10 2xl:gap-14 px-4 md:px-8 lg:px-10 2xl:px-24 py-4 lg:py-10">
-            {/* Image */}
-            <Image
-              src="https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg"
-              width="1920"
-              height="1080"
-              alt="image"
-              className="hidden md:flex rounded-xl w-[146px] h-[220px] object-center object-cover "
-            />
-            {/* Text content */}
-            <div className="flex justify-between w-full gap-8 lg:flex-1 ">
-              {/* Content container */}
-              <div className="flex flex-col gap-1 justify-between">
-                <div className="flex flex-col gap-1.5">
-                  {/* title */}
-                  <p className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
-                    MENCURI RADEN SALEH
-                  </p>
-                  {/* Location */}
-                  <div className="flex gap-2  items-center">
-                    <LocationIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
-                    <p className="text-white font-medium text-xs md:text-sm lg:text-lg">
-                      XX7 Mall ABC
-                    </p>
-                  </div>
-                  {/* Ticket Count   */}
-                  <div className="flex gap-2  items-center">
-                    <TicketIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
-                    <p className="text-white font-medium text-xs md:text-sm lg:text-lg">
-                      Ticket (6 People)
-                    </p>
-                  </div>
-                  {/* Date */}
-                  <p className="text-[#d9d9d9] font-medium text-xs lg:text-base">
-                    Kamis, 01 Sept 2023
-                  </p>
-                </div>
-                {/* Status */}
-                <p className="text-xs md:text-sm lg:text-lg font-semibold text-white flex gap-2 lg:gap-3 items-center">
-                  Status : <Button color="red">Success</Button>
-                </p>
-              </div>
-              {/* Price and detail button */}
-              <div className="flex items-center justify-center flex-col gap-2">
-                <p className="text-sm md:text-base lg:text-2xl font-bold text-red">
-                  Rp. 50000
-                </p>
-                <Button color="red">Details</Button>
-              </div>
-            </div>
+          {/* Image */}
+
+          <CardTransaction />
+          <div className="flex flex-col gap-3">
+            {topUpBalances?.map((data: any) => (
+              <CardBalance
+                title="Top Up"
+                userId={data.userName}
+                key={data.id as string}
+                amount={data.amount}
+                id={data.id}
+                dateTime={data.createdAt}
+              />
+            ))}
+          </div>
+          <div className="flex flex-col gap-3">
+            {withdrawalBalances?.map((data: any) => (
+              <CardBalance
+                title="Withdrawal"
+                userId={data.userName}
+                key={data.id as string}
+                amount={data.amount}
+                id={data.id}
+                dateTime={data.createdAt}
+              />
+            ))}
+          </div>
+          <div className="flex flex-col gap-3">
+            {receivedBalances?.map((data: any) => (
+              <CardBalance
+                title="Received Balance"
+                userId={data.senderName}
+                key={data.id as string}
+                amount={data.amount}
+                id={data.id}
+                dateTime={data.createdAt}
+              />
+            ))}
+          </div>
+          <div className="flex flex-col gap-3">
+            {sharedBalances?.map((data: any) => (
+              <CardBalance
+                title="Share Balance"
+                userId={data.receiverName}
+                key={data.id as string}
+                amount={data.amount}
+                id={data.id}
+                dateTime={data.createdAt}
+              />
+            ))}
           </div>
         </div>
       </div>
