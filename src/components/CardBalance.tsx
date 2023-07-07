@@ -57,12 +57,8 @@ const CardBalance = ({
   }, [id, router]);
   const onDeleteSharedBalance = useCallback(async () => {
     try {
-      const response = await fetch(`/api/shared-balance`, {
+      const response = await fetch(`/api/share-balance/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sharedBalanceId: id }),
       });
 
       if (response.ok) {
