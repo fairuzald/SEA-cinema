@@ -21,7 +21,7 @@ const ProfileClient = ({
   currentUser,
   allUsers,
 }: {
-  currentUser?: User | null;
+  currentUser: User | null;
   allUsers?: User[];
 }) => {
   const { data: session } = useSession();
@@ -101,10 +101,9 @@ const ProfileClient = ({
       toast("Your data is empty");
     }
   }, [router, name, username, telephoneNumber, age]);
-  console.log(topupNominals, shareNominals, withDrawalNominals);
   const handleSubmitNonShare = useCallback(
     async (amount: string, postUrl: string) => {
-      if (parseInt(amount.replace(/\./g, ""), 10) >= 0) {
+      if (parseInt(amount.replace(/\./g, ""), 10) > 0) {
         try {
           const response = await fetch(`/api/${postUrl}`, {
             method: "POST",
@@ -120,7 +119,8 @@ const ProfileClient = ({
             router.refresh();
             toast.success(`Successfully ${postUrl}`);
           } else {
-            throw new Error("Request failed");
+            const errorResponse = await response.json();
+            toast.error(errorResponse.message);
           }
         } catch (err) {
           toast.error("Something went wrong");
@@ -132,7 +132,7 @@ const ProfileClient = ({
     [router]
   );
   const handleSubmitShare = useCallback(async () => {
-    if (parseInt(shareNominals.replace(/\./g, ""), 10) >= 0) {
+    if (parseInt(shareNominals.replace(/\./g, ""), 10) > 0) {
       try {
         const response = await fetch(`/api/share-balance`, {
           method: "POST",
@@ -147,7 +147,7 @@ const ProfileClient = ({
 
         if (response.ok) {
           router.refresh();
-          toast.success(`Successfully Share`);
+          toast.success("Successfully Share your balance");
         } else {
           const errorResponse = await response.json();
           toast.error(errorResponse.message);
@@ -375,12 +375,15 @@ const ProfileClient = ({
                   <p className="text-red">
                     Or customize your own topup nominal{" "}
                   </p>
-
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
+                  </p>
                   <TextInput
                     type="text"
                     text={topupNominals}
                     setText={setTopupNominals}
                     placeholder={"Top Up Nominals"}
+                    isDigit
                     fullwidth
                   />
                   <p className="text-red text-sm lg:text-base"></p>
@@ -456,12 +459,16 @@ const ProfileClient = ({
                     Maximal amount is
                     <span className="text-red"> Rp. 500.000</span>
                   </p>
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
+                  </p>
                   <TextInput
                     type="text"
                     text={shareNominals}
                     setText={setShareNominals}
                     placeholder={"Share Nominals"}
                     fullwidth
+                    isDigit
                   />
                 </div>
               </div>
@@ -523,9 +530,12 @@ const ProfileClient = ({
                   <p className="text-red">
                     Or customize your own Withdrawal nominal{" "}
                   </p>
-                  <p className="text-white text-sm lg:text-base">
+                  <p className="text-white font-medium text-sm lg:text-base">
                     Maximal amount is
                     <span className="text-red"> Rp. 500.000</span>
+                  </p>
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
                   </p>
                   <TextInput
                     type="text"
@@ -533,6 +543,7 @@ const ProfileClient = ({
                     setText={setWithDrawalNominals}
                     placeholder={"Withdrawal Nominals"}
                     fullwidth
+                    isDigit
                   />
                 </div>
               </div>

@@ -19,9 +19,7 @@ export default async function getCurrentUser() {
     if (!currentUser) {
       return null;
     }
-    return {
-      ...currentUser,
-    };
+    return currentUser
   } catch (err) {
     console.log(err);
   }
