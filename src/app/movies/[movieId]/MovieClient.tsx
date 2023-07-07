@@ -11,7 +11,8 @@ import SeatModal from "@/components/modals/SeatModals";
 import { Location as LocationType, Transaction, User } from "@prisma/client";
 import { addWeeks, differenceInDays, format } from "date-fns";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 export enum STEPS {
@@ -31,6 +32,7 @@ const MovieClient = ({
   currentUser: User | null;
   bookings?: Transaction[];
 }) => {
+  const pathname = usePathname();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
@@ -70,7 +72,6 @@ const MovieClient = ({
   const isFillAll =
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
-  console.log(currentUser?.age)
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
@@ -82,8 +83,10 @@ const MovieClient = ({
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
     } else {
-      if (currentUser?.age && currentUser?.age < movie.age_rating){
-        return toast.error("You are underage to watch this film, Please choose another film that is age appropriate")
+      if (currentUser?.age && currentUser?.age < movie.age_rating) {
+        return toast.error(
+          "You are underage to watch this film, Please choose another film that is age appropriate"
+        );
       }
       if (!selectedDate || !selectedTime) {
         toast(
@@ -91,7 +94,7 @@ const MovieClient = ({
         );
         return;
       }
-        setStep(STEPS.SEAT_SELECTION);
+      setStep(STEPS.SEAT_SELECTION);
       seatModal.onOpen();
     }
   }
@@ -133,11 +136,12 @@ const MovieClient = ({
       }
     } else {
       toast.error("Your balance is not enough, Top Up First");
-      router.push("/profile?topup");
+      router.push(`/profile?topup&previous=${pathname}`);
     }
   }, [
     router,
     movie,
+    pathname,
     selectedDate,
     selectedSeats,
     selectedTime,
@@ -381,10 +385,45 @@ const MovieClient = ({
                 Rp. {selectedSeats.length * movie.ticket_price}
               </p>
             </div>
-            <div className="flex mx-auto">
-              <Button color="red" size="large" onClick={onSubmit}>
-                BOOKING NOW
-              </Button>
+            <div className="flex mx-auto gap-7">
+              {currentUser ? (
+                currentUser?.balance <
+                selectedSeats.length * movie.ticket_price ? (
+                  <>
+                    <Button
+                      color="red"
+                      size="large"
+                      onClick={() => {
+                        setStep(STEPS.DATE_SELECTION);
+                        router.push(`/movies/${movie.id}`);
+                      }}
+                    >
+                      Cancel Booking
+                    </Button>
+                    <Button color="red" size="large" onClick={onSubmit}>
+                      Top Up
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      color="red"
+                      size="large"
+                      onClick={() => {
+                        setStep(STEPS.DATE_SELECTION);
+                        router.push(`/movies/${movie.id}`);
+                      }}
+                    >
+                      Cancel Booking
+                    </Button>
+                    <Button color="red" size="large" onClick={onSubmit}>
+                      BOOKING NOW
+                    </Button>
+                  </>
+                )
+              ) : (
+                <p className="text-white font-bold text-2xl">Loading....</p>
+              )}
             </div>
           </div>
         </>

@@ -25,16 +25,15 @@ const ProfileClient = ({
   allUsers?: User[];
 }) => {
   const { data: session } = useSession();
-
   const params = useSearchParams();
   const router = useRouter();
   const [name, setName] = useState(currentUser?.name as string);
   const [username, setUsername] = useState(currentUser?.username as string);
   const [telephoneNumber, setTelephoneNumber] = useState(
     currentUser?.telephoneNumber as string
-  );
-  const [topupNominals, setTopupNominals] = useState("");
-  const [shareNominals, setShareNominals] = useState("");
+    );
+    const [topupNominals, setTopupNominals] = useState("");
+    const [shareNominals, setShareNominals] = useState("");
   const [search, setSearch] = useState("");
   const prices = [
     50000, 100000, 150000, 200000, 250000, 300000, 400000, 500000,
@@ -43,22 +42,22 @@ const ProfileClient = ({
   const [age, setAge] = useState(currentUser?.age.toString() as string);
   const [selectedUser, setSelectedUser] = useState<User | undefined | null>(
     undefined
-  );
-
-  const formattedDate = (dateTime: Date) => {
-    return format(new Date(dateTime), "EEEE, dd MMM yyyy");
-  };
-
+    );
+    
+    const formattedDate = (dateTime: Date) => {
+      return format(new Date(dateTime), "EEEE, dd MMM yyyy");
+    };
+    
   // Handle more than maxAmount on Transactions
   useEffect(() => {
     const maxAmount = 500000;
     const numericNominal = (nominal: string) =>
-      parseInt(nominal.replace(/\./g, ""), 10);
+    parseInt(nominal.replace(/\./g, ""), 10);
     if (numericNominal(withDrawalNominals) > maxAmount) {
       setWithDrawalNominals(maxAmount.toLocaleString("id-ID"));
     }
     if (numericNominal(shareNominals) > maxAmount)
-      setShareNominals(maxAmount.toLocaleString("id-ID"));
+    setShareNominals(maxAmount.toLocaleString("id-ID"));
   }, [topupNominals, shareNominals, withDrawalNominals]);
 
   const handlePriceSelect = (
@@ -72,6 +71,7 @@ const ProfileClient = ({
       return setAmount(price.toLocaleString("id-ID"));
     }
   };
+  const previous = params.get("previous");
   const updateUser = useCallback(async () => {
     if (name && username && telephoneNumber && age) {
       try {
@@ -208,6 +208,7 @@ const ProfileClient = ({
                 className={`w-full px-4 py-2 font-semibold text-base lg:text-lg`}
               >
                 <Button color="red">Sign Out</Button>
+                
               </li>
             </ul>
           </div>
@@ -398,6 +399,18 @@ const ProfileClient = ({
                   Top Up
                 </Button>
               </div>
+              {previous &&
+              <div className="w-[300px] mt-7">
+                <Button
+                  color="red"
+                  size="large"
+                  onClick={() => router.push(previous.toString())}
+                  >
+                  Back to Movies
+                </Button>
+              </div>
+                }
+              
             </div>
           </>
         )}
