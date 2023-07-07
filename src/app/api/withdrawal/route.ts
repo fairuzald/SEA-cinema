@@ -29,28 +29,3 @@ export async function POST(req: Request) {
   });
   return NextResponse.json({ withdrawal, user });
 }
-export async function DELETE(req: Request) {
-  const body = await req.json();
-  const currentUser = await getCurrentUser();
-
-  if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
-  }
-
-  const { withdrawalId } = body;
-
-  if (!withdrawalId || typeof withdrawalId !== "string") {
-    return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
-  }
-
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
-
-  // Hapus data withdrawal dari database
-  const deletedWithdrawal = await prisma.withdrawal.delete({
-    where: {
-      id: withdrawalId,
-    },
-  });
-
-  return NextResponse.json({ deletedWithdrawal });
-}

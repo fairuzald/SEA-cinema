@@ -17,7 +17,6 @@ export async function POST(req: Request) {
   ) {
     return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
   }
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
 
   // Lakukan pembagian saldo dengan menyimpan data ke dalam database
   const shareBalance = await prisma.shareBalance.create({
