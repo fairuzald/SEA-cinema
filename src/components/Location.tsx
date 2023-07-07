@@ -27,7 +27,6 @@ const Location = ({
       setSelectedTime({ id, price, mall, address, time });
     }
   };
-  console.log(selectedTime);
   return (
     <div className="flex flex-col gap-4 w-full">
       {data.map((location: any, index: number) => (

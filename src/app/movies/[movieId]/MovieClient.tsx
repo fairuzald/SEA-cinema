@@ -9,7 +9,7 @@ import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
 import { Location as LocationType, Transaction, User } from "@prisma/client";
-import { format } from "date-fns";
+import { addWeeks, differenceInDays, format } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
@@ -60,6 +60,13 @@ const MovieClient = ({
 
     return `${month} ${day}, ${year}`;
   }
+  const today = new Date();
+  const releaseDate = new Date(movie.release_date);
+  // Calculate the length of the date range to possible watch the movie
+  const endDate = addWeeks(releaseDate, 4); //Assume that movie only can watch 4 weeks after launched
+  const lengthDate = differenceInDays(endDate, today);
+  const isLaunch = today.getTime() > releaseDate.getTime();
+  const isExpired = lengthDate < 0;
   const isFillAll =
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
@@ -192,30 +199,42 @@ const MovieClient = ({
                   {movie.description}
                 </p>
               </div>
-              {/* Schedule */}
-              <div className="flex flex-col gap-2 w-full">
-                <h2 className="font-bold text-lg lg:text-xl text-red">
-                  Schedule
-                </h2>
-                <DateSelection
-                  setSelectedDate={setSelectedDate}
-                  selectedDate={selectedDate}
-                  releaseDate={new Date(movie.release_date)}
-                />
-              </div>
-              {/* Location */}
-              <div className="flex flex-col gap-4 w-full">
-                <h2 className="font-bold text-lg lg:text-xl text-red">
-                  Location
-                </h2>
-                <div></div>
-                <Location
-                  price={movie.ticket_price}
-                  selectedTime={selectedTime}
-                  setSelectedTime={setSelectedTime}
-                  data={locations}
-                ></Location>
-              </div>
+              {isLaunch ? isExpired ? (
+                <div className="flex flex-col flex-auto gap-2 w-full">
+                  <p className="text-red text-3xl font-bold ">
+                    Not Show Anymore
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-2 w-full">
+                    <h2 className="font-bold text-lg lg:text-xl text-red">
+                      Schedule
+                    </h2>
+                    <DateSelection
+                      setSelectedDate={setSelectedDate}
+                      selectedDate={selectedDate}
+                      length={lengthDate}
+                    />
+                  </div>
+                  {/* Location */}
+                  <div className="flex flex-col gap-4 w-full">
+                    <h2 className="font-bold text-lg lg:text-xl text-red">
+                      Location
+                    </h2>
+                    <Location
+                      price={movie.ticket_price}
+                      selectedTime={selectedTime}
+                      setSelectedTime={setSelectedTime}
+                      data={locations}
+                    ></Location>
+                  </div>
+                </>
+              ):<div className="flex flex-col flex-auto gap-2 w-full">
+              <p className="text-white text-3xl font-bold ">
+                Not Launching Yet
+              </p>
+            </div>}
             </div>
             <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
               <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
