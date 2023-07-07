@@ -232,6 +232,7 @@ const MovieClient = ({
                         selectedTime={selectedTime}
                         setSelectedTime={setSelectedTime}
                         data={locations}
+                        selectedDate={selectedDate}
                       ></Location>
                     </div>
                   </>
