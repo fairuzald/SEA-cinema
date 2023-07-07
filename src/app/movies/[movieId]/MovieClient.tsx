@@ -70,6 +70,7 @@ const MovieClient = ({
   const isFillAll =
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
+  console.log(currentUser?.age)
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
@@ -81,13 +82,16 @@ const MovieClient = ({
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
     } else {
+      if (currentUser?.age && currentUser?.age < movie.age_rating){
+        return toast.error("You are underage to watch this film, Please choose another film that is age appropriate")
+      }
       if (!selectedDate || !selectedTime) {
         toast(
           "Please select date and time before proceeding to seat selection."
         );
         return;
       }
-      setStep(STEPS.SEAT_SELECTION);
+        setStep(STEPS.SEAT_SELECTION);
       seatModal.onOpen();
     }
   }

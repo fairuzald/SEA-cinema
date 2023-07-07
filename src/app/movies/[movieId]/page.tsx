@@ -7,7 +7,7 @@ import { Location, User } from "@prisma/client";
 import getCurrentUser from "@/app/actions/getCurrentuser";
 import getBooking from "@/app/actions/getBooking";
 export const dynamicParams = false;
-
+export const dynamic = "force-dynamic"
 // Fallback blocking to make static page allowed based on id movie data
 export async function generateStaticParams() {
   const movies = await getMovies();
