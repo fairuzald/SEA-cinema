@@ -4,7 +4,7 @@ import Link from "next/link";
 import ChevronIcon from "./icons/ChevronIcon";
 import { usePathname } from "next/navigation";
 
-const Breadcrumbs = ({ currentText = "" }: { currentText: string }) => {
+const Breadcrumbs = ({ currentText = "" }: { currentText?: string }) => {
   const pathname = usePathname();
 
   // Take title from pathname Url router with no empty string
