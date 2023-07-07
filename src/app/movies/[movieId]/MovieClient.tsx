@@ -157,14 +157,18 @@ const MovieClient = ({
                 height={1080}
                 className="object-center object-cover w-full h-full sm:w-[350px] lg:w-[400px] md:h-[550px] xl:w-[518px] xl:h-[632px] rounded-xl"
               />
-              <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
-                Select schedule and location and then click below to order
-              </p>
-              <div className="hidden lg:flex">
-                <Button color="red" onClick={onNext}>
-                  Order Ticket Now
-                </Button>
-              </div>
+              {isLaunch && !isExpired && (
+                <>
+                  <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
+                    Select schedule and location and then click below to order
+                  </p>
+                  <div className="hidden lg:flex">
+                    <Button color="red" onClick={onNext}>
+                      Order Ticket Now
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
             {/* Right Side for the content */}
             <div className="flex flex-col lg:w-[calc(100%-400px)] xl:w-[calc(100%-518px)] gap-7">
@@ -199,62 +203,70 @@ const MovieClient = ({
                   {movie.description}
                 </p>
               </div>
-              {isLaunch ? isExpired ? (
+              {isLaunch ? (
+                isExpired ? (
+                  <div className="flex flex-col flex-auto gap-2 w-full">
+                    <p className="text-red text-3xl font-bold ">
+                      Not Show Anymore
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-2 w-full">
+                      <h2 className="font-bold text-lg lg:text-xl text-red">
+                        Schedule
+                      </h2>
+                      <DateSelection
+                        setSelectedDate={setSelectedDate}
+                        selectedDate={selectedDate}
+                        length={lengthDate}
+                      />
+                    </div>
+                    {/* Location */}
+                    <div className="flex flex-col gap-4 w-full">
+                      <h2 className="font-bold text-lg lg:text-xl text-red">
+                        Location
+                      </h2>
+                      <Location
+                        price={movie.ticket_price}
+                        selectedTime={selectedTime}
+                        setSelectedTime={setSelectedTime}
+                        data={locations}
+                      ></Location>
+                    </div>
+                  </>
+                )
+              ) : (
                 <div className="flex flex-col flex-auto gap-2 w-full">
-                  <p className="text-red text-3xl font-bold ">
-                    Not Show Anymore
+                  <p className="text-white text-3xl font-bold ">
+                    Not Launching Yet
                   </p>
                 </div>
-              ) : (
-                <>
-                  <div className="flex flex-col gap-2 w-full">
-                    <h2 className="font-bold text-lg lg:text-xl text-red">
-                      Schedule
-                    </h2>
-                    <DateSelection
-                      setSelectedDate={setSelectedDate}
-                      selectedDate={selectedDate}
-                      length={lengthDate}
-                    />
-                  </div>
-                  {/* Location */}
-                  <div className="flex flex-col gap-4 w-full">
-                    <h2 className="font-bold text-lg lg:text-xl text-red">
-                      Location
-                    </h2>
-                    <Location
-                      price={movie.ticket_price}
-                      selectedTime={selectedTime}
-                      setSelectedTime={setSelectedTime}
-                      data={locations}
-                    ></Location>
-                  </div>
-                </>
-              ):<div className="flex flex-col flex-auto gap-2 w-full">
-              <p className="text-white text-3xl font-bold ">
-                Not Launching Yet
-              </p>
-            </div>}
+              )}
             </div>
-            <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
-              <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
-                Select schedule and location and then click below to order
-              </p>
-              <div className="w-[200px]">
-                <Button color="red" size="large" onClick={onNext}>
-                  Order Ticket Now
-                </Button>
-              </div>
-            </div>
-            <SeatModal
-              selectedSeats={selectedSeats}
-              setSelectedSeats={setSelectedSeats}
-              step={step}
-              setStep={setStep}
-              requirement={isFillAll}
-              totalPrice={selectedSeats.length * movie.ticket_price}
-              disabledSeats={disabledSeats}
-            />
+            {isLaunch && !isExpired && (
+              <>
+                <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
+                  <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
+                    Select schedule and location and then click below to order
+                  </p>
+                  <div className="w-[200px]">
+                    <Button color="red" size="large" onClick={onNext}>
+                      Order Ticket Now
+                    </Button>
+                  </div>
+                </div>
+                <SeatModal
+                  selectedSeats={selectedSeats}
+                  setSelectedSeats={setSelectedSeats}
+                  step={step}
+                  setStep={setStep}
+                  requirement={isFillAll}
+                  totalPrice={selectedSeats.length * movie.ticket_price}
+                  disabledSeats={disabledSeats}
+                />
+              </>
+            )}
           </div>
         </>
       ) : (
