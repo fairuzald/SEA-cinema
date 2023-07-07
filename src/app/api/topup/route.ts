@@ -30,37 +30,3 @@ export async function POST(req: Request) {
   });
   return NextResponse.json({ topup, user });
 }
-
-export async function DELETE(
-  req: Request,
-  { params }: { params: { topupId?: string } }
-) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
-  }
-  const { topupId } = params;
-  if (!topupId || typeof topupId !== "string") {
-    return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
-  }
-
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
-  const topup = await prisma.topup.findUnique({
-    where: { id: topupId },
-  });
-
-  if (!topup) {
-    return NextResponse.json({ error: "Topup not found" }, { status: 404 });
-  }
-
-  if (topup.userId !== currentUser.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // Hapus data topup berdasarkan ID
-  const deletedTopup = await prisma.topup.delete({
-    where: { id: topupId },
-  });
-
-  return NextResponse.json({ deletedTopup });
-}
