@@ -6,7 +6,7 @@ const LocationIcon = ({ style }: { style?: string }) => {
       viewBox="0 0 20 25"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={style}
+      className={style ? style : "fill-white"}
     >
       <g clip-path="url(#clip0_30_181)">
         <path
@@ -22,7 +22,5 @@ const LocationIcon = ({ style }: { style?: string }) => {
     </svg>
   );
 };
-LocationIcon.defaultProps = {
-  style: "fill-white",
-};
+
 export default LocationIcon;

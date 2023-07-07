@@ -9,7 +9,7 @@ const CrossIcon: React.FC<IconProps> = ({ style }) => {
       width="49"
       height="49"
       viewBox="0 0 49 49"
-      className={style}
+      className={style ? style : "fill-white"}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g clip-path="url(#clip0_334_807)">
@@ -26,9 +26,6 @@ const CrossIcon: React.FC<IconProps> = ({ style }) => {
       </defs>
     </svg>
   );
-};
-CrossIcon.defaultProps = {
-  style: "fill-white",
 };
 
 export default CrossIcon;

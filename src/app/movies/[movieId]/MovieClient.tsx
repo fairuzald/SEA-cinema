@@ -179,8 +179,8 @@ const MovieClient = ({
                 </div>
                 <div className="flex flex-col text-base lg:text-lg font-semibold text-white">
                   <p>{formatDate(movie.release_date)}</p>
-                  <p>{movie.ticket_price}</p>
-                  <p>{movie.age_rating}</p>
+                  <p>Rp. {movie.ticket_price.toLocaleString("id-ID")}</p>
+                  <p>{movie.age_rating} +</p>
                 </div>
               </div>
               {/* Description */}
