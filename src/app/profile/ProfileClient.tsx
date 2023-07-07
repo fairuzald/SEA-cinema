@@ -404,7 +404,7 @@ const ProfileClient = ({
                 <Button
                   color="red"
                   size="large"
-                  onClick={() => router.push(previous.toString())}
+                  onClick={() => router.back()}
                   >
                   Back to Movies
                 </Button>
