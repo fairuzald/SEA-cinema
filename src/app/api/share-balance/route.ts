@@ -6,7 +6,10 @@ export async function POST(req: Request) {
   const body = await req.json();
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return NextResponse.json({ message: "Invalid CurrentUser" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Invalid CurrentUser" },
+      { status: 400 }
+    );
   }
   const { amount, receiverId } = body;
   // Validating body and check type of data body
@@ -14,7 +17,8 @@ export async function POST(req: Request) {
     !amount ||
     typeof amount !== "number" ||
     !receiverId ||
-    typeof receiverId !== "string"
+    typeof receiverId !== "string" ||
+    amount <= 0
   ) {
     return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
   }
