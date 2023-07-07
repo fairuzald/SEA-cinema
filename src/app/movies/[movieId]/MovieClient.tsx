@@ -9,7 +9,13 @@ import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
 import { Location as LocationType, Transaction, User } from "@prisma/client";
-import { addWeeks, differenceInDays, format } from "date-fns";
+import {
+  addWeeks,
+  differenceInDays,
+  format,
+  getDate,
+  getMonth,
+} from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -43,11 +49,11 @@ const MovieClient = ({
       ? bookings?.filter(
           (transaction) =>
             transaction.locationId === selectedTime.id &&
-            transaction.watchDate.getTime() === selectedDate?.getTime() &&
+            getDate(transaction.watchDate) === getDate(selectedDate) &&
+            getMonth(transaction.watchDate) === getMonth(selectedDate) &&
             transaction.watchTime === selectedTime.time
         )
       : [];
-
   // Extract the seats from the filtered transactions
   const disabledSeats = filteredTransactions?.flatMap(
     (transaction) => transaction.seat
@@ -114,7 +120,7 @@ const MovieClient = ({
           body: JSON.stringify({
             movieTitle: movie.title,
             locationId: selectedTime.id,
-            watchDate: selectedDate,
+            watchDate: selectedDate?.toISOString(),
             watchTime: selectedTime.time,
             totalPrice: selectedSeats.length * movie.ticket_price,
             seats: selectedSeats,
