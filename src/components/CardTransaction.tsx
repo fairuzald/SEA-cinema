@@ -59,7 +59,7 @@ const CardTransaction = ({ data }: { data: any }) => {
         {/* Price and detail button */}
         <div className="flex items-center justify-center flex-col gap-2">
           <p className="text-sm md:text-base lg:text-2xl font-bold text-red">
-            Rp. {data.totalPrice}
+            Rp. {data.totalPrice.toLocaleString("id-Id")}
           </p>
 
           <Link href={`/booking/${data.id}`}>

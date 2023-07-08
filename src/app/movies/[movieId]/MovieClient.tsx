@@ -293,7 +293,7 @@ const MovieClient = ({
                     requirement={isFillAll}
                     totalPrice={selectedSeats.length * movie.ticket_price}
                     disabledSeats={disabledSeats}
-                    selectedDate={format(selectedDate, 'd MMMM yyyy')}
+                    selectedDate={format(selectedDate, "d MMMM yyyy")}
                     selectedTime={selectedTime.time}
                     mall={selectedTime.mall}
                   />
