@@ -26,7 +26,7 @@ export default async function MovieDetailsPage({
     const zonedDate = utcToZonedTime(localDate, timeZone);
 
     // Format the zoned date as per your requirement
-    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    return format(zonedDate, "yyyy-MM-dd | HH:mm:ss.SSSxxx");
   };
   return (
     <main className="w-full min-h-screen overflow-hidden flex bg-background">

@@ -16,6 +16,7 @@ import {
   getDate,
   getMonth,
 } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -79,12 +80,16 @@ const MovieClient = ({
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
   const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
+    const localDate = new Date(selectedDate);
     const [hours, minutes] = timeString.split(":");
-    selectedDate.setHours(Number(hours), Number(minutes), 0, 0);
+    localDate.setHours(Number(hours), Number(minutes), 0, 0);
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const zonedDate = utcToZonedTime(localDate, timeZone);
 
     // Mengonversi objek Date menjadi string dalam format ISO
-    return selectedDate.toISOString();
+    return format(zonedDate, "yyyy-MM-dd | HH:mm:ss.SSSxxx");
   };
+
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
