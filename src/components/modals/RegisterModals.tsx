@@ -30,11 +30,11 @@ const RegisterModals = () => {
   // Form submission handler
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-  
+
     const parsedAge = parseInt(data.age, 10); // Parse age as an integer
-  
+
     const requestData = { ...data, age: parsedAge }; // Update age value with parsed integer
-  
+
     fetch("/api/user", {
       method: "POST",
       body: JSON.stringify(requestData),
@@ -46,7 +46,7 @@ const RegisterModals = () => {
       .catch((err) => toast.error("Failed to register your data"))
       .finally(() => setIsLoading(false));
   };
-  
+
   // Toggle between register and login modals
   const onToggle = useCallback(() => {
     registerModal.onClose();
@@ -58,14 +58,14 @@ const RegisterModals = () => {
     registerModal.onClose();
   }, [registerModal]);
   const header = (
-    <div className="flex gap-7 items-center bg-soft-black px-5 lg:px-10 w-full py-2">
+    <div className="flex items-center bg-soft-black px-5 lg:px-10 w-full py-2">
       <button
         className="bg-transparent rounded-full hover:bg-bnb-hover p-2"
         onClick={onClose}
       >
         <CrossIcon style="w-4 h-4 fill-white" />
       </button>
-      <p className="text-white font-bold text-lg flex-1 flex items-center justify-center">
+      <p className="text-white font-bold text-base lg:text-lg flex-1 flex items-center justify-center">
         Register
       </p>
     </div>
@@ -73,10 +73,10 @@ const RegisterModals = () => {
   const body = (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
-        <h4 className="text-xl font-semibold text-white">
+        <h4 className="text-lg lg:text-xl font-semibold text-white">
           Welcome to SEA CINEMA
         </h4>
-        <p className="text-white"> Create an account</p>
+        <p className="text-sm lg:text-base text-white"> Create an account</p>
         <TextFields
           type="text"
           disabled={isLoading}
@@ -129,13 +129,22 @@ const RegisterModals = () => {
     </div>
   );
   const footer = (
-    <p className="flex items-center justify-center w-full text-white font-medium">
+    <p className="flex items-center justify-center w-full text-white text-sm lg:text-base font-medium">
       Create an account{" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
         Sign Up
       </button>
-    </p>)
-  return <Modal header={header} isOpen={registerModal.isOpen} body={body} size="medium" footer={footer} />;
+    </p>
+  );
+  return (
+    <Modal
+      header={header}
+      isOpen={registerModal.isOpen}
+      body={body}
+      size="medium"
+      footer={footer}
+    />
+  );
 };
 
 export default RegisterModals;

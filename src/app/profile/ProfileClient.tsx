@@ -11,7 +11,7 @@ import { User } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import UserFilter from "@/components/UserFilter";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 enum BALANCES {
   TOPUP = 1,
   SHARE = 2,
@@ -207,7 +207,7 @@ const ProfileClient = ({
               <li
                 className={`w-full px-4 py-2 font-semibold text-base lg:text-lg`}
               >
-                <Button color="red">Sign Out</Button>
+                <Button color="trans-red" onClick={()=>signOut()}>Sign Out</Button>
                 
               </li>
             </ul>

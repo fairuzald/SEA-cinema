@@ -59,14 +59,14 @@ const TextFields: React.FC<TextFieldsProps> = ({
           disabled={disabled}
           value={value}
           onChange={handleChange}
-          className={`peer rounded-lg w-full disabled:opacity-70 font-medium disabled:cursor-not-allowed pt-[22px] pb-[10px] text-white bg-transparent outline-none`}
+          className={`peer rounded-lg w-full disabled:opacity-70 font-medium text-sm lg:text-base disabled:cursor-not-allowed pt-[22px] pb-[10px] text-white bg-transparent outline-none`}
         />
         <label
           className={`absolute text-md ${
             formatPrice ? "left-12" : "left-4"
           } duration-150 transform  -translate-y-1 top-5 z-10 origin-[0] ${
             value && "-translate-y-4 scale-75"
-          } peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 font-medium peer-focus:-translate-y-4 ${
+          } peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 text-sm lg:text-base peer-focus:scale-75 font-medium peer-focus:-translate-y-4 ${
             errors[id] ? "text-red" : "text-white"
           }`}
         >
