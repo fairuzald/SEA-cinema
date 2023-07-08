@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { STEPS } from "@/app/movies/[movieId]/MovieClient";
 import { useState, useEffect, SetStateAction } from "react";
 
@@ -15,8 +15,7 @@ const Timer = ({
       setTimeLeft((prevTime) => {
         if (prevTime <= 0) {
           clearInterval(countdown);
-          if(setStep){
-
+          if (setStep) {
             setStep(STEPS.DATE_SELECTION);
           }
           return 0;
@@ -38,6 +37,13 @@ const Timer = ({
   };
 
   const { minutes, seconds } = getTimeLeft();
+  useEffect(() => {
+    if (minutes <= 0 && seconds <= 0) {
+      if (setStep) {
+        return setStep(STEPS.DATE_SELECTION);
+      }
+    }
+  }, [minutes, seconds, setStep]);
   return (
     <div className="flex items-center justify-center text-red font-semibold gap-2">
       <div className="w-fit py-1 px-2 bg-[#553333] rounded-lg">

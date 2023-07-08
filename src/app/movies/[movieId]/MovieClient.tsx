@@ -368,9 +368,13 @@ const MovieClient = ({
                   </div>
                   {/* Data Booking Info */}
                   <div className="text-white font-medium  text-sm lg:text-xl flex flex-col gap-3">
-                    <p>{selectedSeats.map((item) => `${item},`)}</p>
                     <p>
-                      Rp. {movie.ticket_price}
+                      {selectedSeats.map((item, index) =>
+                        index === selectedSeats.length - 1 ? item : item + ", "
+                      )}
+                    </p>
+                    <p>
+                      Rp. {movie.ticket_price.toLocaleString("id-Id")}
                       <span className="text-gray">
                         {" "}
                         x {selectedSeats.length}
@@ -398,7 +402,7 @@ const MovieClient = ({
                 Total Balance
               </p>
               <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {currentUser?.balance || 0}
+                Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
               </p>
             </div>
             <div className="flex justify-between lg:px-10 2xl:px-20">
@@ -406,7 +410,10 @@ const MovieClient = ({
                 Total Payment
               </p>
               <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {selectedSeats.length * movie.ticket_price}
+                Rp.{" "}
+                {(selectedSeats.length * movie.ticket_price).toLocaleString(
+                  "id-Id"
+                )}
               </p>
             </div>
             <div className="flex mx-auto gap-7">
