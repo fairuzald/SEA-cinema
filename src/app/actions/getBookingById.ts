@@ -17,6 +17,8 @@ export default async function getBookingById(id: string) {
         location: true,
       },
     });
+    console.log(transactions?.userId)
+    console.log(new Date())
     if (currentUser.id !== transactions?.userId) {
       throw new Error("Invalid user access");
     }

@@ -78,6 +78,13 @@ const MovieClient = ({
   const isFillAll =
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
+  const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
+    const [hours, minutes] = timeString.split(":");
+    selectedDate.setHours(Number(hours), Number(minutes), 0, 0);
+
+    // Mengonversi objek Date menjadi string dalam format ISO
+    return selectedDate.toISOString();
+  };
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
@@ -110,35 +117,41 @@ const MovieClient = ({
       currentUser?.balance &&
       selectedSeats.length * movie.ticket_price < currentUser?.balance
     ) {
-      try {
-        const response = await fetch(`/api/booking`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
-          body: JSON.stringify({
-            movieTitle: movie.title,
-            locationId: selectedTime.id,
-            watchDate: selectedDate?.toISOString(),
-            watchTime: selectedTime.time,
-            totalPrice: selectedSeats.length * movie.ticket_price,
-            seats: selectedSeats,
-          }),
-        });
+      if (selectedSeats && selectedTime && selectedDate) {
+        try {
+          const response = await fetch(`/api/booking`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
+            body: JSON.stringify({
+              movieTitle: movie.title,
+              locationId: selectedTime.id,
+              watchDate: formattingISODateAPI(selectedTime.time, selectedDate),
+              watchTime: selectedTime.time,
+              totalPrice: selectedSeats.length * movie.ticket_price,
+              seats: selectedSeats, 
+            }),
+          });
 
-        if (response.ok) {
-          router.refresh();
-          toast.success(`Booking success`);
-          setStep(STEPS.DATE_SELECTION);
-          return router.push("/booking?active");
-        } else {
-          setStep(STEPS.DATE_SELECTION);
-          throw new Error("Request failed");
+          if (response.ok) {
+            router.refresh();
+            toast.success(`Booking success`);
+            setStep(STEPS.DATE_SELECTION);
+            return router.push("/booking?active");
+          } else {
+            setStep(STEPS.DATE_SELECTION);
+            throw new Error("Request failed");
+          }
+        } catch (err) {
+          toast.error("Something went wrong");
+          return setStep(STEPS.DATE_SELECTION);
         }
-      } catch (err) {
-        toast.error("Something went wrong");
-        return setStep(STEPS.DATE_SELECTION);
+      }
+      else{
+        toast.error("Fill your data first");
+        return setStep(STEPS.DATE_SELECTION)
       }
     } else {
       toast.error("Your balance is not enough, Top Up First");
