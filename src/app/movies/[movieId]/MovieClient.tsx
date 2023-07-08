@@ -184,7 +184,7 @@ const MovieClient = ({
                 height={1080}
                 className="object-center object-cover w-full h-full sm:w-[350px] lg:w-[400px] md:h-[550px] xl:w-[518px] xl:h-[632px] rounded-xl"
               />
-              {isLaunch && !isExpired && (
+              {isLaunch && !isExpired && currentUser&& (
                 <>
                   <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
                     Select schedule and location and then click below to order
@@ -230,7 +230,7 @@ const MovieClient = ({
                   {movie.description}
                 </p>
               </div>
-              {isLaunch ? (
+              {currentUser ? isLaunch ? (
                 isExpired ? (
                   <div className="flex flex-col flex-auto gap-2 w-full">
                     <p className="text-red text-3xl font-bold ">
@@ -270,9 +270,9 @@ const MovieClient = ({
                     Not Launching Yet
                   </p>
                 </div>
-              )}
+              ):""}
             </div>
-            {isLaunch && !isExpired && (
+            {isLaunch && !isExpired && currentUser&& (
               <>
                 <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
                   <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
