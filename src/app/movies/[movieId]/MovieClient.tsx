@@ -16,7 +16,6 @@ import {
   getDate,
   getMonth,
 } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -80,14 +79,11 @@ const MovieClient = ({
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
   const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
-    const localDate = new Date(selectedDate);
     const [hours, minutes] = timeString.split(":");
-    localDate.setHours(Number(hours), Number(minutes), 0, 0);
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const zonedDate = utcToZonedTime(localDate, timeZone);
+    selectedDate.setHours(Number(hours), Number(minutes), 0, 0);
 
     // Mengonversi objek Date menjadi string dalam format ISO
-    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+    return selectedDate.toISOString();
   };
 
   function onNext() {
@@ -136,7 +132,7 @@ const MovieClient = ({
               watchDate: formattingISODateAPI(selectedTime.time, selectedDate),
               watchTime: selectedTime.time,
               totalPrice: selectedSeats.length * movie.ticket_price,
-              seats: selectedSeats, 
+              seats: selectedSeats,
             }),
           });
 
@@ -153,10 +149,9 @@ const MovieClient = ({
           toast.error("Something went wrong");
           return setStep(STEPS.DATE_SELECTION);
         }
-      }
-      else{
+      } else {
         toast.error("Fill your data first");
-        return setStep(STEPS.DATE_SELECTION)
+        return setStep(STEPS.DATE_SELECTION);
       }
     } else {
       toast.error("Your balance is not enough, Top Up First");
@@ -289,15 +284,20 @@ const MovieClient = ({
                     </Button>
                   </div>
                 </div>
-                <SeatModal
-                  selectedSeats={selectedSeats}
-                  setSelectedSeats={setSelectedSeats}
-                  step={step}
-                  setStep={setStep}
-                  requirement={isFillAll}
-                  totalPrice={selectedSeats.length * movie.ticket_price}
-                  disabledSeats={disabledSeats}
-                />
+                {selectedDate && selectedTime && (
+                  <SeatModal
+                    selectedSeats={selectedSeats}
+                    setSelectedSeats={setSelectedSeats}
+                    step={step}
+                    setStep={setStep}
+                    requirement={isFillAll}
+                    totalPrice={selectedSeats.length * movie.ticket_price}
+                    disabledSeats={disabledSeats}
+                    selectedDate={format(selectedDate, 'd MMMM yyyy')}
+                    selectedTime={selectedTime.time}
+                    mall={selectedTime.mall}
+                  />
+                )}
               </>
             )}
           </div>

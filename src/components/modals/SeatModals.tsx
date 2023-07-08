@@ -16,6 +16,9 @@ const SeatModal = ({
   requirement,
   totalPrice,
   disabledSeats,
+  mall,
+  selectedDate,
+  selectedTime,
 }: {
   selectedSeats: string[];
   setSelectedSeats: React.Dispatch<SetStateAction<string[]>>;
@@ -24,6 +27,9 @@ const SeatModal = ({
   requirement: boolean;
   totalPrice: number;
   disabledSeats?: string[];
+  mall: string;
+  selectedDate: string;
+  selectedTime: string;
 }) => {
   function onNext() {
     if (step === STEPS.SEAT_SELECTION) {
@@ -44,9 +50,9 @@ const SeatModal = ({
         <ArrowIcon style="fill-white w-5 h-5 lg:w-7 lg:h-7" />
       </button>
       <div className="flex flex-col">
-        <p className="text-white font-bold text-base lg:text-xl">XX7 Mall A</p>
+        <p className="text-white font-bold text-base lg:text-xl">{mall}</p>
         <p className="text-white font-medium text-xs lg:text-base">
-          06 Jul | 15.50
+          {selectedDate} | {selectedTime}
         </p>
       </div>
     </div>

@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentuser";
 import { NextResponse } from "next/server";
@@ -16,13 +15,20 @@ export async function POST(req: Request) {
 
   let bookingNumber = generateUniqueBookingNumber();
 
-  // Generate unique booking number
+  // Generate unique booking number manually
   async function generateUniqueBookingNumber() {
-    const newBookingNumber = uuidv4();
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const length = Math.floor(Math.random() * 3) + 6; // Random length between 6 and 8
+    let bookingNumber = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      bookingNumber += characters[randomIndex];
+    }
 
     // Check if booking number already exists in the database
     const existingTransaction = await prisma.transaction.findUnique({
-      where: { bookingNumber: newBookingNumber },
+      where: { bookingNumber },
     });
 
     if (existingTransaction) {
@@ -30,9 +36,8 @@ export async function POST(req: Request) {
       return generateUniqueBookingNumber();
     }
 
-    return newBookingNumber;
+    return bookingNumber;
   }
-
 
   // Update user balance
   const updatedUser = await prisma.user.update({
@@ -56,9 +61,9 @@ export async function POST(req: Request) {
       totalPrice,
       seat: seats,
       status: "Success",
-      createdAt: (new Date()).toISOString(),
+      createdAt: new Date().toISOString(),
     },
   });
 
-  return NextResponse.json({ transaction });
+  return NextResponse.json({ transaction, updatedUser });
 }
