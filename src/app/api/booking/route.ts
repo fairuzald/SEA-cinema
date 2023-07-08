@@ -56,7 +56,8 @@ export async function POST(req: Request) {
       watchTime,
       totalPrice,
       seat: seats,
-      status: "success",
+      status: "Success",
+      createdAt: (new Date()).toISOString(),
     },
   });
 
