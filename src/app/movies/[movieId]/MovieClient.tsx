@@ -87,7 +87,7 @@ const MovieClient = ({
     const zonedDate = utcToZonedTime(localDate, timeZone);
 
     // Mengonversi objek Date menjadi string dalam format ISO
-    return format(zonedDate, "yyyy-MM-dd | HH:mm:ss.SSSxxx");
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
   };
 
   function onNext() {
