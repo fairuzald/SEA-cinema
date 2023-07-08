@@ -14,7 +14,10 @@ export default async function MovieDetailsPage({
 }) {
   const { id } = params;
   const booking = await getBookingById(id);
-  const formattedDate = (dateTime: Date) => {
+  const formattedDate = (dateTime: Date, isTime?: boolean) => {
+    if(isTime) {
+      return format(new Date(dateTime), "EEEE, dd MMM yyyy | HH:MM");
+    }
     return format(new Date(dateTime), "EEEE, dd MMM yyyy");
   };
   return (
@@ -66,12 +69,14 @@ export default async function MovieDetailsPage({
             {/* Placeholder data */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
               <p>Code Booking </p>
+              <p>Booking DateTime </p>
               <p>{booking.seat.length} Ticket</p>
               <p>Each Seat</p>
             </div>
             {/* Data Booking Info */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
               <p>{booking.id}</p>
+              <p>{formattedDate(booking.createdAt, true)}</p>
               <p>{booking.seat.map((item) => item + ",")}</p>
               <p>
                 Rp {booking.movie.ticket_price}

@@ -3,7 +3,7 @@ import prisma from "@/app/libs/prismadb";
 export default async function getBooking(userId: string) {
   try {
     if (!userId) {
-      return []
+      return [];
     }
 
     const transactions = await prisma.transaction.findMany({
@@ -13,6 +13,9 @@ export default async function getBooking(userId: string) {
       include: {
         movie: true,
         location: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
