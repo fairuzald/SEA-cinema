@@ -272,7 +272,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white font-bold border-b text-lg lg:text-xl border-gray py-2">
+              <div className="text-white font-bold border-b text-lg text-center items-center justify-center lg:text-xl border-gray py-2">
                 <p>Edit Profile</p>
               </div>
               {/* Edit content */}
@@ -320,7 +320,7 @@ const ProfileClient = ({
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button color="red" onClick={updateUser}>
                   Confirm Changes
                 </Button>
@@ -332,7 +332,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Top up</p>
               </div>
               {/* Edit content */}
@@ -390,7 +390,7 @@ const ProfileClient = ({
                   <p className="text-red text-sm lg:text-base"></p>
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button
                   color="red"
                   size="large"
@@ -400,7 +400,7 @@ const ProfileClient = ({
                 </Button>
               </div>
               {previous &&
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button
                   color="red"
                   size="large"
@@ -418,7 +418,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Share Balance</p>
               </div>
               {/* Edit content */}
@@ -485,7 +485,7 @@ const ProfileClient = ({
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button color="red" size="large" onClick={handleSubmitShare}>
                   Share
                 </Button>
@@ -497,7 +497,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Withdrawal</p>
               </div>
               {/* Edit content */}
@@ -560,7 +560,7 @@ const ProfileClient = ({
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button
                   color="red"
                   size="large"

@@ -2,13 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import SearchBar from "./SearchBar";
 import Button from "./Button";
 import Avatar from "./Avatar";
 import HamburgerIcon from "./icons/HamburgerIcon";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { signOut, useSession } from "next-auth/react";
-import { User } from "@prisma/client";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { data: currentUser } = useSession();
@@ -16,7 +15,7 @@ const Navbar = () => {
   const LoginModal = useLoginModal();
   // const user = getCurrentUser()
   const { data: session } = useSession();
-
+  const pathname = usePathname();
   return (
     <nav className="fixed z-20 inset-0 flex w-full h-[60px] lg:h-[100px] bg-soft-black">
       {/* container */}
@@ -52,32 +51,58 @@ const Navbar = () => {
             } transition duration-300 xl:flex-row bg-black xl:pointer-events-auto xl:bg-transparent absolute top-16 pt-2.5 pb-5 px-10 md:px-14 xl:p-0 xl:scale-100 lg:px-16 xl:opacity-100 rounded-xl text-center right-6 md:right-14 lg:top-24 xl:static xl:flex items-center justify-center gap-7 text-sm xl:text-lg`}
           >
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/movies" className="text-white font-bold">
+              <Link
+                href="/movies"
+                className={`${
+                  pathname.split("/").includes("movies")
+                    ? "text-red"
+                    : "text-white"
+                } font-bold`}
+              >
                 Movies
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/booking" className="text-white font-bold">
+              <Link
+                href="/booking"
+                className={`${
+                  pathname.split("/").includes("booking")
+                    ? "text-red"
+                    : "text-white"
+                } font-bold`}
+              >
                 Booking
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/transactions?topup" className="text-white font-bold">
+              <Link
+                href="/transactions?topup"
+                className={`${
+                  pathname.split("/").includes("transactions")
+                    ? "text-red"
+                    : "text-white"
+                } font-bold`}
+              >
                 Transaction
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/profile?topup" className="text-white font-bold">
-                Topup
-              </Link>
-            </li>
-            <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/watchlist" className="text-white font-bold">
+              <Link
+                href="/watchlist"
+                className={`${
+                  pathname === "/watchlist" ? "text-red" : "text-white"
+                } font-bold`}
+              >
                 Watchlist
               </Link>
             </li>
             <li className="py-2.5 md:py-3 lg:py-4">
-              <Link href="/profile?dashboard" className="text-white font-bold">
+              <Link
+                href="/profile?dashboard"
+                className={`${
+                  pathname === "/profile" ? "text-red" : "text-white"
+                } font-bold`}
+              >
                 Profile
               </Link>
             </li>

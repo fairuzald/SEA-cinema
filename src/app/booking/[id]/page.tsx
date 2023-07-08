@@ -1,11 +1,4 @@
-import getBooking from "@/app/actions/getBooking";
 import getBookingById from "@/app/actions/getBookingById";
-import getCurrentUser from "@/app/actions/getCurrentuser";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import Button from "@/components/Button";
-import { format } from "date-fns";
-import Image from "next/image";
-import { toast } from "react-hot-toast";
 import DetailsBookingClient from "./DetailsBookingClient";
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
