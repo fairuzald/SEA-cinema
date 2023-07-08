@@ -66,7 +66,7 @@ const MovieClient = ({
     const month = date.toLocaleString("en-US", { month: "long" });
     const day = date.getDate();
 
-    return `${month} ${day}, ${year}`;
+    return `${day} ${month} ${year}`;
   }
   const today = new Date();
   const releaseDate = new Date(movie.release_date);
@@ -184,7 +184,7 @@ const MovieClient = ({
                 height={1080}
                 className="object-center object-cover w-full h-full sm:w-[350px] lg:w-[400px] md:h-[550px] xl:w-[518px] xl:h-[632px] rounded-xl"
               />
-              {isLaunch && !isExpired && currentUser&& (
+              {isLaunch && !isExpired && currentUser && (
                 <>
                   <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
                     Select schedule and location and then click below to order
@@ -230,49 +230,53 @@ const MovieClient = ({
                   {movie.description}
                 </p>
               </div>
-              {currentUser ? isLaunch ? (
-                isExpired ? (
+              {currentUser ? (
+                isLaunch ? (
+                  isExpired ? (
+                    <div className="flex flex-col flex-auto gap-2 w-full">
+                      <p className="text-red text-2xl lg:text-3xl font-bold ">
+                        Not Show Anymore
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-2 w-full">
+                        <h2 className="font-bold text-lg lg:text-xl text-red">
+                          Schedule
+                        </h2>
+                        <DateSelection
+                          setSelectedDate={setSelectedDate}
+                          selectedDate={selectedDate}
+                          length={lengthDate}
+                        />
+                      </div>
+                      {/* Location */}
+                      <div className="flex flex-col gap-4 w-full">
+                        <h2 className="font-bold text-lg lg:text-xl text-red">
+                          Location
+                        </h2>
+                        <Location
+                          price={movie.ticket_price}
+                          selectedTime={selectedTime}
+                          setSelectedTime={setSelectedTime}
+                          data={locations}
+                          selectedDate={selectedDate}
+                        ></Location>
+                      </div>
+                    </>
+                  )
+                ) : (
                   <div className="flex flex-col flex-auto gap-2 w-full">
-                    <p className="text-red text-3xl font-bold ">
-                      Not Show Anymore
+                    <p className="text-white text-2xl lg:text-3xl font-bold ">
+                      Not Launching Yet
                     </p>
                   </div>
-                ) : (
-                  <>
-                    <div className="flex flex-col gap-2 w-full">
-                      <h2 className="font-bold text-lg lg:text-xl text-red">
-                        Schedule
-                      </h2>
-                      <DateSelection
-                        setSelectedDate={setSelectedDate}
-                        selectedDate={selectedDate}
-                        length={lengthDate}
-                      />
-                    </div>
-                    {/* Location */}
-                    <div className="flex flex-col gap-4 w-full">
-                      <h2 className="font-bold text-lg lg:text-xl text-red">
-                        Location
-                      </h2>
-                      <Location
-                        price={movie.ticket_price}
-                        selectedTime={selectedTime}
-                        setSelectedTime={setSelectedTime}
-                        data={locations}
-                        selectedDate={selectedDate}
-                      ></Location>
-                    </div>
-                  </>
                 )
               ) : (
-                <div className="flex flex-col flex-auto gap-2 w-full">
-                  <p className="text-white text-3xl font-bold ">
-                    Not Launching Yet
-                  </p>
-                </div>
-              ):""}
+                ""
+              )}
             </div>
-            {isLaunch && !isExpired && currentUser&& (
+            {isLaunch && !isExpired && currentUser && (
               <>
                 <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
                   <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
