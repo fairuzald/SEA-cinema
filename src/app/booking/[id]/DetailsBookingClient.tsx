@@ -81,7 +81,7 @@ const DetailsBookingClient = ({
         {/* Bookers Info */}
 
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
-          <p className="text-red font-semibold text-2xl">
+          <p className="text-red font-semibold text-xl lg:text-2xl">
             Booking User Information
           </p>
           <div className="flex  gap-x-20 items-center">
@@ -101,7 +101,7 @@ const DetailsBookingClient = ({
         </div>
         {/* Booking Info */}
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
-          <p className="text-red font-semibold text-2xl">Booking Information</p>
+          <p className="text-red font-semibold text-xl lg:text-2xl">Booking Information</p>
           <div className="flex  gap-x-20 items-center">
             {/* Placeholder data */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
@@ -128,7 +128,7 @@ const DetailsBookingClient = ({
         </div>
 
         {/* Payment Status */}
-        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-20 flex  items-center">
+        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 gap-20 flex  items-center">
           {/* Placeholder data */}
           <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2">
             <p>Total Payment</p>

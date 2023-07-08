@@ -20,17 +20,17 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
   );
   const renderBookings = (bookings: any[]) => {
     return bookings.length > 0 ? (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4 md:gap-7 lg:gap-8">
         {bookings.map((data: any) => (
           <CardTransaction key={data.id} data={data} />
         ))}
       </div>
     ) : (
-      <div className="flex flex-col flex-auto text-white text-3xl gap-10 font-bold items-center justify-center w-full text-center h-[400px]">
+      <div className="flex flex-col flex-auto text-white text-2xl lg:text-3xl gap-10 font-bold items-center justify-center w-full text-center h-[400px]">
         No Data Found
         <Link href="/booking">
           <Button color="trans-red" size="large">
-            Clear Filterd
+            Clear Filter
           </Button>
         </Link>
       </div>
