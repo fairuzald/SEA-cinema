@@ -2,6 +2,7 @@ import getBookingById from "@/app/actions/getBookingById";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import { format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import Image from "next/image";
 export const dynamicParams = true;
 export const dynamic = "force-dynamic";
@@ -14,11 +15,18 @@ export default async function MovieDetailsPage({
 }) {
   const { id } = params;
   const booking = await getBookingById(id);
-  const formattedDate = (dateTime: Date, isTime?: boolean) => {
-    if(isTime) {
-      return format(new Date(dateTime), "EEEE, dd MMM yyyy | HH:MM");
-    }
+  const formattedDate = (dateTime: Date) => {
     return format(new Date(dateTime), "EEEE, dd MMM yyyy");
+  };
+  const formatUTCDate = (date: Date) => {
+    const localDate = new Date(date);
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Convert the local date to a specific time zone
+    const zonedDate = utcToZonedTime(localDate, timeZone);
+
+    // Format the zoned date as per your requirement
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
   };
   return (
     <main className="w-full min-h-screen overflow-hidden flex bg-background">
@@ -76,7 +84,7 @@ export default async function MovieDetailsPage({
             {/* Data Booking Info */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
               <p>{booking.id}</p>
-              <p>{formattedDate(booking.createdAt, true)}</p>
+              <p>{formatUTCDate(booking.createdAt)}</p>
               <p>{booking.seat.map((item) => item + ",")}</p>
               <p>
                 Rp {booking.movie.ticket_price}

@@ -33,7 +33,6 @@ export async function POST(req: Request) {
     return newBookingNumber;
   }
 
-  // Perform validation or authorization process as needed
 
   // Update user balance
   const updatedUser = await prisma.user.update({
