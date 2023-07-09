@@ -51,19 +51,15 @@ To use the SEA Cinema web application, follow these steps:
 1. Clone the repository: `git clone https://github.com/fairuzald/SEA-Cinema.git`
 2. Install the necessary dependencies:
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
-# or
-pnpm dev
+yarn install
 ```
 3. Start the application run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
 ```
 4. Access the application through your web browser at `http://localhost:3000`
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
