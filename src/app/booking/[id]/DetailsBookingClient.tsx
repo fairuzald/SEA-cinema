@@ -37,14 +37,10 @@ const DetailsBookingClient = ({
       return toast.error("Something went wrong");
     }
   };
-  const { data: session } = useSession();
-  if (!session) {
-    return notFound();
-  }
   return (
     <div className="w-full px-5 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {/* Breadcrumbs */}
-      <Breadcrumbs />
+      <Breadcrumbs currentText={booking.bookingNumber}/>
       <div className="w-full flex flex-col justify-center rounded-2xl border-gray border">
         {/* Movies Info */}
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-8 lg:gap-14 2xl:gap-20 flex flex-col lg:flex-row justify-between items-center">

@@ -23,7 +23,7 @@ export default async function getBookingById(params: { id?: string }) {
       include: {
         movie: true,
         location: true,
-        user: true
+        user: true,
       },
     });
 
@@ -32,7 +32,7 @@ export default async function getBookingById(params: { id?: string }) {
       throw new Error("Invalid user access");
     }
     return transactions;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error);
   }
 }
