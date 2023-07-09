@@ -8,6 +8,12 @@ import Link from "next/link";
 import Button from "@/components/Button";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
+
+// Generate metadata title
+export const metadata = {
+  title: "Watchlist Page"
+}
+
 // Movies Page
 export default async function Page() {
   const movies = await getFavoriteMovies();

@@ -69,6 +69,7 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
             </p>
           </Link>
         </div>
+      
         <div className="flex flex-col w-full gap-2 lg:gap-4 px-5 md:px-10 lg:px-14 xl:px-16 2xl:px-20 pt-10 pb-10">
           {params.has("active")
             ? renderUpcomingBookings

@@ -10,7 +10,10 @@ import { NextAuthProvider } from "@/components/NextAuthProvider";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "SEA Cinema",
+  title: {
+    default:"SEA Cinema",
+    template: "%s | SEA Cinema",
+  },
   description: "SEA cinem a movie booking app",
 };
 

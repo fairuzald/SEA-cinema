@@ -6,6 +6,11 @@ import getCurrentUser from "../actions/getCurrentuser";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 
+// Generate metadata title
+export const metadata = {
+  title: "Booking Page"
+}
+
 const BookingPage = async () => {
   const currentUser = await getCurrentUser();
   if (!currentUser) {

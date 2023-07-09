@@ -4,8 +4,12 @@ import React from "react";
 import getMovies from "../actions/getMovies";
 import getCurrentUser from "../actions/getCurrentuser";
 import { SafeMovie } from "../types";
-
 export const dynamic = "force-dynamic";
+
+// Generate metadata title
+export const metadata = {
+  title: "Movies Page"
+}
 
 // Movies Page
 export default async function Page() {

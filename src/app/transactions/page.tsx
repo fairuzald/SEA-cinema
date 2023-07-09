@@ -8,7 +8,9 @@ import getTopUp from "../actions/getTopup";
 import getWithdrawal from "../actions/getWithdrawal";
 import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
-
+export const metadata = {
+  title: "Transactions"
+}
 const TransactionsPage = async () => {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
