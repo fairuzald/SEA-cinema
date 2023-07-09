@@ -1,16 +1,26 @@
 "use client";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
-import React from "react";
+import React, { useState } from "react";
 import { Transaction } from "@prisma/client";
 import CardTransaction from "@/components/CardTransaction";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { isAfter, isBefore } from "date-fns";
-
+import { format, isAfter, isBefore } from "date-fns";
+import TextInput from "@/components/TextInput";
+import CrossIcon from "@/components/icons/CrossIcon";
+import Calendar from "@/components/icons/Calendar";
+import type { Range } from "react-date-range";
+const initialDateRange = {
+  startDate: new Date(),
+  endDate: new Date(),
+  key: "selection",
+};
 const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
   const params = useSearchParams();
   const today = new Date();
+
+  const [codeBooking, setCodeBooking] = useState("")
   const upcomingBookings = bookings?.filter((data: any) =>
     isAfter(new Date(data.watchDate), today)
   );
@@ -71,11 +81,19 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
         </div>
       
         <div className="flex flex-col w-full gap-2 lg:gap-4 px-5 md:px-10 lg:px-14 xl:px-16 2xl:px-20 pt-10 pb-10">
-          {params.has("active")
+          <div className="flex flex-col gap-3 mb-4">
+      <p className="font-semibold text-lg lg:text-2xl text-red">Find Your Code Booking</p>
+      <div className="flex gap-4">
+            <TextInput text={codeBooking} setText={setCodeBooking} type="text" placeholder="Code Booking" />
+        
+            <button onClick={()=>{setCodeBooking("")}}><CrossIcon style="w-5 h-5 fill-white"/></button>
+      </div>
+          </div>
+          {!codeBooking? params.has("active")
             ? renderUpcomingBookings
             : params.has("finish")
             ? renderPastBookings
-            : renderBookings(bookings)}
+            : renderBookings(bookings):renderBookings(bookings.filter(booking => booking.bookingNumber.includes( codeBooking)))}
         </div>
       </div>
     </div>

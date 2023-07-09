@@ -31,7 +31,7 @@ const TextInput = ({
       className={`flex gap-4 ${
         fullwidth
           ? "w-full bg-gray text-black "
-          : "w-[140px] lg:w-[200px] bg-[#d9d9d9] text-[#3d3d3d]"
+          : "w-[140px] lg:w-[250px] bg-[#d9d9d9] text-[#3d3d3d]"
       } justify-between  items-center rounded-md py-2 px-3`}
     >
       <input
