@@ -121,7 +121,7 @@ const LoginModals = () => {
     <p className="flex items-center justify-center text-sm lg:text-base w-full text-white font-medium">
       First time using SEA Cinema?{" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
-        Sign In
+        Sign Up
       </button>
     </p>
   );

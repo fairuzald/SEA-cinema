@@ -1,34 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">Welcome to SEA Cinema - Movie Ticket Booking Web Application 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+</p>
 
-## Getting Started
+> SEA Cinema is a web application designed to facilitate the booking of movie tickets online. This platform offers a seamless and convenient experience for users to browse movies, view movie details, make transactions, manage bookings, update their profiles, top up their balances, withdraw funds, and share balances with friends. With a user-friendly interface and a comprehensive set of features, SEA Cinema aims to revolutionize the way moviegoers interact with ticket booking services.
 
-First, run the development server:
+## Install
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+```sh
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+yarn run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Author
 
-## Learn More
+👤 **Moh Fairuz Alauddin Yahya**
 
-To learn more about Next.js, take a look at the following resources:
+* Website: fairuzald.com
+* Github: [@fairuzald](https://github.com/fairuzald)
+* LinkedIn: [@in.com\/in\/moh-fairuz-alauddin-yahya-b793b5232\/](https://linkedin.com/in/in.com\/in\/moh-fairuz-alauddin-yahya-b793b5232\/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Show your support
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Give a ⭐️ if this project helped you!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

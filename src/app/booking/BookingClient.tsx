@@ -58,42 +58,39 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
         <div className="flex border-b border-gray justify-center md:justify-start items-end gap-10 pt-4 md:px-10">
           <Link href="?active">
             <p
-              className={`${
-                params.has("active")
-                  ? "text-red border  border-red"
-                  : "text-white"
-              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
+              className={`${params.has("active")
+                ? "text-red border  border-red"
+                : "text-white"
+                } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
             >
               Active
             </p>
           </Link>
           <Link href="?finish">
             <p
-              className={`${
-                params.has("finish")
-                  ? "text-red border  border-red"
-                  : "text-white"
-              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
+              className={`${params.has("finish")
+                ? "text-red border  border-red"
+                : "text-white"
+                } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
             >
               Finish
             </p>
           </Link>
         </div>
-      
+
         <div className="flex flex-col w-full gap-2 lg:gap-4 px-5 md:px-10 lg:px-14 xl:px-16 2xl:px-20 pt-10 pb-10">
           <div className="flex flex-col gap-3 mb-4">
-      <p className="font-semibold text-lg lg:text-2xl text-red">Find Your Code Booking</p>
-      <div className="flex gap-4">
-            <TextInput text={codeBooking} setText={setCodeBooking} type="text" placeholder="Code Booking" />
-        
-            <button onClick={()=>{setCodeBooking("")}}><CrossIcon style="w-5 h-5 fill-white"/></button>
-      </div>
+            <p className="font-semibold text-lg lg:text-2xl text-red">Find Your Code Bookin g</p>
+            <div className="flex gap-4">
+              <TextInput text={codeBooking} setText={setCodeBooking} type="text" placeholder="Code Booking" />
+              <button onClick={() => { setCodeBooking("") }}><CrossIcon style="w-5 h-5 fill-white" /></button>
+            </div>
           </div>
-          {!codeBooking? params.has("active")
+          {!codeBooking ? params.has("active")
             ? renderUpcomingBookings
             : params.has("finish")
-            ? renderPastBookings
-            : renderBookings(bookings):renderBookings(bookings.filter(booking => booking.bookingNumber.includes( codeBooking)))}
+              ? renderPastBookings
+              : renderBookings(bookings) : renderBookings(bookings.filter(booking => booking.bookingNumber.includes(codeBooking)))}
         </div>
       </div>
     </div>

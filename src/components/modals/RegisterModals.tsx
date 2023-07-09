@@ -8,6 +8,7 @@ import CrossIcon from "../icons/CrossIcon";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import TextFields from "../TextFields";
+import { signIn } from "next-auth/react";
 
 const RegisterModals = () => {
   const registerModal = useRegisterModal();
@@ -30,11 +31,8 @@ const RegisterModals = () => {
   // Form submission handler
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-
     const parsedAge = parseInt(data.age, 10); // Parse age as an integer
-
     const requestData = { ...data, age: parsedAge }; // Update age value with parsed integer
-
     fetch("/api/user", {
       method: "POST",
       body: JSON.stringify(requestData),
@@ -42,6 +40,8 @@ const RegisterModals = () => {
       .then(() => {
         registerModal.onClose();
         toast.success("Your data was registered");
+        signIn("credentials", { username, password });
+
       })
       .catch((err) => toast.error("Failed to register your data"))
       .finally(() => setIsLoading(false));
@@ -132,7 +132,7 @@ const RegisterModals = () => {
     <p className="flex items-center justify-center w-full text-white text-sm lg:text-base font-medium">
       Already have an account? {" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
-        Sign Up
+        Sign In
       </button>
     </p>
   );
