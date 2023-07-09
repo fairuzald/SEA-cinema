@@ -3,8 +3,9 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import { Transaction } from "@prisma/client";
 import { format } from "date-fns";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-hot-toast";
 
@@ -36,6 +37,10 @@ const DetailsBookingClient = ({
       return toast.error("Something went wrong");
     }
   };
+  const { data: session } = useSession();
+  if (!session) {
+    return notFound();
+  }
   return (
     <div className="w-full px-5 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {/* Breadcrumbs */}
@@ -101,7 +106,9 @@ const DetailsBookingClient = ({
         </div>
         {/* Booking Info */}
         <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
-          <p className="text-red font-semibold text-xl lg:text-2xl">Booking Information</p>
+          <p className="text-red font-semibold text-xl lg:text-2xl">
+            Booking Information
+          </p>
           <div className="flex  gap-x-20 items-center">
             {/* Placeholder data */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
@@ -116,7 +123,7 @@ const DetailsBookingClient = ({
               <p>{formattedDate(booking.createdAt)}</p>
               <p>
                 {booking.seat.map((item: string, index: number) =>
-                  index !== booking.seat.length-1 ? item + ", " : item
+                  index !== booking.seat.length - 1 ? item + ", " : item
                 )}
               </p>
               <p>
