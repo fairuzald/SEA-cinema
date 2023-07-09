@@ -50,7 +50,7 @@ Sharing the SEA Cinema experience with friends is made easy through the Share Ba
 ## Installation and Usage
 To use the SEA Cinema web application, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/SEA-Cinema.git`
+1. Clone the repository: `git clone https://github.com/fairuzald/SEA-Cinema.git`
 2. Install the necessary dependencies:
 ```bash
 npm run dev
