@@ -76,7 +76,7 @@ const LoginModals = () => {
         <CrossIcon style="w-4 h-4 fill-white" />
       </button>
       <p className="text-white font-bold text-base lg:text-lg flex-1 flex items-center justify-center">
-        Register
+        Login
       </p>
     </div>
   );
@@ -85,9 +85,9 @@ const LoginModals = () => {
   const body = (
     <div className="flex flex-col gap-3 lg:gap-5">
       <h4 className="text-lg lg:text-xl font-semibold text-white">
-        Welcome to SEA CINEMA
+        Welcome back to SEA CINEMA
       </h4>
-      <p className="text-white text-sm lg:text-base">Create an account</p>
+      <p className="text-white text-sm lg:text-base">Fill out your username and password to sign in</p>
 
       <TextFields
         type="text"
@@ -119,7 +119,7 @@ const LoginModals = () => {
   );
   const footer = (
     <p className="flex items-center justify-center text-sm lg:text-base w-full text-white font-medium">
-      Already have an account?{" "}
+      First time using SEA Cinema?{" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
         Sign In
       </button>

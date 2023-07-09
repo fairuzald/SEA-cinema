@@ -130,7 +130,7 @@ const RegisterModals = () => {
   );
   const footer = (
     <p className="flex items-center justify-center w-full text-white text-sm lg:text-base font-medium">
-      Create an account{" "}
+      Already have an account? {" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
         Sign Up
       </button>
