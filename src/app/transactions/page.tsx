@@ -11,13 +11,13 @@ export const dynamic = "force-dynamic";
 
 const TransactionsPage = async () => {
   const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return notFound();
+  }
   const receivedBalances = await getReceivedBalance(currentUser?.id as string);
   const sharedBalances = await getSharedBalance(currentUser?.id as string);
   const topUpBalances = await getTopUp(currentUser?.id as string);
   const withdrawalBalances = await getWithdrawal(currentUser?.id as string);
-  if (!currentUser) {
-    return notFound();
-  }
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}

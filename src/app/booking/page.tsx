@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 
 const BookingPage = async () => {
   const currentUser = await getCurrentUser();
-  const bookings = await getBooking(currentUser?.id as string);
-  if(!currentUser){
+  if (!currentUser) {
     return notFound();
   }
+  const bookings = await getBooking(currentUser?.id as string);
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
