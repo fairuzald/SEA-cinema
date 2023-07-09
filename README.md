@@ -88,7 +88,7 @@ Please ensure you have Node.js and npm installed on your system before proceedin
 
 ## Run App & Deploment on Vercel
 To use Just Do List, go to
-[https://just-do-list.vercel.app/](https://just-do-list.vercel.app/).
+[https://sea-cinema.fairuzald.com/](https://sea-cinema.fairuzald.com/).
 
 ## Feedback and Contributions
 
