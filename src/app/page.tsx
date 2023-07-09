@@ -4,6 +4,7 @@ import Carousel from "@/components/Carousel";
 import Image from "next/image";
 import Link from "next/link";
 import getCurrentUser from "./actions/getCurrentuser";
+export const dynamic = "force-dynamic"
 
 // Function to fetch movies data from the API
 async function getMovies() {
@@ -36,7 +37,6 @@ export default async function Home() {
     releaseDate.setHours(0, 0, 0, 0);
     return releaseDate >= fourWeeksAgo && releaseDate <= currentDate;
   });
-  const currrentUser = await getCurrentUser();
   return (
     <main className="text-red-500 bg-background min-h-screen">
       {/* Background section */}
