@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { ChangeEvent, SetStateAction } from "react";
 
 const TextInput = ({
   placeholder,
@@ -6,7 +6,8 @@ const TextInput = ({
   disabled,
   text,
   setText,
-  fullwidth
+  fullwidth,
+  isDigit,
 }: {
   placeholder?: string;
   type: string;
@@ -14,11 +15,27 @@ const TextInput = ({
   text: string;
   setText: React.Dispatch<SetStateAction<string>>;
   fullwidth?: boolean;
+  isDigit?: boolean;
 }) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    if (isDigit && /^\d+$/.test(inputValue)) {
+      setText(inputValue);
+    } else {
+      setText("");
+    }
+  };
+
   return (
-    <div className={`flex gap-4 ${fullwidth?"w-full bg-gray text-black ":"w-[140px] lg:w-[200px] bg-[#d9d9d9] text-[#3d3d3d]"} justify-between  items-center rounded-md py-2 px-3`}>
+    <div
+      className={`flex gap-4 ${
+        fullwidth
+          ? "w-full bg-gray text-black "
+          : "w-[140px] lg:w-[250px] bg-[#d9d9d9] text-[#3d3d3d]"
+      } justify-between  items-center rounded-md py-2 px-3`}
+    >
       <input
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => (isDigit ? handleChange(e) : setText(e.target.value))}
         disabled={disabled}
         type={type}
         value={text}

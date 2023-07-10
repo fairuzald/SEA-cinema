@@ -4,7 +4,7 @@ import Link from "next/link";
 import ChevronIcon from "./icons/ChevronIcon";
 import { usePathname } from "next/navigation";
 
-const Breadcrumbs = ({ currentText }: { currentText: string }) => {
+const Breadcrumbs = ({ currentText = "" }: { currentText?: string }) => {
   const pathname = usePathname();
 
   // Take title from pathname Url router with no empty string
@@ -15,24 +15,25 @@ const Breadcrumbs = ({ currentText }: { currentText: string }) => {
   // DataUrl for href on Next Link
   const [dataUrls, setDataUrls] = useState<string[]>([]);
 
-
   // Taking data url and changing for first time rendering
   useEffect(() => {
     const newTitlePages = pathname.split("/").filter((title) => title !== "");
     setTitlePages(newTitlePages);
-  
-    const newDataUrls = newTitlePages.reduce((array: string[], current: string, index: number) => {
-      if (index === 0) {
-        return ["/" + current];
-      } else {
-        const prev = array[index - 1];
-        return [...array, `${prev}/${current}`];
-      }
-    }, []);
-  
+
+    const newDataUrls = newTitlePages.reduce(
+      (array: string[], current: string, index: number) => {
+        if (index === 0) {
+          return ["/" + current];
+        } else {
+          const prev = array[index - 1];
+          return [...array, `${prev}/${current}`];
+        }
+      },
+      []
+    );
+
     setDataUrls(newDataUrls);
   }, [pathname]);
-  
 
   return (
     <>
@@ -78,7 +79,5 @@ const Breadcrumbs = ({ currentText }: { currentText: string }) => {
     </>
   );
 };
-Breadcrumbs.defaultProps = {
-  currentText: "",
-};
+
 export default Breadcrumbs;

@@ -6,24 +6,20 @@ import { SafeMovie } from "../types";
 import getCurrentUser from "../actions/getCurrentuser";
 import Link from "next/link";
 import Button from "@/components/Button";
+import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
+
+// Generate metadata title
+export const metadata = {
+  title: "Watchlist Page"
+}
+
 // Movies Page
 export default async function Page() {
   const movies = await getFavoriteMovies();
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return (
-      <main className="w-full min-h-screen flex bg-background">
-        <div className="flex w-full items-center flex-col gap-10 justify-center flex-auto font-bold text-white text-3xl">
-          Your are not logged in
-          <Link href="/">
-            <Button color="trans-red" size="large">
-              Home Page
-            </Button>
-          </Link>
-        </div>
-      </main>
-    );
+    return notFound();
   }
   return (
     <main className="w-full min-h-screen flex bg-background">

@@ -28,6 +28,7 @@ const CardTransaction = ({ data }: { data: any }) => {
             <p className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
               {data.movie.title}
             </p>
+           
             {/* Location */}
             <div className="flex gap-2  items-center">
               <LocationIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
@@ -37,6 +38,7 @@ const CardTransaction = ({ data }: { data: any }) => {
             </div>
             {/* Ticket Count   */}
             <div className="flex gap-2  items-center">
+              
               <TicketIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
               <p className="text-white font-medium text-xs md:text-sm lg:text-lg">
                 Ticket (
@@ -46,6 +48,8 @@ const CardTransaction = ({ data }: { data: any }) => {
                 )
               </p>
             </div>
+            <p className="text-white font-medium text-xs md:text-sm lg:text-lg">
+               Code Booking:  {data.bookingNumber}</p>
             {/* Date */}
             <p className="text-[#d9d9d9] font-medium text-xs lg:text-base">
               {formattedDate(data.watchDate) + " | " + data.watchTime}
@@ -59,7 +63,7 @@ const CardTransaction = ({ data }: { data: any }) => {
         {/* Price and detail button */}
         <div className="flex items-center justify-center flex-col gap-2">
           <p className="text-sm md:text-base lg:text-2xl font-bold text-red">
-            Rp. {data.totalPrice}
+            Rp. {data.totalPrice.toLocaleString("id-Id")}
           </p>
 
           <Link href={`/booking/${data.id}`}>

@@ -68,62 +68,60 @@ const LoginModals = () => {
 
   // Modal header
   const header = (
-    <div className="flex gap-7 items-center bg-[#000000] px-5 lg:px-10 w-full py-2">
+    <div className="flex items-center bg-[#000000] px-5 lg:px-10 w-full py-2">
       <button
         className="bg-transparent rounded-full hover:bg-bnb-hover p-2"
         onClick={onClose}
       >
         <CrossIcon style="w-4 h-4 fill-white" />
       </button>
-      <p className="text-white font-bold text-lg flex-1 flex items-center justify-center">
-        Register
+      <p className="text-white font-bold text-base lg:text-lg flex-1 flex items-center justify-center">
+        Login
       </p>
     </div>
   );
 
   // Modal body
   const body = (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col gap-5">
-        <h4 className="text-xl font-semibold text-white">
-          Welcome to SEA CINEMA
-        </h4>
-        <p className="text-white">Create an account</p>
+    <div className="flex flex-col gap-3 lg:gap-5">
+      <h4 className="text-lg lg:text-xl font-semibold text-white">
+        Welcome back to SEA CINEMA
+      </h4>
+      <p className="text-white text-sm lg:text-base">Fill out your username and password to sign in</p>
 
-        <TextFields
-          type="text"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
-          label="Username"
-          id="username"
-          value={username}
-          setValue={setUsername}
-        />
-        <TextFields
-          type="password"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
-          label="Password"
-          id="password"
-          value={password}
-          setValue={setPassword}
-        />
+      <TextFields
+        type="text"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+        label="Username"
+        id="username"
+        value={username}
+        setValue={setUsername}
+      />
+      <TextFields
+        type="password"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+        label="Password"
+        id="password"
+        value={password}
+        setValue={setPassword}
+      />
 
-        <Button color="red" onClick={handleSubmit(onSubmit)}>
-          Continue
-        </Button>
-      </div>
+      <Button color="red" onClick={handleSubmit(onSubmit)}>
+        Continue
+      </Button>
     </div>
   );
   const footer = (
-    <p className="flex items-center justify-center w-full text-white font-medium">
-      Already have an account?{" "}
+    <p className="flex items-center justify-center text-sm lg:text-base w-full text-white font-medium">
+      First time using SEA Cinema?{" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
-        Sign In
+        Sign Up
       </button>
     </p>
   );

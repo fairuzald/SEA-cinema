@@ -6,10 +6,16 @@ import getReceivedBalance from "../actions/getReceivedBalance";
 import getSharedBalance from "../actions/getSharedBalance";
 import getTopUp from "../actions/getTopup";
 import getWithdrawal from "../actions/getWithdrawal";
+import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
-
+export const metadata = {
+  title: "Transactions"
+}
 const TransactionsPage = async () => {
   const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return notFound();
+  }
   const receivedBalances = await getReceivedBalance(currentUser?.id as string);
   const sharedBalances = await getSharedBalance(currentUser?.id as string);
   const topUpBalances = await getTopUp(currentUser?.id as string);

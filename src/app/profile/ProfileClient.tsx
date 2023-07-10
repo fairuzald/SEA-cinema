@@ -2,9 +2,8 @@
 import React, { SetStateAction, useCallback, useEffect, useState } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
-import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import TextInput from "@/components/TextInput";
@@ -12,7 +11,7 @@ import { User } from "@prisma/client";
 import { toast } from "react-hot-toast";
 import UserFilter from "@/components/UserFilter";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 enum BALANCES {
   TOPUP = 1,
   SHARE = 2,
@@ -22,44 +21,57 @@ const ProfileClient = ({
   currentUser,
   allUsers,
 }: {
-  currentUser?: User | null;
+  currentUser: User | null;
   allUsers?: User[];
 }) => {
   const { data: session } = useSession();
-
   const params = useSearchParams();
   const router = useRouter();
   const [name, setName] = useState(currentUser?.name as string);
   const [username, setUsername] = useState(currentUser?.username as string);
   const [telephoneNumber, setTelephoneNumber] = useState(
     currentUser?.telephoneNumber as string
-  );
-  const [topupNominals, setTopupNominals] = useState("");
-  const [shareNominals, setShareNominals] = useState("");
+    );
+    const [topupNominals, setTopupNominals] = useState("");
+    const [shareNominals, setShareNominals] = useState("");
   const [search, setSearch] = useState("");
   const prices = [
-    50000, 100000, 150000, 200000, 300000, 500000, 700000, 1000000,
+    50000, 100000, 150000, 200000, 250000, 300000, 400000, 500000,
   ];
   const [withDrawalNominals, setWithDrawalNominals] = useState("");
   const [age, setAge] = useState(currentUser?.age.toString() as string);
   const [selectedUser, setSelectedUser] = useState<User | undefined | null>(
     undefined
-  );
+    );
+    
+    const formattedDate = (dateTime: Date) => {
+      return format(new Date(dateTime), "EEEE, dd MMM yyyy");
+    };
+    
+  // Handle more than maxAmount on Transactions
+  useEffect(() => {
+    const maxAmount = 500000;
+    const numericNominal = (nominal: string) =>
+    parseInt(nominal.replace(/\./g, ""), 10);
+    if (numericNominal(withDrawalNominals) > maxAmount) {
+      setWithDrawalNominals(maxAmount.toLocaleString("id-ID"));
+    }
+    if (numericNominal(shareNominals) > maxAmount)
+    setShareNominals(maxAmount.toLocaleString("id-ID"));
+  }, [topupNominals, shareNominals, withDrawalNominals]);
 
-  const formattedDate = (dateTime: Date) => {
-    return format(new Date(dateTime), "EEEE, dd MMM yyyy");
-  };
   const handlePriceSelect = (
     amount: string,
     setAmount: React.Dispatch<SetStateAction<string>>,
     price: number
   ) => {
-    if (parseInt(amount) === price) {
+    if (parseInt(amount.replace(/\./g, ""), 10) === price) {
       return setAmount("");
     } else {
-      return setAmount(price.toString());
+      return setAmount(price.toLocaleString("id-ID"));
     }
   };
+  const previous = params.get("previous");
   const updateUser = useCallback(async () => {
     if (name && username && telephoneNumber && age) {
       try {
@@ -89,10 +101,9 @@ const ProfileClient = ({
       toast("Your data is empty");
     }
   }, [router, name, username, telephoneNumber, age]);
-
   const handleSubmitNonShare = useCallback(
     async (amount: string, postUrl: string) => {
-      if (parseInt(amount) >= 0) {
+      if (parseInt(amount.replace(/\./g, ""), 10) > 0) {
         try {
           const response = await fetch(`/api/${postUrl}`, {
             method: "POST",
@@ -100,7 +111,7 @@ const ProfileClient = ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              amount: parseInt(amount),
+              amount: parseInt(amount.replace(/\./g, ""), 10),
             }),
           });
 
@@ -108,7 +119,8 @@ const ProfileClient = ({
             router.refresh();
             toast.success(`Successfully ${postUrl}`);
           } else {
-            throw new Error("Request failed");
+            const errorResponse = await response.json();
+            toast.error(errorResponse.message);
           }
         } catch (err) {
           toast.error("Something went wrong");
@@ -120,7 +132,7 @@ const ProfileClient = ({
     [router]
   );
   const handleSubmitShare = useCallback(async () => {
-    if (parseInt(shareNominals) >= 0) {
+    if (parseInt(shareNominals.replace(/\./g, ""), 10) > 0) {
       try {
         const response = await fetch(`/api/share-balance`, {
           method: "POST",
@@ -128,16 +140,17 @@ const ProfileClient = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: parseInt(shareNominals),
+            amount: parseInt(shareNominals.replace(/\./g, ""), 10),
             receiverId: selectedUser?.id,
           }),
         });
 
         if (response.ok) {
           router.refresh();
-          toast.success(`Successfully Share`);
+          toast.success("Successfully Share your balance");
         } else {
-          throw new Error("Request failed");
+          const errorResponse = await response.json();
+          toast.error(errorResponse.message);
         }
       } catch (err) {
         toast.error("Something went wrong");
@@ -194,7 +207,8 @@ const ProfileClient = ({
               <li
                 className={`w-full px-4 py-2 font-semibold text-base lg:text-lg`}
               >
-                <Button color="red">Sign Out</Button>
+                <Button color="trans-red" onClick={()=>signOut()}>Sign Out</Button>
+                
               </li>
             </ul>
           </div>
@@ -258,7 +272,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white font-bold border-b text-lg lg:text-xl border-gray py-2">
+              <div className="text-white font-bold border-b text-lg text-center items-center justify-center lg:text-xl border-gray py-2">
                 <p>Edit Profile</p>
               </div>
               {/* Edit content */}
@@ -306,7 +320,7 @@ const ProfileClient = ({
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button color="red" onClick={updateUser}>
                   Confirm Changes
                 </Button>
@@ -318,7 +332,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Top up</p>
               </div>
               {/* Edit content */}
@@ -326,7 +340,9 @@ const ProfileClient = ({
                 {/* Name */}
                 <p className="text-red font-bold text-lg lg:text-xl">
                   Your Balance{" "}
-                  <span className="text-white">Rp.{currentUser?.balance}</span>
+                  <span className="text-white">
+                    Rp. {currentUser?.balance?.toLocaleString("id-ID")}
+                  </span>
                 </p>
 
                 <p className="text-red font-semibold text-base lg:text-lg">
@@ -338,7 +354,8 @@ const ProfileClient = ({
                       <div
                         key={index}
                         className={`border ${
-                          parseInt(topupNominals) === price
+                          parseInt(topupNominals.replace(/\./g, ""), 10) ===
+                          price
                             ? "bg-red border-red"
                             : "border-gray bg-transparent"
                         } rounded-xl p-5 lg:p-8 cursor-pointer`}
@@ -350,7 +367,7 @@ const ProfileClient = ({
                           )
                         }
                       >
-                        Rp. {price}
+                        Rp. {price.toLocaleString("id-ID")}
                       </div>
                     );
                   })}
@@ -359,16 +376,21 @@ const ProfileClient = ({
                   <p className="text-red">
                     Or customize your own topup nominal{" "}
                   </p>
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
+                  </p>
                   <TextInput
                     type="text"
                     text={topupNominals}
                     setText={setTopupNominals}
-                    placeholder={"Withdrawal Nominals"}
+                    placeholder={"Top Up Nominals"}
+                    isDigit
                     fullwidth
                   />
+                  <p className="text-red text-sm lg:text-base"></p>
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button
                   color="red"
                   size="large"
@@ -377,6 +399,18 @@ const ProfileClient = ({
                   Top Up
                 </Button>
               </div>
+              {previous &&
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
+                <Button
+                  color="red"
+                  size="large"
+                  onClick={() => router.back()}
+                  >
+                  Back to Movies
+                </Button>
+              </div>
+                }
+              
             </div>
           </>
         )}
@@ -384,7 +418,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Share Balance</p>
               </div>
               {/* Edit content */}
@@ -392,7 +426,9 @@ const ProfileClient = ({
                 {/* Name */}
                 <p className="text-red font-bold text-lg lg:text-xl">
                   Your Balance{" "}
-                  <span className="text-white">Rp.{currentUser?.balance}</span>
+                  <span className="text-white">
+                    Rp. {currentUser?.balance?.toLocaleString("id-ID")}
+                  </span>
                 </p>
                 <div className="relative flex flex-col py-7 items-center w-full justify-center">
                   <UserFilter
@@ -410,7 +446,8 @@ const ProfileClient = ({
                       <div
                         key={index}
                         className={`border ${
-                          parseInt(shareNominals) === price
+                          parseInt(shareNominals.replace(/\./g, ""), 10) ===
+                          price
                             ? "bg-red border-red"
                             : "border-gray bg-transparent"
                         } rounded-xl p-5 lg:p-8 cursor-pointer`}
@@ -422,7 +459,7 @@ const ProfileClient = ({
                           )
                         }
                       >
-                        Rp. {price}
+                        Rp. {price.toLocaleString("id-ID")}
                       </div>
                     );
                   })}
@@ -431,16 +468,24 @@ const ProfileClient = ({
                   <p className="text-red">
                     Or customize your own share nominals{" "}
                   </p>
+                  <p className="text-white text-sm lg:text-base">
+                    Maximal amount is
+                    <span className="text-red"> Rp. 500.000</span>
+                  </p>
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
+                  </p>
                   <TextInput
                     type="text"
                     text={shareNominals}
                     setText={setShareNominals}
                     placeholder={"Share Nominals"}
                     fullwidth
+                    isDigit
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button color="red" size="large" onClick={handleSubmitShare}>
                   Share
                 </Button>
@@ -452,7 +497,7 @@ const ProfileClient = ({
           <>
             <div className="flex flex-col gap-3 w-full md:flex-1 border border-gray rounded-lg p-5 md:px-7 lg:px-14 lg:py-10 xl:px-20">
               {/* Header */}
-              <div className="text-white items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
+              <div className="text-white text-center items-center justify-center mb-1 flex font-bold border-b text-base w-full lg:text-xl border-gray py-2 gap-10">
                 <p>Withdrawal</p>
               </div>
               {/* Edit content */}
@@ -460,7 +505,9 @@ const ProfileClient = ({
                 {/* Name */}
                 <p className="text-red font-bold text-lg lg:text-xl">
                   Your Balance{" "}
-                  <span className="text-white">Rp.{currentUser?.balance}</span>
+                  <span className="text-white">
+                    Rp. {currentUser?.balance?.toLocaleString("id-ID")}
+                  </span>
                 </p>
 
                 <p className="text-red font-semibold text-base lg:text-lg">
@@ -472,7 +519,10 @@ const ProfileClient = ({
                       <div
                         key={index}
                         className={`border ${
-                          parseInt(withDrawalNominals) === price
+                          parseInt(
+                            withDrawalNominals.replace(/\./g, ""),
+                            10
+                          ) === price
                             ? "bg-red border-red"
                             : "border-gray bg-transparent"
                         } rounded-xl p-5 lg:p-8 cursor-pointer`}
@@ -484,14 +534,21 @@ const ProfileClient = ({
                           )
                         }
                       >
-                        Rp. {price}
+                        Rp. {price.toLocaleString("id-ID")}
                       </div>
                     );
                   })}
                 </div>
                 <div className="flex flex-col font-semibold text-base lg:text-lg gap-2">
                   <p className="text-red">
-                    Or customize your own topup nominal{" "}
+                    Or customize your own Withdrawal nominal{" "}
+                  </p>
+                  <p className="text-white font-medium text-sm lg:text-base">
+                    Maximal amount is
+                    <span className="text-red"> Rp. 500.000</span>
+                  </p>
+                  <p className="text-white text-sm font-medium lg:text-base">
+                    Input must be a number
                   </p>
                   <TextInput
                     type="text"
@@ -499,10 +556,11 @@ const ProfileClient = ({
                     setText={setWithDrawalNominals}
                     placeholder={"Withdrawal Nominals"}
                     fullwidth
+                    isDigit
                   />
                 </div>
               </div>
-              <div className="w-[300px] mt-7">
+              <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
                 <Button
                   color="red"
                   size="large"

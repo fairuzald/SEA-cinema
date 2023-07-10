@@ -4,19 +4,18 @@ import React from "react";
 import getMovies from "../actions/getMovies";
 import getCurrentUser from "../actions/getCurrentuser";
 import { SafeMovie } from "../types";
-import { getSession } from "next-auth/react";
-import { User } from "@prisma/client";
 export const dynamic = "force-dynamic";
+
+// Generate metadata title
+export const metadata = {
+  title: "Movies Page"
+}
 
 // Movies Page
 export default async function Page() {
   const movies = await getMovies();
-  const session = await getSession();
-  let currentUser:any = null; // Initialize currentUser to null
-
-  if (session) {
-    currentUser = await getCurrentUser(); // Assign currentUser if session exists
-  }
+  const currentUser = await getCurrentUser();
+  
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}

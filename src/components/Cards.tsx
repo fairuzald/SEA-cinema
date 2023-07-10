@@ -11,13 +11,19 @@ interface CardsProps {
   isFavorited?: boolean;
   isAge?: boolean;
   data: any;
-  currentUser?: User|null;
+  currentUser?: User | null;
 }
-const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data, currentUser }) => {
+const Cards: React.FC<CardsProps> = ({
+  size,
+  isFavorited,
+  isAge,
+  data,
+  currentUser,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   const { hasFavorited, toggleFavorite } = useFavorites({
-    currentUser: currentUser , 
+    currentUser: currentUser,
     movieId: data.id,
   });
   const handleMouseEnter = () => {
@@ -54,41 +60,46 @@ const Cards: React.FC<CardsProps> = ({ size, isFavorited, isAge, data, currentUs
         />
         {/* Watchlist button */}
         {isFavorited && (
-          <button className="absolute top-4 lg:top-5 left-24 md:left-40 lg:left-56" onClick={toggleFavorite}>
-            <HeartIcon style={`w-5 h-5 lg:w-6 lg:h-6 ${
-              hasFavorited
-                ? "fill-rose-500 text-rose-500"
-                : "fill-neutral-500/70"
-            } hover:fill-red-heart transition duration-300`} />
+          <button
+            className="absolute top-4 lg:top-5 left-24 md:left-40 lg:left-56"
+            onClick={toggleFavorite}
+          >
+            <HeartIcon
+              style={`w-5 h-5 lg:w-6 lg:h-6 ${
+                hasFavorited
+                  ? "fill-rose-500 text-rose-500"
+                  : "fill-neutral-500/70"
+              } hover:fill-red-heart transition duration-300`}
+            />
           </button>
         )}
         {/* When  link hovered will be appear */}
         <div
-          className={`flex w-full lg:px-7 pb-3 flex-col gap-2.5 lg:gap-1.5 h-[250px] lg:bg-black lg:items-center lg:justify-center lg:absolute  lg:z-10 ${
+          className={`flex w-full lg:px-7 pb-3 flex-col gap-2.5 lg:gap-1.5 h-[250px] lg:h-[280px] lg:bg-black lg:items-center lg:justify-center lg:absolute  lg:z-10 ${
             isHovered ? "lg:-translate-y-full" : "lg:translate-y-full"
           } transition-transform duration-300`}
         >
           {/* Title */}
-          <p className="font-bold text-red lg:text-center  text-lg lg:text-xl">
+          <p className="font-bold text-red text-left lg:text-center  text-lg lg:text-xl">
             {data.title}
           </p>
           {/* Containter age and price */}
           <div className="flex lg:mx-auto mr-auto">
             {/* Age */}
-            <p className="font-semibold text-white text-sm lg:text-base px-3 border-r border-white">
+            <p className="font-semibold text-white text-sm lg:text-base pr-3 lg:px-3 border-r border-white">
               {data.age_rating} +
             </p>
             {/* Price */}
             <p className="font-semibold text-white text-sm lg:text-base px-3">
-              Rp. {data.ticket_price}
+              Rp. {data.ticket_price.toLocaleString("id-Id")}
             </p>
           </div>
           {/* Description */}
-          <p className=" font-medium text-white lg:text-justify lg:break-all lg:mx-2 text-xs lg:text-sm line-clamp-4">
+          <p className=" font-medium text-white text-left lg:text-justify lg:break-all lg:mx-2 text-xs lg:text-sm line-clamp-4 md:line-clamp-none lg:line-clamp-4">
             {data.description}
           </p>
           {/* Release Date */}
-          <p className="font-semibold text-white text-xs lg:text-sm">
+          <p className="font-semibold text-white text-xs text-left lg:text-center lg:text-sm">
             Release Date: {formattedDate(data.release_date)}
           </p>
         </div>

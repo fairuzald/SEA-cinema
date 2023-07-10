@@ -7,11 +7,9 @@ import { Adapter } from "next-auth/adapters";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
-
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
@@ -54,6 +52,6 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions as AuthOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

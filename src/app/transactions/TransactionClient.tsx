@@ -25,14 +25,14 @@ const TransactionClient = ({
       <Breadcrumbs />
       <div className="w-full flex flex-col justify-center rounded-2xl border-gray border">
         {/* Toggle query active and inactive */}
-        <div className="flex border-b border-gray justify-center md:justify-start items-end gap-10 pt-4 md:px-10">
+        <div className="flex border-b border-gray justify-center md:justify-start items-end gap-3 md:gap-5 lg:gap-10 pt-4 md:px-10">
           <Link href="?topup">
             <p
               className={`${
                 params.has("topup")
                   ? "text-red border  border-red"
                   : "text-white"
-              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
+              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-4 lg:py-4  rounded-t-lg`}
             >
               Topup
             </p>
@@ -43,7 +43,7 @@ const TransactionClient = ({
                 params.has("share-balance")
                   ? "text-red border  border-red"
                   : "text-white"
-              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
+              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-4 lg:py-4  rounded-t-lg`}
             >
               Share Balance
             </p>
@@ -54,7 +54,7 @@ const TransactionClient = ({
                 params.has("withdrawal")
                   ? "text-red border  border-red"
                   : "text-white"
-              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4  rounded-t-lg`}
+              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-4 lg:py-4  rounded-t-lg`}
             >
               Withdrawal
             </p>

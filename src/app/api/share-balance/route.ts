@@ -1,24 +1,54 @@
 import getCurrentUser from "@/app/actions/getCurrentuser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
+
 export async function POST(req: Request) {
   const body = await req.json();
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Invalid CurrentUser" },
+      { status: 400 }
+    );
   }
   const { amount, receiverId } = body;
+  // Validating body and check type of data body
   if (
     !amount ||
     typeof amount !== "number" ||
     !receiverId ||
-    typeof receiverId !== "string"
+    typeof receiverId !== "string" ||
+    amount <= 0
   ) {
     return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
   }
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
 
-  // Lakukan pembagian saldo dengan menyimpan data ke dalam database
+  // Validate not to send balance to yourself
+  if (receiverId === currentUser.id) {
+    return NextResponse.json(
+      { message: "Unable to send balance to yourself" },
+      { status: 404 }
+    );
+  }
+
+  // Fetch user's balance now
+  const sender = await prisma.user.findUnique({
+    where: { id: currentUser.id },
+  });
+
+  if (!sender) {
+    return NextResponse.json({ message: "Sender not found" }, { status: 404 });
+  }
+
+  // Validating balance not gonna be minus if success
+  if (sender.balance < amount) {
+    return NextResponse.json(
+      { message: "Insufficient balance" },
+      { status: 400 }
+    );
+  }
+
+  // Share balance and save data into database
   const shareBalance = await prisma.shareBalance.create({
     data: {
       amount,
@@ -27,17 +57,17 @@ export async function POST(req: Request) {
     },
   });
 
-  // Update saldo pengirim (pengurangan saldo)
+  // Update the sender's balance (deducting the amount)
   const updateSenderBalance = await prisma.user.update({
     where: { id: currentUser.id },
     data: {
       balance: {
-        decrement: amount, // Mengurangi saldo pengirim
+        decrement: amount,
       },
     },
   });
 
-  // Update saldo penerima (penambahan saldo)
+  // Update the receiver's balance (adding the amount)
   const updateReceiverBalance = await prisma.user.update({
     where: { id: receiverId },
     data: {
@@ -52,30 +82,4 @@ export async function POST(req: Request) {
     updateReceiverBalance,
     updateSenderBalance,
   });
-}
-
-export async function DELETE(req: Request) {
-  const body = await req.json();
-  const currentUser = await getCurrentUser();
-
-  if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
-  }
-
-  const { sharedBalanceId } = body;
-
-  if (!sharedBalanceId || typeof sharedBalanceId !== "string") {
-    return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
-  }
-
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
-
-  // Hapus data sharedBalance dari database
-  const deletedSharedBalance = await prisma.shareBalance.delete({
-    where: {
-      id: sharedBalanceId,
-    },
-  });
-
-  return NextResponse.json({ deletedSharedBalance });
 }

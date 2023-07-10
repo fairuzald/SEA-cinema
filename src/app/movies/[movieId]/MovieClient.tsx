@@ -9,9 +9,16 @@ import Timer from "@/components/Timer";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import SeatModal from "@/components/modals/SeatModals";
 import { Location as LocationType, Transaction, User } from "@prisma/client";
-import { format } from "date-fns";
+import {
+  addWeeks,
+  differenceInDays,
+  format,
+  getDate,
+  getMonth,
+} from "date-fns";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 export enum STEPS {
@@ -31,6 +38,7 @@ const MovieClient = ({
   currentUser: User | null;
   bookings?: Transaction[];
 }) => {
+  const pathname = usePathname();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
   const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
@@ -41,11 +49,11 @@ const MovieClient = ({
       ? bookings?.filter(
           (transaction) =>
             transaction.locationId === selectedTime.id &&
-            transaction.watchDate.getTime() === selectedDate?.getTime() &&
+            getDate(transaction.watchDate) === getDate(selectedDate) &&
+            getMonth(transaction.watchDate) === getMonth(selectedDate) &&
             transaction.watchTime === selectedTime.time
         )
       : [];
-
   // Extract the seats from the filtered transactions
   const disabledSeats = filteredTransactions?.flatMap(
     (transaction) => transaction.seat
@@ -58,11 +66,26 @@ const MovieClient = ({
     const month = date.toLocaleString("en-US", { month: "long" });
     const day = date.getDate();
 
-    return `${month} ${day}, ${year}`;
+    return `${day} ${month} ${year}`;
   }
+  const today = new Date();
+  const releaseDate = new Date(movie.release_date);
+  // Calculate the length of the date range to possible watch the movie
+  const endDate = addWeeks(releaseDate, 4); //Assume that movie only can watch 4 weeks after launched
+  const lengthDate = differenceInDays(endDate, today);
+  const isLaunch = today.getTime() > releaseDate.getTime();
+  const isExpired = lengthDate < 0;
   const isFillAll =
     selectedSeats.length === 0 || !selectedDate || !selectedTime;
   const seatModal = useSeatModal();
+  const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
+    const [hours, minutes] = timeString.split(":");
+    selectedDate.setHours(Number(hours), Number(minutes), 0, 0);
+
+    // Mengonversi objek Date menjadi string dalam format ISO
+    return selectedDate.toISOString();
+  };
+
   function onNext() {
     if (step === STEPS.PAYMENT) {
       if (isFillAll) {
@@ -74,6 +97,11 @@ const MovieClient = ({
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
     } else {
+      if (currentUser?.age && currentUser?.age < movie.age_rating) {
+        return toast.error(
+          "You are underage to watch this film, Please choose another film that is age appropriate"
+        );
+      }
       if (!selectedDate || !selectedTime) {
         toast(
           "Please select date and time before proceeding to seat selection."
@@ -90,43 +118,49 @@ const MovieClient = ({
       currentUser?.balance &&
       selectedSeats.length * movie.ticket_price < currentUser?.balance
     ) {
-      try {
-        const response = await fetch(`/api/booking`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
-          body: JSON.stringify({
-            movieTitle: movie.title,
-            locationId: selectedTime.id,
-            watchDate: selectedDate,
-            watchTime: selectedTime.time,
-            totalPrice: selectedSeats.length * movie.ticket_price,
-            seats: selectedSeats,
-          }),
-        });
+      if (selectedSeats && selectedTime && selectedDate) {
+        try {
+          const response = await fetch(`/api/booking`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
+            body: JSON.stringify({
+              movieTitle: movie.title,
+              locationId: selectedTime.id,
+              watchDate: formattingISODateAPI(selectedTime.time, selectedDate),
+              watchTime: selectedTime.time,
+              totalPrice: selectedSeats.length * movie.ticket_price,
+              seats: selectedSeats,
+            }),
+          });
 
-        if (response.ok) {
-          router.refresh();
-          toast.success(`Booking success`);
-          setStep(STEPS.DATE_SELECTION);
-          return router.push("/booking?active");
-        } else {
-          setStep(STEPS.DATE_SELECTION);
-          throw new Error("Request failed");
+          if (response.ok) {
+            router.refresh();
+            toast.success(`Booking success`);
+            setStep(STEPS.DATE_SELECTION);
+            return router.push("/booking?active");
+          } else {
+            setStep(STEPS.DATE_SELECTION);
+            throw new Error("Request failed");
+          }
+        } catch (err) {
+          toast.error("Something went wrong");
+          return setStep(STEPS.DATE_SELECTION);
         }
-      } catch (err) {
-        toast.error("Something went wrong");
+      } else {
+        toast.error("Fill your data first");
         return setStep(STEPS.DATE_SELECTION);
       }
     } else {
       toast.error("Your balance is not enough, Top Up First");
-      router.push("/profile?topup");
+      router.push(`/profile?topup&previous=${pathname}`);
     }
   }, [
     router,
     movie,
+    pathname,
     selectedDate,
     selectedSeats,
     selectedTime,
@@ -150,14 +184,18 @@ const MovieClient = ({
                 height={1080}
                 className="object-center object-cover w-full h-full sm:w-[350px] lg:w-[400px] md:h-[550px] xl:w-[518px] xl:h-[632px] rounded-xl"
               />
-              <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
-                Select schedule and location and then click below to order
-              </p>
-              <div className="hidden lg:flex">
-                <Button color="red" onClick={onNext}>
-                  Order Ticket Now
-                </Button>
-              </div>
+              {isLaunch && !isExpired && currentUser && (
+                <>
+                  <p className="hidden lg:flex text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
+                    Select schedule and location and then click below to order
+                  </p>
+                  <div className="hidden lg:flex">
+                    <Button color="red" onClick={onNext}>
+                      Order Ticket Now
+                    </Button>
+                  </div>
+                </>
+              )}
             </div>
             {/* Right Side for the content */}
             <div className="flex flex-col lg:w-[calc(100%-400px)] xl:w-[calc(100%-518px)] gap-7">
@@ -179,8 +217,8 @@ const MovieClient = ({
                 </div>
                 <div className="flex flex-col text-base lg:text-lg font-semibold text-white">
                   <p>{formatDate(movie.release_date)}</p>
-                  <p>{movie.ticket_price}</p>
-                  <p>{movie.age_rating}</p>
+                  <p>Rp. {movie.ticket_price.toLocaleString("id-ID")}</p>
+                  <p>{movie.age_rating} +</p>
                 </div>
               </div>
               {/* Description */}
@@ -192,50 +230,80 @@ const MovieClient = ({
                   {movie.description}
                 </p>
               </div>
-              {/* Schedule */}
-              <div className="flex flex-col gap-2 w-full">
-                <h2 className="font-bold text-lg lg:text-xl text-red">
-                  Schedule
-                </h2>
-                <DateSelection
-                  setSelectedDate={setSelectedDate}
-                  selectedDate={selectedDate}
-                  releaseDate={new Date(movie.release_date)}
-                />
-              </div>
-              {/* Location */}
-              <div className="flex flex-col gap-4 w-full">
-                <h2 className="font-bold text-lg lg:text-xl text-red">
-                  Location
-                </h2>
-                <div></div>
-                <Location
-                  price={movie.ticket_price}
-                  selectedTime={selectedTime}
-                  setSelectedTime={setSelectedTime}
-                  data={locations}
-                ></Location>
-              </div>
+              {currentUser ? (
+                isLaunch ? (
+                  isExpired ? (
+                    <div className="flex flex-col flex-auto gap-2 w-full">
+                      <p className="text-red text-2xl lg:text-3xl font-bold ">
+                        Not Show Anymore
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-2 w-full">
+                        <h2 className="font-bold text-lg lg:text-xl text-red">
+                          Schedule
+                        </h2>
+                        <DateSelection
+                          setSelectedDate={setSelectedDate}
+                          selectedDate={selectedDate}
+                          length={lengthDate}
+                        />
+                      </div>
+                      {/* Location */}
+                      <div className="flex flex-col gap-4 w-full">
+                        <h2 className="font-bold text-lg lg:text-xl text-red">
+                          Location
+                        </h2>
+                        <Location
+                          price={movie.ticket_price}
+                          selectedTime={selectedTime}
+                          setSelectedTime={setSelectedTime}
+                          data={locations}
+                          selectedDate={selectedDate}
+                        ></Location>
+                      </div>
+                    </>
+                  )
+                ) : (
+                  <div className="flex flex-col flex-auto gap-2 w-full">
+                    <p className="text-white text-2xl lg:text-3xl font-bold ">
+                      Not Launching Yet
+                    </p>
+                  </div>
+                )
+              ) : (
+                ""
+              )}
             </div>
-            <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
-              <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
-                Select schedule and location and then click below to order
-              </p>
-              <div className="w-[200px]">
-                <Button color="red" size="large" onClick={onNext}>
-                  Order Ticket Now
-                </Button>
-              </div>
-            </div>
-            <SeatModal
-              selectedSeats={selectedSeats}
-              setSelectedSeats={setSelectedSeats}
-              step={step}
-              setStep={setStep}
-              requirement={isFillAll}
-              totalPrice={selectedSeats.length * movie.ticket_price}
-              disabledSeats={disabledSeats}
-            />
+            {isLaunch && !isExpired && currentUser && (
+              <>
+                <div className="flex mx-auto lg:hidden flex-col items-center justify-center gap-6">
+                  <p className="flex lg:hidden text-white text-base lg:text-lg font-medium w-[calc(100%-100px)] text-center">
+                    Select schedule and location and then click below to order
+                  </p>
+                  <div className="w-[200px]">
+                    <Button color="red" size="large" onClick={onNext}>
+                      Order Ticket Now
+                    </Button>
+                  </div>
+                </div>
+                {selectedDate && selectedTime && (
+                  <SeatModal
+                    selectedSeats={selectedSeats}
+                    setSelectedSeats={setSelectedSeats}
+                    step={step}
+                    setStep={setStep}
+                    requirement={isFillAll}
+                    totalPrice={selectedSeats.length * movie.ticket_price}
+                    disabledSeats={disabledSeats}
+                    selectedDate={format(selectedDate, "d MMMM yyyy")}
+                    selectedTime={selectedTime.time}
+                    mall={selectedTime.mall}
+                  />
+                )}
+              </>
+            )}
           </div>
         </>
       ) : (
@@ -304,9 +372,13 @@ const MovieClient = ({
                   </div>
                   {/* Data Booking Info */}
                   <div className="text-white font-medium  text-sm lg:text-xl flex flex-col gap-3">
-                    <p>{selectedSeats.map((item) => `${item},`)}</p>
                     <p>
-                      Rp. {movie.ticket_price}
+                      {selectedSeats.map((item, index) =>
+                        index === selectedSeats.length - 1 ? item : item + ", "
+                      )}
+                    </p>
+                    <p>
+                      Rp. {movie.ticket_price.toLocaleString("id-Id")}
                       <span className="text-gray">
                         {" "}
                         x {selectedSeats.length}
@@ -334,7 +406,7 @@ const MovieClient = ({
                 Total Balance
               </p>
               <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {currentUser?.balance || 0}
+                Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
               </p>
             </div>
             <div className="flex justify-between lg:px-10 2xl:px-20">
@@ -342,13 +414,51 @@ const MovieClient = ({
                 Total Payment
               </p>
               <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {selectedSeats.length * movie.ticket_price}
+                Rp.{" "}
+                {(selectedSeats.length * movie.ticket_price).toLocaleString(
+                  "id-Id"
+                )}
               </p>
             </div>
-            <div className="flex mx-auto">
-              <Button color="red" size="large" onClick={onSubmit}>
-                BOOKING NOW
-              </Button>
+            <div className="flex mx-auto gap-7">
+              {currentUser ? (
+                currentUser?.balance <
+                selectedSeats.length * movie.ticket_price ? (
+                  <>
+                    <Button
+                      color="red"
+                      size="large"
+                      onClick={() => {
+                        setStep(STEPS.DATE_SELECTION);
+                        router.push(`/movies/${movie.id}`);
+                      }}
+                    >
+                      Cancel Booking
+                    </Button>
+                    <Button color="red" size="large" onClick={onSubmit}>
+                      Top Up
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      color="red"
+                      size="large"
+                      onClick={() => {
+                        setStep(STEPS.DATE_SELECTION);
+                        router.push(`/movies/${movie.id}`);
+                      }}
+                    >
+                      Cancel Booking
+                    </Button>
+                    <Button color="red" size="large" onClick={onSubmit}>
+                      BOOKING NOW
+                    </Button>
+                  </>
+                )
+              ) : (
+                <p className="text-white font-bold text-2xl">Loading....</p>
+              )}
             </div>
           </div>
         </>

@@ -57,12 +57,8 @@ const CardBalance = ({
   }, [id, router]);
   const onDeleteSharedBalance = useCallback(async () => {
     try {
-      const response = await fetch(`/api/shared-balance`, {
+      const response = await fetch(`/api/share-balance/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sharedBalanceId: id }),
       });
 
       if (response.ok) {
@@ -86,15 +82,6 @@ const CardBalance = ({
             <p className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
               {title}
             </p>
-            {/* Location */}
-
-            {/* Ticket Count   */}
-            <div className="flex gap-2  items-center">
-              <TicketIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
-              <p className="text-white font-medium text-xs md:text-sm lg:text-lg">
-                {id}
-              </p>
-            </div>
 
             {/* Date */}
             <p className="text-[#d9d9d9] font-medium text-xs lg:text-base">
@@ -118,10 +105,10 @@ const CardBalance = ({
         <div className="flex items-center justify-center flex-col gap-2">
           <p
             className={`text-sm md:text-base lg:text-2xl font-bold ${
-              title === "Received Balance" ? "text-green-500" : "text-red"
+              title === "Received Balance" || title==="Top Up" ? "text-green-500" : "text-red"
             } `}
           >
-            {title === "Received Balance" ? "+" : "-"} {amount}
+            {title === "Received Balance" || title==="Top Up" ? "+" : "-"} {amount}
           </p>
           <Button
             color="red"

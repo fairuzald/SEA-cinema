@@ -16,6 +16,9 @@ export default async function getTopUp(userId: string) {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return topups.map((topup) => {

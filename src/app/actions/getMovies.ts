@@ -2,6 +2,7 @@ import prisma from "@/app/libs/prismadb";
 
 export default async function getMovies() {
   try {
+    // Retrieve movies data from database
     const movies = await prisma.movie.findMany({
       orderBy: {
         release_date: "desc",

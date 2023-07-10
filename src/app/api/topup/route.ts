@@ -1,17 +1,28 @@
-import getCurrentUser from "@/app/actions/getCurrentuser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
+import getCurrentUser from "@/app/actions/getCurrentuser";
 
+// Define the POST handler for the API
 export async function POST(req: Request) {
   const body = await req.json();
   const currentUser = await getCurrentUser();
+
+  // Check if the current user is valid
   if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Invalid Current User" },
+      { status: 400 }
+    );
   }
+
   const { amount } = body;
-  if (!amount || typeof amount !== "number") {
+
+  // Validate the amount value
+  if (!amount || typeof amount !== "number" || amount <= 0) {
     return NextResponse.json({ message: "Invalid Amount" }, { status: 204 });
   }
+
+  // Create a new top-up transaction in the database
   const topup = await prisma.topup.create({
     data: {
       userId: currentUser.id,
@@ -19,48 +30,16 @@ export async function POST(req: Request) {
     },
   });
 
-  // Update saldo pengguna
+  // Update the user's balance by incrementing the amount
   const user = await prisma.user.update({
     where: { id: currentUser.id },
     data: {
       balance: {
-        increment: amount, // Menambahkan saldo
+        increment: amount,
       },
     },
   });
+
+  // Return the top-up transaction and updated user data
   return NextResponse.json({ topup, user });
-}
-
-export async function DELETE(
-  req: Request,
-  { params }: { params: { topupId?: string } }
-) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
-  }
-  const { topupId } = params;
-  if (!topupId || typeof topupId !== "string") {
-    return NextResponse.json({ message: "Invalid Body" }, { status: 204 });
-  }
-
-  // Lakukan proses validasi atau otorisasi sesuai kebutuhan
-  const topup = await prisma.topup.findUnique({
-    where: { id: topupId },
-  });
-
-  if (!topup) {
-    return NextResponse.json({ error: "Topup not found" }, { status: 404 });
-  }
-
-  if (topup.userId !== currentUser.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // Hapus data topup berdasarkan ID
-  const deletedTopup = await prisma.topup.delete({
-    where: { id: topupId },
-  });
-
-  return NextResponse.json({ deletedTopup });
 }
