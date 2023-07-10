@@ -23,54 +23,33 @@ SEA Cinema is a cutting-edge web application designed to revolutionize the way m
 # Key Features
 ## Frontend Description
 
-### 1. Movies Page 
+1. **Movies Page**: The Movies page showcases a wide selection of movies currently showing. Users can browse through the list, view movie posters, and read brief descriptions to get an overview of each film. Clicking on a movie will redirect users to the Movie Details page for more information.
 
-The Movies page showcases a wide selection of movies currently showing. Users can browse through the list, view movie posters, and read brief descriptions to get an overview of each film. Clicking on a movie will redirect users to the Movie Details page for more information.
+2. **Movie Details**: The Movie Details page provides comprehensive information about a specific movie, including the title, age ratings, synopsis, price, and release date. Users can also view the available showtimes and choose their preferred date, time, location, and seats for booking.
 
-### 2. Movie Details
+3. **Transactions**: The Transactions page in SEA Cinema serves as a comprehensive record of all financial activities related to the user's account. It captures and displays a detailed history of transactions, including top-ups, balance sharing, and withdrawals. This feature provides users with a transparent overview of their financial interactions within the platform.
 
-The Movie Details page provides comprehensive information about a specific movie, including the title, age ratings, synopsis, price, and release date. Users can also view the available showtimes and choose their preferred date, time, location, and seats for booking.
+4. **Bookings**: The Bookings page allows users to keep track of their upcoming movie bookings. It provides a detailed overview of each booking, including the movie title, date, time, cinema location, and seat numbers. Users can modify or cancel their bookings based on their preferences.
 
-### 3. Transactions 
+5. **Profile Management**: The Profile page enables users to personalize their SEA Cinema experience. They can update their personal information, such as name, username, and age.
 
-The Transactions page in SEA Cinema serves as a comprehensive record of all financial activities related to the user's account. It captures and displays a detailed history of transactions, including top-ups, balance sharing, and withdrawals. This feature provides users with a transparent overview of their financial interactions within the platform.
+6. **Top-Up Balance**: To facilitate seamless transactions, SEA Cinema offers a Top-Up Balance feature. Users can add funds to their account balance through various payment methods, ensuring they have sufficient funds for hassle-free ticket purchases.
 
-### 4. Bookings 
+7. **Withdrawal**: The Withdrawal feature allows users to transfer their available account balance back to their bank accounts. This option provides flexibility for users to manage their finances and use the funds as needed.
 
-The Bookings page allows users to keep track of their upcoming movie bookings. It provides a detailed overview of each booking, including the movie title, date, time, cinema location, and seat numbers. Users can modify or cancel their bookings based on their preferences.
-
-### 5. Profile Management 
-
-The Profile page enables users to personalize their SEA Cinema experience. They can update their perion personal information, such as name, username, age.
-
-### 6. Top-Up Balance
-
-To facilitate seamless transactions, SEA Cinema offers a Top-Up Balance feature. Users can add funds to their account balance through various payment methods, ensuring they have sufficient funds for hassle-free ticket purchases.
-
-### 7. Withdrawal
-
-The Withdrawal feature allows users to transfer their available account balance back to their bank accounts. This option provides flexibility for users to manage their finances and use the funds as needed.
-
-### 8. Share Balance
-
-Sharing the SEA Cinema experience with friends is made easy through the Share Balance feature. Users can transfer a portion of their account balance to their friends' accounts, allowing them to enjoy movies together without the hassle of separate transactions.
+8. **Share Balance**: Sharing the SEA Cinema experience with friends is made easy through the Share Balance feature. Users can transfer a portion of their account balance to their friends' accounts, allowing them to enjoy movies together without the hassle of separate transactions.
 
 ## Backend Description
 
-### 1.User Authentication and Authorization:
-Processes user authentication, token verification. Implements features like login validation, password reset, and session management using NextAuth.js with JWT tokens handles secure user authentication and authorization
+1. **User Authentication and Authorization**: Processes user authentication, token verification. Implements features like login validation, password reset, and session management using NextAuth.js with JWT tokens handles secure user authentication and authorization.
 
-### 2. Routing:
-Handles API endpoint configuration for various features like movie browsing, ticket purchasing, user profile management, and financial transactions such as top-up, share balance, and withdrawal.
+2. **Routing**: Handles API endpoint configuration for various features like movie browsing, ticket purchasing, user profile management, and financial transactions such as top-up, share balance, and withdrawal.
 
-### 3. Data Storage and Database:
-Manages data storage and integration with application utilizes the Prisma ORM and MongoDB as database. Performs CRUD operations on data, including fetching movie information, storing transaction details, and managing user profiles.
+3. **Data Storage and Database**: Manages data storage and integration with the application utilizes the Prisma ORM and MongoDB as the database. Performs CRUD operations on data, including fetching movie information, storing transaction details, and managing user profiles.
 
-### 4. Error Handling: 
-Manages error handling and provides appropriate error responses with clear error messages. Logs and tracks errors for troubleshooting purposes.
+4. **Error Handling**: Manages error handling and provides appropriate error responses with clear error messages. Logs and tracks errors for troubleshooting purposes.
 
-### 5. Data Validation: 
-Validates user-submitted data to ensure its compliance with expected formats and rules. Checks data existence, data types, data length, and other validation criteria to ensure correct and secure data input.
+5. **Data Validation**: Validates user-submitted data to ensure its compliance with expected formats and rules. Checks data existence, data types, data length, and other validation criteria to ensure correct and secure data input.
 
 # Installation and Usage
 
