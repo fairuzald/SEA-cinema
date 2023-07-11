@@ -39,7 +39,6 @@ const TextFields: React.FC<TextFieldsProps> = ({
       setValue(newValue);
     }
   };
-
   return (
     <div className="relative w-full">
       <div
@@ -61,8 +60,9 @@ const TextFields: React.FC<TextFieldsProps> = ({
           onChange={handleChange}
           className={`peer rounded-lg w-full disabled:opacity-70 font-medium text-sm lg:text-base disabled:cursor-not-allowed pt-[22px] pb-[10px] text-white bg-transparent outline-none`}
         />
+        {/* Label as animation placeholder primary */}
         <label
-          className={`absolute text-md ${
+          className={`absolute text-md pointer-events-none ${
             formatPrice ? "left-12" : "left-4"
           } duration-150 transform  -translate-y-1 top-5 z-10 origin-[0] ${
             value && "-translate-y-4 scale-75"
