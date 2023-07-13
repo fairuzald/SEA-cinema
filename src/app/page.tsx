@@ -66,7 +66,7 @@ export default async function Home() {
       {moviesNow.length > 0 && (
         <div className="w-full flex px-20 gap-10 flex-col py-10">
           {/* Title Showing Now Cinemas Section */}
-          <h3 className="text-red text-3xl font-montserrat-b text-left">
+          <h3 className="text-red text-3xl font-bold text-left">
             Now Showing In Cinemas
           </h3>
           <div className="w-full px-[200px] overflow-hidden">

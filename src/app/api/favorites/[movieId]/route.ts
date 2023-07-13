@@ -5,7 +5,6 @@ export async function POST(
   req: Request,
   { params }: { params: { movieId?: string } }
 ) {
-  console.log(params);
   // Get current user
   const currentUser = await getCurrentUser();
 

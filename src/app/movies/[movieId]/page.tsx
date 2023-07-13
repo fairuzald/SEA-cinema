@@ -14,21 +14,19 @@ type Props = {
   params: { movieId: string };
   searchParams: { [key: string]: string | string[] | undefined }
 }
- 
+
 export async function generateMetadata(
   { params, searchParams }: Props,
   parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  // read route params
- 
   // fetch data
   const product = await getmovieById(params)
- 
+
   return {
     title: product?.title,
   }
 }
- 
+
 // Fallback blocking to make static page allowed based on id movie data
 export const dynamicParams = false;
 export async function generateStaticParams() {
@@ -41,6 +39,7 @@ export async function generateStaticParams() {
 
 // Page Movie Details
 export default async function MovieDetailsPage({ params, searchParams }: Props) {
+  // fetch required data to mapping detail moviess
   const movie = await getmovieById(params);
   const locations = await getLocations();
   const currentUser = await getCurrentUser();

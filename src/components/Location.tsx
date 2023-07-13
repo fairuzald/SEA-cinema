@@ -61,15 +61,15 @@ const Location = ({
           key={index}
           className="bg-[#3D3D3D] flex flex-col gap-1 px-6 py-5 lg:p-7"
         >
-          <p className="text-white font-semibold text-base lg:text-lg">
+          <h3 className="text-white font-semibold text-base lg:text-lg">
             {location.mall}
-          </p>
-          <p className="text-gray font-medium text-sm lg:text-base">
+          </h3>
+          <h4 className="text-gray font-medium text-sm lg:text-base">
             {location.address}
-          </p>
-          <p className="text-gray font-medium text-sm lg:text-base">
+          </h4>
+          <h4 className="text-gray font-medium text-sm lg:text-base">
             Rp. {price.toLocaleString("id-Id")}
-          </p>
+          </h4>
           <div className="flex gap-4 mt-2">
             {location.times.map((time: string) => (
               <Button

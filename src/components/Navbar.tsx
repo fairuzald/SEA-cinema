@@ -13,11 +13,11 @@ const Navbar = () => {
   const { data: currentUser } = useSession();
   const [popUp, setPopUp] = useState(false);
   const LoginModal = useLoginModal();
-  // const user = getCurrentUser()
   const { data: session } = useSession();
   const pathname = usePathname();
   return (
     <nav className="fixed z-20 inset-0 flex w-full h-[60px] lg:h-[100px] bg-soft-black">
+      <h1 className="hidden">Navbar</h1>
       {/* container */}
       <div className="flex items-center justify-around px-2 lg:px-[20px] py-3 lg:py-8 w-full">
         <ul className="flex items-center justify-between px-8 md:px-14 lg:px-16 xl:px-20 2xl:px-20 gap-1 lg:gap-8 w-full">
@@ -36,7 +36,7 @@ const Navbar = () => {
               </p>
             </Link>
           </li>
-
+          {/* Hamburger Button for mobile */}
           <button
             className="flex relative xl:hidden"
             onClick={() => setPopUp((prev) => !prev)}
@@ -44,68 +44,68 @@ const Navbar = () => {
             <HamburgerIcon style="w-7 h-7 md:w-10 fill-white" />
           </button>
           <div
-            className={`flex-col ${
-              popUp
+            className={`flex-col ${popUp
                 ? "scale-100 opacity-100"
                 : "scale-0 opacity-0 pointer-events-none"
-            } transition duration-300 xl:flex-row bg-black xl:pointer-events-auto xl:bg-transparent absolute top-16 pt-2.5 pb-5 px-10 md:px-14 xl:p-0 xl:scale-100 lg:px-16 xl:opacity-100 rounded-xl text-center right-6 md:right-14 lg:top-24 xl:static xl:flex items-center justify-center gap-7 text-sm xl:text-lg`}
+              } transition duration-300 xl:flex-row bg-black xl:pointer-events-auto xl:bg-transparent absolute top-16 pt-2.5 pb-5 px-10 md:px-14 xl:p-0 xl:scale-100 lg:px-16 xl:opacity-100 rounded-xl text-center right-6 md:right-14 lg:top-24 xl:static xl:flex items-center justify-center gap-7 text-sm xl:text-lg`}
           >
+            {/* Movies */}
             <li className="py-2.5 md:py-3 lg:py-4">
               <Link
                 href="/movies"
-                className={`${
-                  pathname.split("/").includes("movies")
+                className={`${pathname.split("/").includes("movies")
                     ? "text-red"
                     : "text-white"
-                } font-bold`}
+                  } font-bold`}
               >
                 Movies
               </Link>
             </li>
+            {/* Booking */}
             <li className="py-2.5 md:py-3 lg:py-4">
               <Link
                 href="/booking"
-                className={`${
-                  pathname.split("/").includes("booking")
+                className={`${pathname.split("/").includes("booking")
                     ? "text-red"
                     : "text-white"
-                } font-bold`}
+                  } font-bold`}
               >
                 Booking
               </Link>
             </li>
+            {/* Topup */}
             <li className="py-2.5 md:py-3 lg:py-4">
               <Link
                 href="/transactions?topup"
-                className={`${
-                  pathname.split("/").includes("transactions")
+                className={`${pathname.split("/").includes("transactions")
                     ? "text-red"
                     : "text-white"
-                } font-bold`}
+                  } font-bold`}
               >
                 Transaction
               </Link>
             </li>
+            {/* Watchlist */}
             <li className="py-2.5 md:py-3 lg:py-4">
               <Link
                 href="/watchlist"
-                className={`${
-                  pathname === "/watchlist" ? "text-red" : "text-white"
-                } font-bold`}
+                className={`${pathname === "/watchlist" ? "text-red" : "text-white"
+                  } font-bold`}
               >
                 Watchlist
               </Link>
             </li>
+            {/* Profile */}
             <li className="py-2.5 md:py-3 lg:py-4">
               <Link
                 href="/profile?dashboard"
-                className={`${
-                  pathname === "/profile" ? "text-red" : "text-white"
-                } font-bold`}
+                className={`${pathname === "/profile" ? "text-red" : "text-white"
+                  } font-bold`}
               >
                 Profile
               </Link>
             </li>
+            {/* Button login or logout */}
             <li className="py-1">
               <Button
                 color={session ? "trans-red" : "red"}
@@ -115,7 +115,6 @@ const Navbar = () => {
               >
                 <div className="flex items-center gap-2">
                   <p>{session ? "Logout" : "Login"}</p>
-
                   {session && <Avatar currentUser={currentUser} />}
                 </div>
               </Button>

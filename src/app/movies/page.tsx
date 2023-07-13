@@ -12,7 +12,7 @@ export const metadata = {
 }
 
 // Movies Page
-export default async function Page() {
+export default async function MoviesPage() {
   const movies = await getMovies();
   const currentUser = await getCurrentUser();
   
@@ -23,7 +23,7 @@ export default async function Page() {
         {/* Breadcrumbs */}
         <Breadcrumbs />
         {/* Mapping movie data into cards component */}
-        <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
+        <section className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
           {movies.map((movie: SafeMovie) => {
             return (
               <Cards
@@ -35,7 +35,7 @@ export default async function Page() {
               />
             );
           })}
-        </div>
+        </section>
       </div>
     </main>
   );

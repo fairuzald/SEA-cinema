@@ -31,7 +31,7 @@ export default async function WatchListPage() {
         <Breadcrumbs />
         {/* Mapping favorited movie data into cards component */}
         {favoritedMovies.length > 0 ? (
-          <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
+          <section className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
             {favoritedMovies.map((movie: SafeMovie) => {
               return (
                 <Cards
@@ -43,17 +43,17 @@ export default async function WatchListPage() {
                 />
               );
             })}
-          </div>
+          </section>
         ) : (
           // If there's no data watchlist found
-          <div className="flex w-full items-center flex-col sm:w-[calc(100%-20px)] gap-10 lg:mx-auto lg:w-[650px] flex-auto font-bold justify-center text-white text-2xl text-center lg:text-3xl">
-            Not found your Watchlist Movie, Go to the movies page and press love to add it to your watchlist
+          <section className="flex w-full items-center flex-col sm:w-[calc(100%-20px)] gap-10 lg:mx-auto lg:w-[650px] flex-auto font-bold justify-center text-white text-2xl text-center lg:text-3xl">
+           <h1> Not found your Watchlist Movie, Go to the movies page and press love to add it to your watchlist</h1>
             <Link href="/movies">
               <Button color="trans-red" size="large">
-                Go Movie Page
+                <h2>Go Movie Page</h2>
               </Button>
             </Link>
-          </div>
+          </section>
         )}
       </div>
     </main>

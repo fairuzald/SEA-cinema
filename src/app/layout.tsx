@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
+      <body className={montserrat.className} aria-label="Body">
         <ClientOnly>
           <NextAuthProvider>
             <Navbar />

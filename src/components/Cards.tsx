@@ -80,28 +80,28 @@ const Cards: React.FC<CardsProps> = ({
           } transition-transform duration-300`}
         >
           {/* Title */}
-          <p className="font-bold text-red text-left lg:text-center  text-lg lg:text-xl">
+          <h2 className="font-bold text-red text-left lg:text-center  text-lg lg:text-xl">
             {data.title}
-          </p>
+          </h2>
           {/* Containter age and price */}
           <div className="flex lg:mx-auto mr-auto">
             {/* Age */}
-            <p className="font-semibold text-white text-sm lg:text-base pr-3 lg:px-3 border-r border-white">
+            <h3 className="font-semibold text-white text-sm lg:text-base pr-3 lg:px-3 border-r border-white">
               {data.age_rating} +
-            </p>
+            </h3>
             {/* Price */}
-            <p className="font-semibold text-white text-sm lg:text-base px-3">
+            <h3 className="font-semibold text-white text-sm lg:text-base px-3">
               Rp. {data.ticket_price.toLocaleString("id-Id")}
-            </p>
+            </h3>
           </div>
           {/* Description */}
-          <p className=" font-medium text-white text-left lg:text-justify lg:break-all lg:mx-2 text-xs lg:text-sm line-clamp-4 md:line-clamp-none lg:line-clamp-4">
+          <h3 className=" font-medium text-white text-left lg:text-justify lg:break-all lg:mx-2 text-xs lg:text-sm line-clamp-4 md:line-clamp-none lg:line-clamp-4">
             {data.description}
-          </p>
+          </h3>
           {/* Release Date */}
-          <p className="font-semibold text-white text-xs text-left lg:text-center lg:text-sm">
+          <h3 className="font-semibold text-white text-xs text-left lg:text-center lg:text-sm">
             Release Date: {formattedDate(data.release_date)}
-          </p>
+          </h3>
         </div>
       </div>
     </button>
