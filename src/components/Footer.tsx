@@ -21,9 +21,9 @@ const Footer = () => {
                 <div className="flex flex-wrap gap-x-5  md:gap-x-10 mx-auto md:text-base gap-y-3 lg:text-xl text-sm items-center justify-center">
                     <Link href="/movies" className="w-fit h-fit hover:text-red duration-300 transition">Movies</Link>
                     <Link href="/booking" className="w-fit h-fit hover:text-red duration-300 transition">Booking</Link>
-                    <Link href="/transactions" className="w-fit h-fit hover:text-red duration-300 transition">Transactions</Link>
+                    <Link href="/transactions?topup" className="w-fit h-fit hover:text-red duration-300 transition">Transactions</Link>
                     <Link href="/watchlist" className="w-fit h-fit hover:text-red duration-300 transition">Watchlist</Link>
-                    <Link href="/profile" className="w-fit h-fit hover:text-red duration-300 transition">Profile</Link>
+                    <Link href="/profile?dashboard" className="w-fit h-fit hover:text-red duration-300 transition">Profile</Link>
                 </div>
                 {/* Copyright text */}
                 <p className='text-red text-xs md:text-sm lg:text-base'>All rights reserved by Fairuz © 2023</p>
