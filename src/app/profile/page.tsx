@@ -11,9 +11,11 @@ export const metadata = {
   title: "Profile Page"
 }
 
-export default async function Page() {
+export default async function ProfilePage() {
+  // Fetch User and All Users data
   const currentUser = await getCurrentUser();
   const allUsers = await getUsers();
+  // Redirect to 404 if not logged in
   if (!currentUser) {
     return notFound();
   }
