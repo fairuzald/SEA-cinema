@@ -8,17 +8,26 @@ import CrossIcon from "../icons/CrossIcon";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import TextFields from "../TextFields";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-const RegisterModals = () => {
+const RegisterModal = () => {
+  // Register and login modal hooks
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
 
+  const router = useRouter()
+
+  // State to handle registration form 
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [age, setAge] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch data session 
+  const { data: session } = useSession()
+
   // React Hook Form initialization
   const {
     register,
@@ -27,25 +36,44 @@ const RegisterModals = () => {
   } = useForm<FieldValues>({
     defaultValues: { name: "", username: "", password: "" },
   });
-
   // Form submission handler
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<FieldValues> = useCallback(async (data) => {
     const parsedAge = parseInt(data.age, 10); // Parse age as an integer
     const requestData = { ...data, age: parsedAge }; // Update age value with parsed integer
-    fetch("/api/user", {
-      method: "POST",
-      body: JSON.stringify(requestData),
-    })
-      .then(() => {
-        registerModal.onClose();
-        toast.success("Your data was registered");
-        signIn("credentials", { username, password });
-
-      })
-      .catch((err) => toast.error("Failed to register your data"))
-      .finally(() => setIsLoading(false));
-  };
+    // Prevent registration while still logged in
+    if (!session) {
+      if (password !== passwordConfirmation) {
+        return toast.error("Mismatch password and password confirmation")
+      }
+      try {
+        const response = await fetch("/api/user", {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        })
+        const responseMsg = await response.json();
+        if (response.ok) {
+          registerModal.onClose();
+          if (responseMsg.status === 409 || responseMsg.status === 204) { // Check respon status from server
+            return toast.error(responseMsg.message)
+          }
+          toast.success(responseMsg.message);
+          signIn("credentials", { username, password });
+          return router.refresh()
+        }
+        else {
+          router.refresh()
+          return toast.error(responseMsg.message);
+        }
+      } catch (err) {
+        router.refresh()
+        return toast.error("Something went wrong");
+      }
+    }
+    else {
+      router.refresh()
+      return toast.error("You must log out before registration")
+    }
+  }, [session, registerModal, password, username, passwordConfirmation, router]);
 
   // Toggle between register and login modals
   const onToggle = useCallback(() => {
@@ -57,6 +85,8 @@ const RegisterModals = () => {
   const onClose = useCallback(() => {
     registerModal.onClose();
   }, [registerModal]);
+
+  // Register Modal Header
   const header = (
     <div className="flex items-center bg-soft-black px-5 lg:px-10 w-full py-2">
       <button
@@ -70,16 +100,17 @@ const RegisterModals = () => {
       </p>
     </div>
   );
+
+  // Registration Modals Body
   const body = (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-3">
-        <h4 className="text-lg lg:text-xl font-semibold text-white">
+        <p className="text-lg lg:text-xl font-semibold text-white">
           Welcome to SEA CINEMA
-        </h4>
+        </p>
         <p className="text-sm lg:text-base text-white"> Create an account</p>
         <TextFields
           type="text"
-          disabled={isLoading}
           register={register}
           errors={errors}
           required
@@ -90,7 +121,6 @@ const RegisterModals = () => {
         />
         <TextFields
           type="text"
-          disabled={isLoading}
           register={register}
           errors={errors}
           required
@@ -101,7 +131,6 @@ const RegisterModals = () => {
         />
         <TextFields
           type="text"
-          disabled={isLoading}
           register={register}
           errors={errors}
           required
@@ -112,7 +141,6 @@ const RegisterModals = () => {
         />
         <TextFields
           type="password"
-          disabled={isLoading}
           register={register}
           errors={errors}
           required
@@ -121,13 +149,24 @@ const RegisterModals = () => {
           value={password}
           setValue={setPassword}
         />
-
+        <TextFields
+          type="password"
+          register={register}
+          errors={errors}
+          required
+          label="Password Confirmation"
+          id="password-confirmation"
+          value={passwordConfirmation}
+          setValue={setPasswordConfirmation}
+        />
         <Button color="red" onClick={handleSubmit(onSubmit)}>
           Continue
         </Button>
       </div>
     </div>
   );
+
+  // Registration Modal Footer
   const footer = (
     <p className="flex items-center justify-center w-full text-white text-sm lg:text-base font-medium">
       Already have an account? {" "}
@@ -138,6 +177,7 @@ const RegisterModals = () => {
   );
   return (
     <Modal
+      onClose={registerModal.onClose}
       header={header}
       isOpen={registerModal.isOpen}
       body={body}
@@ -147,4 +187,4 @@ const RegisterModals = () => {
   );
 };
 
-export default RegisterModals;
+export default RegisterModal;

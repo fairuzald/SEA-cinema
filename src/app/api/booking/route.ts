@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid CurrentUser" }, { status: 400 });
   }
 
-  const { movieTitle, locationId, watchDate, watchTime, totalPrice, seats } =
+  const { movieId, locationId, watchDate, watchTime, totalPrice, seats } =
     body;
 
   let bookingNumber = generateUniqueBookingNumber();
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     data: {
       bookingNumber: (await bookingNumber).toString(),
       userId: currentUser.id,
-      movieTitle,
+      movieId,
       locationId,
       watchDate,
       watchTime,

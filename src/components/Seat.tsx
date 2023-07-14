@@ -37,7 +37,7 @@ const Seat = ({
         seats.push(
           <button
             key={`${key}-${row}-${col}`}
-            className={`text-center hover:bg-red-hover hover:text-white transition rounded-lg text-xs lg:text-sm font-montserrat-b p-1 lg:p-2  ${
+            className={`text-center hover:bg-red-hover hover:text-white transition rounded-lg text-xs lg:text-sm font-bold p-1 lg:p-2  ${
               isSeatDisabled
                 ? "bg-[#D9D9D9] cursor-not-allowed text-white"
                 : isSeatSelected
@@ -69,7 +69,7 @@ const Seat = ({
         <div className="grid grid-cols-4 gap-2">{renderSeats("right")}</div>
       </div>
 
-      <p className="text-white text-xs lg:text-sm font-montserrat-m">
+      <p className="text-white text-xs lg:text-sm font-medium">
         {selectedSeats.length < 6
           ? "Maximum Seats per payout is 6"
           : "The maximum reserved seat limit has been reached"}

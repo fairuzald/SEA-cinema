@@ -12,18 +12,18 @@ export const metadata = {
 }
 
 // Movies Page
-export default async function Page() {
+export default async function MoviesPage() {
   const movies = await getMovies();
   const currentUser = await getCurrentUser();
   
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
-      <div className="w-full px-6 md:px-20 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
+      <div className="w-full px-6 md:px-20 pt-[100px] pb-20 lg:p-[130px] flex flex-col gap-10">
         {/* Breadcrumbs */}
         <Breadcrumbs />
         {/* Mapping movie data into cards component */}
-        <div className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
+        <section className="w-full flex flex-col lg:flex-row lg:flex-wrap gap-7 lg:gap-10 justify-center">
           {movies.map((movie: SafeMovie) => {
             return (
               <Cards
@@ -35,7 +35,7 @@ export default async function Page() {
               />
             );
           })}
-        </div>
+        </section>
       </div>
     </main>
   );

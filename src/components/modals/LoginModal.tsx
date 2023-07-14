@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 import TextFields from "../TextFields";
 import useLoginModal from "@/app/hooks/useLoginModal";
 
-const LoginModals = () => {
+const LoginModal = () => {
+  // State to handle login form data
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +27,7 @@ const LoginModals = () => {
     defaultValues: { username: "", password: "" },
   });
 
+
   // Register and login modal hooks
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
@@ -33,20 +35,20 @@ const LoginModals = () => {
   // Submit form handler
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
+    // Login using next auth credentials
     signIn("credentials", { ...data, redirect: false }).then((callback) => {
       setIsLoading(false);
-      console.log("callback", callback);
       loginModal.onClose();
       router.refresh();
-
+      // If callback is no error  and the data is valid
       if (callback?.ok && !callback.error) {
         return toast.success("Logged in");
       }
-
+      // If callback is no error and the problem credentials sign in cause wrong pass
       if (callback?.ok && callback?.error === "CredentialsSignin") {
         return toast.error("Invalid Password");
       }
-
+      // Iff callback is no error and no data user found
       if (callback?.ok && callback?.error === "Invalid credentials") {
         return toast.error("No found users, please register");
       } else {
@@ -66,7 +68,7 @@ const LoginModals = () => {
     loginModal.onClose();
   }, [loginModal]);
 
-  // Modal header
+  // Login Modal header
   const header = (
     <div className="flex items-center bg-[#000000] px-5 lg:px-10 w-full py-2">
       <button
@@ -81,12 +83,12 @@ const LoginModals = () => {
     </div>
   );
 
-  // Modal body
+  // Login Modal body
   const body = (
     <div className="flex flex-col gap-3 lg:gap-5">
-      <h4 className="text-lg lg:text-xl font-semibold text-white">
+      <p className="text-lg lg:text-xl font-semibold text-white">
         Welcome back to SEA CINEMA
-      </h4>
+      </p>
       <p className="text-white text-sm lg:text-base">Fill out your username and password to sign in</p>
 
       <TextFields
@@ -117,8 +119,10 @@ const LoginModals = () => {
       </Button>
     </div>
   );
+
+  // Login Modal Footer
   const footer = (
-    <p className="flex items-center justify-center text-sm lg:text-base w-full text-white font-medium">
+    <p className="flex items-center justify-center w-full text-white text-sm lg:text-base font-medium">
       First time using SEA Cinema?{" "}
       <button onClick={onToggle} className="ml-3 text-red font-bold">
         Sign Up
@@ -132,8 +136,9 @@ const LoginModals = () => {
       body={body}
       footer={footer}
       size="medium"
+      onClose={loginModal.onClose}
     />
   );
 };
 
-export default LoginModals;
+export default LoginModal;

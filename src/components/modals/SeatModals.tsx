@@ -58,7 +58,7 @@ const SeatModal = ({
     </div>
   );
   const body = (
-    <div className="flex flex-col gap-4 items-center justify-center w-full pb-2 sm:px-5 lg:px-10 2xl:px-14">
+    <section className="flex flex-col gap-4 items-center justify-center w-full pb-2 sm:px-5 lg:px-10 2xl:px-14">
       <h2 className="text-red text-lg lg:text-xl font-bold text-center">
         Choose Your Seats Now!!!
       </h2>
@@ -97,17 +97,17 @@ const SeatModal = ({
       />
       <div className="flex w-full rounded-lg overflow-hidden  border border-gray">
         <div className="flex flex-col border-r border-gray">
-          <p className="bg-gray text-center text-sm lg:text-base  text-black font-medium px-7 lg:px-20">
+          <h3 className="bg-gray text-center text-sm lg:text-base  text-black font-medium px-7 lg:px-20">
             Total Price
-          </p>
+          </h3>
           <p className="text-center text-sm items-center m-auto lg:text-base  text-white font-bold py-6">
             Rp. {totalPrice || 0}
           </p>
         </div>
         <div className="flex flex-col flex-1">
-          <p className="bg-gray text-center text-black text-sm lg:text-base  font-medium">
+          <h3 className="bg-gray text-center text-black text-sm lg:text-base  font-medium">
             Selected Seats ({selectedSeats.length || 0})
-          </p>
+          </h3>
           <p className="text-center text-white font-bold px-4 flex-wrap py-6 flex items-center justify-center gap-2">
             {selectedSeats.map((seat: string, index: number) => {
               return (
@@ -124,12 +124,12 @@ const SeatModal = ({
       </div>
       <div className="mt-3">
         <Button color="red" onClick={onNext}>
-          Go to payment
+          <h4>Go to payment</h4>
         </Button>
       </div>
-    </div>
+    </section>
   );
-  return <Modal header={header} isOpen={seatModal.isOpen} body={body} />;
+  return <Modal header={header} isOpen={seatModal.isOpen} body={body} onClose={seatModal.onClose} />;
 };
 
 export default SeatModal;

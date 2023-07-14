@@ -37,7 +37,8 @@ const Breadcrumbs = ({ currentText = "" }: { currentText?: string }) => {
 
   return (
     <>
-      <nav className="hidden lg:flex items-center gap-4 font-gantari-md  capitalize font-montserrat-sb text-lg text-white">
+      <nav className="hidden lg:flex items-center gap-4 font-gantari-md  capitalize font-semibold text-lg text-white">
+        <h2 className="hidden">Breadcrumbs</h2>
         {/* Homepage */}
         <Link
           href="/"
