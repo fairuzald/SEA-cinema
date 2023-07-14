@@ -21,7 +21,7 @@ export default async function getCurrentUser() {
       return null;
     }
     return currentUser;
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    throw new Error(err);
   }
 }

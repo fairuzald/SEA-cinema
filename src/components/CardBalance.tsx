@@ -1,11 +1,13 @@
-"use client";
+"use client"
+
+// React and component imports
 import React, { useCallback } from "react";
-import TicketIcon from "./icons/TicketIcon";
 import Button from "./Button";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
+// CardBalance component
 const CardBalance = ({
   title,
   dateTime,
@@ -23,6 +25,8 @@ const CardBalance = ({
     return format(new Date(dateTime), "EEEE, dd MMM yyyy | HH.mm");
   };
   const router = useRouter();
+
+  // Function to handle deletion of top-up history
   const onDeleteTopUp = useCallback(async () => {
     try {
       const response = await fetch(`/api/topup/${id}`, {
@@ -39,6 +43,8 @@ const CardBalance = ({
       toast.error("Something went wrong");
     }
   }, [id, router]);
+
+  // Function to handle deletion of withdrawal history
   const onDeleteWithdrawal = useCallback(async () => {
     try {
       const response = await fetch(`/api/withdrawal/${id}`, {
@@ -55,6 +61,8 @@ const CardBalance = ({
       toast.error("Something went wrong");
     }
   }, [id, router]);
+
+  // Function to handle deletion of shared balance
   const onDeleteSharedBalance = useCallback(async () => {
     try {
       const response = await fetch(`/api/share-balance/${id}`, {
@@ -79,45 +87,43 @@ const CardBalance = ({
         <div className="flex flex-col gap-1 justify-between">
           <div className="flex flex-col gap-1.5">
             {/* title */}
-            <p className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
+            <h3 className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
               {title}
-            </p>
-
+            </h3>
             {/* Date */}
-            <p className="text-[#d9d9d9] font-medium text-xs lg:text-base">
+            <h4 className="text-[#d9d9d9] font-medium text-xs lg:text-base">
               {title === "Share Balance"
                 ? "To : "
                 : title === "Received Balance"
-                ? "From : "
-                : "By : "}{" "}
+                  ? "From : "
+                  : "By : "}{" "}
               {userId}
-            </p>
-            <p className="text-[#d9d9d9] font-medium text-xs lg:text-base">
+            </h4>
+            <h4 className="text-[#d9d9d9] font-medium text-xs lg:text-base">
               {dateTime && formattedDate(dateTime)}
-            </p>
+            </h4>
           </div>
           {/* Status */}
-          <p className="text-xs md:text-sm lg:text-lg font-semibold text-white flex gap-2 lg:gap-3 items-center">
+          <h4 className="text-xs md:text-sm lg:text-lg font-semibold text-white flex gap-2 lg:gap-3 items-center">
             Status : <Button color="red">Success</Button>
-          </p>
+          </h4>
         </div>
         {/* Price and detail button */}
         <div className="flex items-center justify-center flex-col gap-2">
-          <p
-            className={`text-sm md:text-base lg:text-2xl font-bold ${
-              title === "Received Balance" || title==="Top Up" ? "text-green-500" : "text-red"
-            } `}
+          <h4
+            className={`text-xs md:text-base lg:text-2xl font-bold ${title === "Received Balance" || title === "Top Up" ? "text-green-500" : "text-red"
+              } `}
           >
-            {title === "Received Balance" || title==="Top Up" ? "+" : "-"} {amount}
-          </p>
+            {title === "Received Balance" || title === "Top Up" ? "+" : "-"}Rp. {amount?.toLocaleString("id-ID")}
+          </h4>
           <Button
             color="red"
             onClick={
               title === "Top Up"
                 ? onDeleteTopUp
                 : title === "Withdrawal"
-                ? onDeleteWithdrawal
-                : onDeleteSharedBalance
+                  ? onDeleteWithdrawal
+                  : onDeleteSharedBalance
             }
           >
             Delete

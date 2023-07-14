@@ -1,14 +1,15 @@
-"use client";
+"use client"
+
+// Component and React imports
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
-import { Transaction } from "@prisma/client";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-hot-toast";
 
+// DetailsBookingClient component
 const DetailsBookingClient = ({
   booking,
   id,
@@ -17,9 +18,24 @@ const DetailsBookingClient = ({
   id: string;
 }) => {
   const router = useRouter();
+
+  // Date handling
+  const currentDate = new Date(); 
+  const targetDate = new Date(booking.watchDate); 
+  const [hours, minutes] = booking.watchTime.split(':').map(Number);
+  // Sets the target time to the given time, but with the same date as the current date
+  targetDate.setHours(hours);
+  targetDate.setMinutes(minutes);
+  targetDate.setSeconds(0);
+  targetDate.setMilliseconds(0);
+  const isExpired = targetDate.getTime() < currentDate.getTime()
+  
+  // Function to format the date
   const formattedDate = (dateTime: Date) => {
     return format(new Date(dateTime), "EEEE, dd MMM yyyy");
   };
+
+  // Function to handle cancellation
   const handleCancel = async () => {
     try {
       const response = await fetch(`/api/booking/${id}`, {
@@ -40,10 +56,10 @@ const DetailsBookingClient = ({
   return (
     <div className="w-full px-5 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {/* Breadcrumbs */}
-      <Breadcrumbs currentText={booking.bookingNumber}/>
+      <Breadcrumbs currentText={booking.bookingNumber} />
       <div className="w-full flex flex-col justify-center rounded-2xl border-gray border">
-        {/* Movies Info */}
-        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-8 lg:gap-14 2xl:gap-20 flex flex-col lg:flex-row justify-between items-center">
+        {/* Booking Info */}
+        <section className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-8 lg:gap-14 2xl:gap-20 flex flex-col lg:flex-row items-center">
           <Image
             src={booking.movie.poster_url}
             width="1920"
@@ -54,43 +70,43 @@ const DetailsBookingClient = ({
           {/* Text Movie Info */}
           <div className="flex flex-col gap-2.5">
             {/* Title */}
-            <h2 className="text-red font-bold text-2xl lg:text-4xl">
+            <h1 className="text-red font-bold text-2xl lg:text-4xl">
               {booking.movie.title}
-            </h2>
+            </h1>
             {/* Description */}
-            <p className="text-white font-medium text-sm lg:text-lg">
+            <h3 className="text-white font-medium text-sm lg:text-lg">
               {booking.movie.description}
-            </p>
+            </h3>
             {/* Age */}
-            <p className="bg-white rounded-lg text-black text-sm lg:text-lg font-bold p-1.5 lg:px-2 text-center w-fit">
+            <h3 className="bg-white rounded-lg text-black text-sm lg:text-lg font-bold p-1.5 lg:px-2 text-center w-fit">
               {booking.movie.age_rating} +
-            </p>
+            </h3>
             {/* Mall */}
-            <p className="text-white font-medium text-sm lg:text-lg">
+            <h3 className="text-white font-medium text-sm lg:text-lg">
               {booking.location.mall}
-            </p>
-            {/* Locatioun */}
-            <p className="text-white font-medium text-sm lg:text-lg">
+            </h3>
+            {/* Location */}
+            <h3 className="text-white font-medium text-sm lg:text-lg">
               {booking.location.address}
-            </p>
+            </h3>
             {/* Date */}
-            <p className="text-white font-medium text-sm lg:text-lg">
+            <h3 className="text-white font-medium text-sm lg:text-lg">
               {formattedDate(booking.watchDate)} | {booking.watchTime}
-            </p>
+            </h3>
           </div>
-        </div>
-        {/* Bookers Info */}
+        </section>
 
-        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
-          <p className="text-red font-semibold text-xl lg:text-2xl">
+        {/* Bookers Info */}
+        <section className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
+          <h2 className="text-red font-semibold text-xl lg:text-2xl">
             Booking User Information
-          </p>
+          </h2>
           <div className="flex  gap-x-20 items-center">
             {/* Placeholder data */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
-              <p>Name </p>
-              <p>Username</p>
-              <p>Age</p>
+              <h3>Name </h3>
+              <h3>Username</h3>
+              <h3>Age</h3>
             </div>
             {/* Data Booking Info */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
@@ -99,19 +115,20 @@ const DetailsBookingClient = ({
               <p>{booking.user.age}</p>
             </div>
           </div>
-        </div>
+        </section>
+
         {/* Booking Info */}
-        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
-          <p className="text-red font-semibold text-xl lg:text-2xl">
+        <section className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 border-b border-gray gap-4 flex flex-col">
+          <h2 className="text-red font-semibold text-xl lg:text-2xl">
             Booking Information
-          </p>
+          </h2>
           <div className="flex  gap-x-20 items-center">
             {/* Placeholder data */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
-              <p>Code Booking </p>
-              <p>Booking Date</p>
-              <p>{booking.seat.length} Ticket</p>
-              <p>Each Seat</p>
+              <h3>Code Booking </h3>
+              <h3>Booking Date</h3>
+              <h3>{booking.seat.length} Ticket</h3>
+              <h3>Each Seat</h3>
             </div>
             {/* Data Booking Info */}
             <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2.5">
@@ -128,29 +145,30 @@ const DetailsBookingClient = ({
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Payment Status */}
-        <div className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 gap-20 flex  items-center">
+        <section className="w-full px-6 sm:px-10 md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10 gap-20 flex  items-center">
           {/* Placeholder data */}
           <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2">
-            <p>Total Payment</p>
-            <p>Status</p>
+            <h2>Total Payment</h2>
+            <h2>Status</h2>
           </div>
           {/* Data Booking Info */}
           <div className="text-white font-medium text-sm lg:text-xl flex flex-col gap-2">
             <p>Rp. {booking.totalPrice.toLocaleString("id-Id")}</p>
             <Button color="red">{booking.status as string}</Button>
           </div>
-        </div>
+        </section>
       </div>
+      { }
       <div className="w-full px-6 sm:px-10 mx-auto md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10  gap-5 flex flex-col items-center">
         {/* Cancel Order */}
         <p className="text-red font-semibold text-base lg:text-2xl">
-          Do you want to cancel this order?
+          Do you want to {isExpired ? "delete the history order" : "cancel this order"} ?
         </p>
         <Button color="red" onClick={handleCancel}>
-          Cancel
+          {isExpired ? "Delete History" : "Cancel Order"}
         </Button>
       </div>
     </div>

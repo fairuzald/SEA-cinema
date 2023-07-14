@@ -17,10 +17,11 @@ import {
   getMonth,
 } from "date-fns";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { toast } from "react-hot-toast";
+
+// Step handling on payment ticket booking
 export enum STEPS {
   DATE_SELECTION = 1,
   SEAT_SELECTION = 2,
@@ -39,28 +40,49 @@ const MovieClient = ({
   bookings?: Transaction[];
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Use hook to handle seat modal
+  const seatModal = useSeatModal();
+
+  // State to handle required data to open modals
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<any>();
-  const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION); // Use STEPS.DATE_SELECTION instead of DATE_SELECTION
+  const [step, setStep] = useState<STEPS>(STEPS.DATE_SELECTION);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+
+  // Handle logic to mapping allowed date on ticket booking
+  const today = new Date();
+  const releaseDate = new Date(movie.release_date);
+
+  // Calculate the length of the date range to possible watch the movie
+  const endDate = addWeeks(releaseDate, 4); //Assume that movie only can watch 4 weeks after launched
+  const lengthDate = differenceInDays(endDate, today);
+  const isLaunch = today.getTime() > releaseDate.getTime();
+  const isExpired = lengthDate < 0;
+
+  // Handle requirements to open seat modals
+  const checkDataEntry = selectedSeats.length === 0 || !selectedDate || !selectedTime;
+
   // Fetch the transactions for the selected location, date, and time if each component of selectedTime exists
   const filteredTransactions =
     selectedTime && selectedDate
       ? bookings?.filter(
-          (transaction) =>
-            transaction.locationId === selectedTime.id &&
-            getDate(transaction.watchDate) === getDate(selectedDate) &&
-            getMonth(transaction.watchDate) === getMonth(selectedDate) &&
-            transaction.watchTime === selectedTime.time
-        )
+        (transaction) =>
+          transaction.locationId === selectedTime.id &&
+          getDate(transaction.watchDate) === getDate(selectedDate) &&
+          getMonth(transaction.watchDate) === getMonth(selectedDate) &&
+          transaction.watchTime === selectedTime.time
+      )
       : [];
+
   // Extract the seats from the filtered transactions
   const disabledSeats = filteredTransactions?.flatMap(
     (transaction) => transaction.seat
   );
 
   // Handle formatting date
-  function formatDate(dateString: string) {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = date.toLocaleString("en-US", { month: "long" });
@@ -68,66 +90,54 @@ const MovieClient = ({
 
     return `${day} ${month} ${year}`;
   }
-  const today = new Date();
-  const releaseDate = new Date(movie.release_date);
-  // Calculate the length of the date range to possible watch the movie
-  const endDate = addWeeks(releaseDate, 4); //Assume that movie only can watch 4 weeks after launched
-  const lengthDate = differenceInDays(endDate, today);
-  const isLaunch = today.getTime() > releaseDate.getTime();
-  const isExpired = lengthDate < 0;
-  const isFillAll =
-    selectedSeats.length === 0 || !selectedDate || !selectedTime;
-  const seatModal = useSeatModal();
+
+  // Handle datatime mongodb type
   const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
     const [hours, minutes] = timeString.split(":");
     selectedDate.setHours(Number(hours), Number(minutes), 0, 0);
-
-    // Mengonversi objek Date menjadi string dalam format ISO
     return selectedDate.toISOString();
   };
 
-  function onNext() {
+  // Handle what the next step button does based on the current step
+  const onNext = useCallback(() => {
+    // If now at the payment step
     if (step === STEPS.PAYMENT) {
-      if (isFillAll) {
-        toast(
-          "Please select seats, date, and time before proceeding to payment."
-        );
-        return;
+      if (checkDataEntry) {
+        return toast("Please select seats, date, and time before proceeding to payment.");
       }
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
-    } else {
+    }
+    // If now at the date selection step
+    else {
+      // Prevent date and time selection if underage
       if (currentUser?.age && currentUser?.age < movie.age_rating) {
-        return toast.error(
-          "You are underage to watch this film, Please choose another film that is age appropriate"
-        );
+        return toast.error("You are underage to watch this film, Please choose another film that is age appropriate");
       }
+      // Prevent seat modal open if date and time not selected
       if (!selectedDate || !selectedTime) {
-        toast(
-          "Please select date and time before proceeding to seat selection."
-        );
-        return;
+        return toast("Please select date and time before proceeding to seat selection.");
       }
       setStep(STEPS.SEAT_SELECTION);
       seatModal.onOpen();
     }
-  }
-  const router = useRouter();
+  }, [checkDataEntry, currentUser?.age, movie.age_rating, seatModal, selectedDate, selectedTime, step])
+
+  // Handle mechanism booking toicket with shooting api booking
   const onSubmit = useCallback(async () => {
-    if (
-      currentUser?.balance &&
-      selectedSeats.length * movie.ticket_price < currentUser?.balance
-    ) {
+    // If the balance user is enough
+    if (currentUser?.balance && selectedSeats.length * movie.ticket_price < currentUser?.balance) {
+      // If all require data has been entered
       if (selectedSeats && selectedTime && selectedDate) {
+        // Shooting booking api
         try {
           const response = await fetch(`/api/booking`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // Jangan lupa mengirimkan data yang diperlukan dalam body permintaan
             body: JSON.stringify({
-              movieTitle: movie.title,
+              movieId: movie.id,
               locationId: selectedTime.id,
               watchDate: formattingISODateAPI(selectedTime.time, selectedDate),
               watchTime: selectedTime.time,
@@ -135,10 +145,10 @@ const MovieClient = ({
               seats: selectedSeats,
             }),
           });
-
+          // Error handling 
           if (response.ok) {
             router.refresh();
-            toast.success(`Booking success`);
+            toast.success("Booking success");
             setStep(STEPS.DATE_SELECTION);
             return router.push("/booking?active");
           } else {
@@ -157,26 +167,19 @@ const MovieClient = ({
       toast.error("Your balance is not enough, Top Up First");
       router.push(`/profile?topup&previous=${pathname}`);
     }
-  }, [
-    router,
-    movie,
-    pathname,
-    selectedDate,
-    selectedSeats,
-    selectedTime,
-    currentUser?.balance,
-  ]);
+  }, [router, movie, pathname, selectedDate, selectedSeats, selectedTime, currentUser?.balance]);
+
   return (
     <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {step !== STEPS.PAYMENT ? (
         <>
           <Breadcrumbs currentText={movie.title} />
-          <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
+          <section className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
             {/* Left Side for Poster and Button*/}
             <div className="flex flex-col items-center gap-5 lg:gap-14">
-              <h2 className="font-bold flex lg:hidden text-3xl lg:text-4xl text-white">
+              <h1 className="font-bold flex lg:hidden text-3xl lg:text-4xl text-white">
                 {movie.title}
-              </h2>
+              </h1>
               <Image
                 src={movie.poster_url}
                 alt={movie.title}
@@ -191,7 +194,7 @@ const MovieClient = ({
                   </p>
                   <div className="hidden lg:flex">
                     <Button color="red" onClick={onNext}>
-                      Order Ticket Now
+                      <h4>Order Ticket Now</h4>
                     </Button>
                   </div>
                 </>
@@ -200,15 +203,15 @@ const MovieClient = ({
             {/* Right Side for the content */}
             <div className="flex flex-col lg:w-[calc(100%-400px)] xl:w-[calc(100%-518px)] gap-7">
               {/* Title */}
-              <h2 className="font-bold lg:flex hidden text-3xl lg:text-4xl text-white">
+              <h1 className="font-bold lg:flex hidden text-3xl lg:text-4xl text-white">
                 {movie.title}
-              </h2>
+              </h1>
               {/* Container for releasedate, price and age */}
-              <div className="flex gap-3">
+              <section className="flex gap-3">
                 <div className="flex flex-col text-base lg:text-lg font-semibold text-red">
-                  <p>Release Date</p>
-                  <p>Price</p>
-                  <p>Age</p>
+                  <h2>Release Date</h2>
+                  <h2>Price</h2>
+                  <h2>Age</h2>
                 </div>
                 <div className="flex flex-col text-base lg:text-lg font-semibold text-white">
                   <p>:</p>
@@ -220,27 +223,27 @@ const MovieClient = ({
                   <p>Rp. {movie.ticket_price.toLocaleString("id-ID")}</p>
                   <p>{movie.age_rating} +</p>
                 </div>
-              </div>
+              </section>
               {/* Description */}
-              <div className="flex flex-col gap-2 w-full">
+              <section className="flex flex-col gap-2 w-full">
                 <h2 className="font-bold text-lg lg:text-xl text-red">
                   Description
                 </h2>
                 <p className="w-full font-light text-sm lg:text-base text-white">
                   {movie.description}
                 </p>
-              </div>
+              </section>
               {currentUser ? (
                 isLaunch ? (
                   isExpired ? (
                     <div className="flex flex-col flex-auto gap-2 w-full">
-                      <p className="text-red text-2xl lg:text-3xl font-bold ">
+                      <h2 className="text-red text-2xl lg:text-3xl font-bold ">
                         Not Show Anymore
-                      </p>
+                      </h2>
                     </div>
                   ) : (
                     <>
-                      <div className="flex flex-col gap-2 w-full">
+                      <section className="flex flex-col gap-2 w-full">
                         <h2 className="font-bold text-lg lg:text-xl text-red">
                           Schedule
                         </h2>
@@ -249,9 +252,9 @@ const MovieClient = ({
                           selectedDate={selectedDate}
                           length={lengthDate}
                         />
-                      </div>
+                      </section>
                       {/* Location */}
-                      <div className="flex flex-col gap-4 w-full">
+                      <section className="flex flex-col gap-4 w-full">
                         <h2 className="font-bold text-lg lg:text-xl text-red">
                           Location
                         </h2>
@@ -262,14 +265,14 @@ const MovieClient = ({
                           data={locations}
                           selectedDate={selectedDate}
                         ></Location>
-                      </div>
+                      </section>
                     </>
                   )
                 ) : (
                   <div className="flex flex-col flex-auto gap-2 w-full">
-                    <p className="text-white text-2xl lg:text-3xl font-bold ">
+                    <h2 className="text-white text-2xl lg:text-3xl font-bold ">
                       Not Launching Yet
-                    </p>
+                    </h2>
                   </div>
                 )
               ) : (
@@ -284,7 +287,8 @@ const MovieClient = ({
                   </p>
                   <div className="w-[200px]">
                     <Button color="red" size="large" onClick={onNext}>
-                      Order Ticket Now
+                      <h4>
+                        Order Ticket Now</h4>
                     </Button>
                   </div>
                 </div>
@@ -294,7 +298,7 @@ const MovieClient = ({
                     setSelectedSeats={setSelectedSeats}
                     step={step}
                     setStep={setStep}
-                    requirement={isFillAll}
+                    requirement={checkDataEntry}
                     totalPrice={selectedSeats.length * movie.ticket_price}
                     disabledSeats={disabledSeats}
                     selectedDate={format(selectedDate, "d MMMM yyyy")}
@@ -304,12 +308,12 @@ const MovieClient = ({
                 )}
               </>
             )}
-          </div>
+          </section>
         </>
       ) : (
         <>
-          <div className="w-full flex flex-col gap-6 lg:gap-10">
-            {/* Breadcrumbs */}
+          <section className="w-full flex flex-col gap-6 lg:gap-10">
+            {/* Breadcrumbs back button */}
             <div className="flex gap-10 items-center">
               <button onClick={() => setStep(STEPS.DATE_SELECTION)}>
                 <ArrowIcon style="lg:w-8 lg:h-8 w-6 h-6 font-bold fill-white" />
@@ -333,26 +337,26 @@ const MovieClient = ({
                     {movie.title}
                   </h2>
                   {/* Description */}
-                  <p className="text-white font-medium text-sm lg:text-lg">
+                  <h3 className="text-white font-medium text-sm lg:text-lg">
                     {movie.description}
-                  </p>
+                  </h3>
                   {/* Age */}
-                  <p className="bg-white rounded-lg text-black text-sm lg:text-base text-center p-1.5 lg:p-2 font-bold w-fit">
+                  <h3 className="bg-white rounded-lg text-black text-sm lg:text-base text-center p-1.5 lg:p-2 font-bold w-fit">
                     {movie.age_rating} +
-                  </p>
+                  </h3>
                   {/* Mall */}
-                  <p className="text-white font-medium text-sm lg:text-lg">
+                  <h3 className="text-white font-medium text-sm lg:text-lg">
                     {selectedTime.mall}
-                  </p>
+                  </h3>
                   {/* Locatioun */}
-                  <p className="text-white font-medium text-sm lg:text-lg">
+                  <h3 className="text-white font-medium text-sm lg:text-lg">
                     {selectedTime.address}
-                  </p>
+                  </h3>
                   {/* Date */}
                   {selectedDate && (
-                    <p className="text-white font-medium text-sm lg:text-lg">
+                    <h3 className="text-white font-medium text-sm lg:text-lg">
                       {format(selectedDate, "EEEE, d MMMM yyyy, HH:mm")}
-                    </p>
+                    </h3>
                   )}
                 </div>
               </div>
@@ -361,14 +365,14 @@ const MovieClient = ({
               {/* Booking Info */}
               <div className="w-full md:px-8 lg:text-xl lg:px-24 lg:py-10 gap-6 flex flex-col ">
                 {/* Transaction Detail subtitle */}
-                <p className="text-white font-semibold text-base lg:text-xl">
+                <h3 className="text-white font-semibold text-base lg:text-xl">
                   Transaction Details
-                </p>
+                </h3>
                 <div className=" gap-x-20 flex ">
                   {/* Placeholder data */}
                   <div className="text-white font-medium  text-sm lg:text-xl flex flex-col gap-3">
-                    <p>{selectedSeats.length} Ticket</p>
-                    <p>Each Seat</p>
+                    <h4>{selectedSeats.length} Ticket</h4>
+                    <h4>Each Seat</h4>
                   </div>
                   {/* Data Booking Info */}
                   <div className="text-white font-medium  text-sm lg:text-xl flex flex-col gap-3">
@@ -397,70 +401,70 @@ const MovieClient = ({
                 * Make sure all data is correct
               </p>
             </div>
-          </div>
-          {/* Footer */}
-          <div className="w-full 2xl:w-[calc(100%-40px)] pb-32 mx-auto lg:px-10 flex flex-col gap-8 lg:gap-14 border-t-[2px] border-white">
-            {/* Total Price */}
-            <div className="flex justify-between pt-3 lg:pt-8 lg:px-10 2xl:px-20">
-              <p className="text-gray font-medium text-sm lg:text-xl">
-                Total Balance
-              </p>
-              <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
-              </p>
-            </div>
-            <div className="flex justify-between lg:px-10 2xl:px-20">
-              <p className="text-gray font-medium text-sm lg:text-xl">
-                Total Payment
-              </p>
-              <p className="text-white font-bold text-base lg:text-2xl">
-                Rp.{" "}
-                {(selectedSeats.length * movie.ticket_price).toLocaleString(
-                  "id-Id"
-                )}
-              </p>
-            </div>
-            <div className="flex mx-auto gap-7">
-              {currentUser ? (
-                currentUser?.balance <
-                selectedSeats.length * movie.ticket_price ? (
-                  <>
-                    <Button
-                      color="red"
-                      size="large"
-                      onClick={() => {
-                        setStep(STEPS.DATE_SELECTION);
-                        router.push(`/movies/${movie.id}`);
-                      }}
-                    >
-                      Cancel Booking
-                    </Button>
-                    <Button color="red" size="large" onClick={onSubmit}>
-                      Top Up
-                    </Button>
-                  </>
+            {/* Footer */}
+            <div className="w-full 2xl:w-[calc(100%-40px)] pb-32 mx-auto lg:px-10 flex flex-col gap-8 lg:gap-14 border-t-[2px] border-white">
+              {/* Total Price */}
+              <div className="flex justify-between pt-3 lg:pt-8 lg:px-10 2xl:px-20">
+                <h4 className="text-gray font-medium text-sm lg:text-xl">
+                  Total Balance
+                </h4>
+                <p className="text-white font-bold text-base lg:text-2xl">
+                  Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
+                </p>
+              </div>
+              <div className="flex justify-between lg:px-10 2xl:px-20">
+                <h4 className="text-gray font-medium text-sm lg:text-xl">
+                  Total Payment
+                </h4>
+                <p className="text-white font-bold text-base lg:text-2xl">
+                  Rp.{" "}
+                  {(selectedSeats.length * movie.ticket_price).toLocaleString(
+                    "id-Id"
+                  )}
+                </p>
+              </div>
+              <div className="flex mx-auto gap-7">
+                {currentUser ? (
+                  currentUser?.balance <
+                    selectedSeats.length * movie.ticket_price ? (
+                    <>
+                      <Button
+                        color="red"
+                        size="large"
+                        onClick={() => {
+                          setStep(STEPS.DATE_SELECTION);
+                          router.push(`/movies/${movie.id}`);
+                        }}
+                      >
+                        Cancel Booking
+                      </Button>
+                      <Button color="red" size="large" onClick={onSubmit}>
+                        Top Up
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        color="red"
+                        size="large"
+                        onClick={() => {
+                          setStep(STEPS.DATE_SELECTION);
+                          router.push(`/movies/${movie.id}`);
+                        }}
+                      >
+                        Cancel Booking
+                      </Button>
+                      <Button color="red" size="large" onClick={onSubmit}>
+                        BOOKING NOW
+                      </Button>
+                    </>
+                  )
                 ) : (
-                  <>
-                    <Button
-                      color="red"
-                      size="large"
-                      onClick={() => {
-                        setStep(STEPS.DATE_SELECTION);
-                        router.push(`/movies/${movie.id}`);
-                      }}
-                    >
-                      Cancel Booking
-                    </Button>
-                    <Button color="red" size="large" onClick={onSubmit}>
-                      BOOKING NOW
-                    </Button>
-                  </>
-                )
-              ) : (
-                <p className="text-white font-bold text-2xl">Loading....</p>
-              )}
+                  <p className="text-white font-bold text-2xl">Loading....</p>
+                )}
+              </div>
             </div>
-          </div>
+          </section>
         </>
       )}
     </div>

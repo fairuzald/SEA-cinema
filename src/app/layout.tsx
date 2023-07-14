@@ -3,15 +3,16 @@ import "./globals.css";
 import { Montserrat } from "next/font/google";
 import ClientOnly from "@/components/ClientOnly";
 import { Toaster } from "react-hot-toast";
-import RegisterModals from "@/components/modals/RegisterModals";
-import LoginModals from "@/components/modals/LoginModals";
+import RegisterModals from "@/components/modals/RegisterModal";
+import LoginModals from "@/components/modals/LoginModal";
 import { NextAuthProvider } from "@/components/NextAuthProvider";
+import Footer from "@/components/Footer";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default:"SEA Cinema",
+    default: "SEA Cinema",
     template: "%s | SEA Cinema",
   },
   description: "SEA cinem a movie booking app",
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
+      <body className={montserrat.className} aria-label="Body">
         <ClientOnly>
           <NextAuthProvider>
             <Navbar />
@@ -33,6 +34,7 @@ export default function RootLayout({
             <LoginModals />
             <div>{children}</div>
             <div id="portals"></div>
+            <Footer/>
           </NextAuthProvider>
         </ClientOnly>
       </body>
