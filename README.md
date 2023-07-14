@@ -103,6 +103,9 @@ Please ensure you have Node.js and npm installed on your system before proceedin
 To use Just Do List, go to
 [https://sea-cinema.fairuzald.com/](https://sea-cinema.fairuzald.com/).
 
+# Environment Variables
+https://gist.github.com/fairuzald/1d1d9cea22fd867673f2716a66e46e38
+
 # Feedback and Contributions
 
 We welcome feedback and contributions from the community to make SEA Cinema even better. If you encounter any issues or have suggestions for improvement, please open an issue on our GitHub repository. Feel free to fork the project and submit pull requests with new features or bug fixes as well.
