@@ -1,10 +1,10 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Movie {
@@ -18,59 +18,58 @@ model Movie {
   transactions Transaction[]
 }
 
-
 model Topup {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @db.ObjectId
-  amount     Int
-  createdAt  DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  amount    Int
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id                String        @id @default(auto()) @map("_id") @db.ObjectId
-  username          String        @unique
-  hashedPassword    String
-  name              String        @unique
-  age               Int
-  balance           Int
-  telephoneNumber   String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  favoritedIds      String[]      @db.ObjectId
-  transactions      Transaction[] @relation("UserTransactions")
-  sentBalances      ShareBalance[] @relation("SentBalances")
-  receivedBalances  ShareBalance[] @relation("ReceivedBalances")
-  topups            Topup[]
-  withdrawals       Withdrawal[]
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  username         String         @unique
+  hashedPassword   String
+  name             String         @unique
+  age              Int
+  balance          Int
+  telephoneNumber  String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  favoritedIds     String[]       @db.ObjectId
+  transactions     Transaction[]  @relation("UserTransactions")
+  sentBalances     ShareBalance[] @relation("SentBalances")
+  receivedBalances ShareBalance[] @relation("ReceivedBalances")
+  topups           Topup[]
+  withdrawals      Withdrawal[]
 }
+
 model Withdrawal {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @db.ObjectId
-  amount     Int
-  createdAt  DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  amount    Int
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 }
 
 model ShareBalance {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  senderId    String   @db.ObjectId
-  receiverId  String   @db.ObjectId
-  amount      Int
-  createdAt   DateTime @default(now())
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId   String   @db.ObjectId
+  receiverId String   @db.ObjectId
+  amount     Int
+  createdAt  DateTime @default(now())
 
   sender   User @relation("SentBalances", fields: [senderId], references: [id])
   receiver User @relation("ReceivedBalances", fields: [receiverId], references: [id])
 }
 
-
 model Transaction {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   bookingNumber String   @unique
   userId        String   @db.ObjectId
-  movieTitle    String
+  movieId       String   @db.ObjectId
   locationId    String   @db.ObjectId
   watchDate     DateTime
   watchTime     String
@@ -80,14 +79,14 @@ model Transaction {
   createdAt     DateTime @default(now())
 
   user     User     @relation("UserTransactions", fields: [userId], references: [id], onDelete: Cascade)
-  movie    Movie    @relation(fields: [movieTitle], references: [title], onDelete: Cascade)
+  movie    Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
   location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
 }
 
 model Location {
-    id          String        @id @default(auto()) @map("_id") @db.ObjectId
-    mall        String
-    address     String
-    times       String[]
-    Transaction Transaction[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  mall        String
+  address     String
+  times       String[]
+  Transaction Transaction[]
 }
