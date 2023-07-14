@@ -123,6 +123,7 @@ const MovieClient = ({
     }
   }, [checkDataEntry, currentUser?.age, movie.age_rating, seatModal, selectedDate, selectedTime, step])
 
+  // Handle mechanism booking toicket with shooting api booking
   const onSubmit = useCallback(async () => {
     // If the balance user is enough
     if (currentUser?.balance && selectedSeats.length * movie.ticket_price < currentUser?.balance) {
@@ -136,7 +137,7 @@ const MovieClient = ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              movieTitle: movie.title,
+              movieId: movie.id,
               locationId: selectedTime.id,
               watchDate: formattingISODateAPI(selectedTime.time, selectedDate),
               watchTime: selectedTime.time,
@@ -144,7 +145,7 @@ const MovieClient = ({
               seats: selectedSeats,
             }),
           });
-
+          // Error handling 
           if (response.ok) {
             router.refresh();
             toast.success("Booking success");
@@ -169,11 +170,11 @@ const MovieClient = ({
   }, [router, movie, pathname, selectedDate, selectedSeats, selectedTime, currentUser?.balance]);
 
   return (
-    <section className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
+    <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
       {step !== STEPS.PAYMENT ? (
         <>
           <Breadcrumbs currentText={movie.title} />
-          <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
+          <section className="w-full flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 2xl:gap-24">
             {/* Left Side for Poster and Button*/}
             <div className="flex flex-col items-center gap-5 lg:gap-14">
               <h1 className="font-bold flex lg:hidden text-3xl lg:text-4xl text-white">
@@ -307,7 +308,7 @@ const MovieClient = ({
                 )}
               </>
             )}
-          </div>
+          </section>
         </>
       ) : (
         <>
@@ -400,73 +401,73 @@ const MovieClient = ({
                 * Make sure all data is correct
               </p>
             </div>
-          {/* Footer */}
-          <div className="w-full 2xl:w-[calc(100%-40px)] pb-32 mx-auto lg:px-10 flex flex-col gap-8 lg:gap-14 border-t-[2px] border-white">
-            {/* Total Price */}
-            <div className="flex justify-between pt-3 lg:pt-8 lg:px-10 2xl:px-20">
-              <h4 className="text-gray font-medium text-sm lg:text-xl">
-                Total Balance
-              </h4>
-              <p className="text-white font-bold text-base lg:text-2xl">
-                Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
-              </p>
-            </div>
-            <div className="flex justify-between lg:px-10 2xl:px-20">
-              <h4 className="text-gray font-medium text-sm lg:text-xl">
-                Total Payment
-              </h4>
-              <p className="text-white font-bold text-base lg:text-2xl">
-                Rp.{" "}
-                {(selectedSeats.length * movie.ticket_price).toLocaleString(
-                  "id-Id"
-                )}
-              </p>
-            </div>
-            <div className="flex mx-auto gap-7">
-              {currentUser ? (
-                currentUser?.balance <
-                  selectedSeats.length * movie.ticket_price ? (
-                  <>
-                    <Button
-                      color="red"
-                      size="large"
-                      onClick={() => {
-                        setStep(STEPS.DATE_SELECTION);
-                        router.push(`/movies/${movie.id}`);
-                      }}
-                    >
-                      Cancel Booking
-                    </Button>
-                    <Button color="red" size="large" onClick={onSubmit}>
-                      Top Up
-                    </Button>
-                  </>
+            {/* Footer */}
+            <div className="w-full 2xl:w-[calc(100%-40px)] pb-32 mx-auto lg:px-10 flex flex-col gap-8 lg:gap-14 border-t-[2px] border-white">
+              {/* Total Price */}
+              <div className="flex justify-between pt-3 lg:pt-8 lg:px-10 2xl:px-20">
+                <h4 className="text-gray font-medium text-sm lg:text-xl">
+                  Total Balance
+                </h4>
+                <p className="text-white font-bold text-base lg:text-2xl">
+                  Rp. {currentUser?.balance.toLocaleString("id-Id") || 0}
+                </p>
+              </div>
+              <div className="flex justify-between lg:px-10 2xl:px-20">
+                <h4 className="text-gray font-medium text-sm lg:text-xl">
+                  Total Payment
+                </h4>
+                <p className="text-white font-bold text-base lg:text-2xl">
+                  Rp.{" "}
+                  {(selectedSeats.length * movie.ticket_price).toLocaleString(
+                    "id-Id"
+                  )}
+                </p>
+              </div>
+              <div className="flex mx-auto gap-7">
+                {currentUser ? (
+                  currentUser?.balance <
+                    selectedSeats.length * movie.ticket_price ? (
+                    <>
+                      <Button
+                        color="red"
+                        size="large"
+                        onClick={() => {
+                          setStep(STEPS.DATE_SELECTION);
+                          router.push(`/movies/${movie.id}`);
+                        }}
+                      >
+                        Cancel Booking
+                      </Button>
+                      <Button color="red" size="large" onClick={onSubmit}>
+                        Top Up
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        color="red"
+                        size="large"
+                        onClick={() => {
+                          setStep(STEPS.DATE_SELECTION);
+                          router.push(`/movies/${movie.id}`);
+                        }}
+                      >
+                        Cancel Booking
+                      </Button>
+                      <Button color="red" size="large" onClick={onSubmit}>
+                        BOOKING NOW
+                      </Button>
+                    </>
+                  )
                 ) : (
-                  <>
-                    <Button
-                      color="red"
-                      size="large"
-                      onClick={() => {
-                        setStep(STEPS.DATE_SELECTION);
-                        router.push(`/movies/${movie.id}`);
-                      }}
-                    >
-                      Cancel Booking
-                    </Button>
-                    <Button color="red" size="large" onClick={onSubmit}>
-                      BOOKING NOW
-                    </Button>
-                  </>
-                )
-              ) : (
-                <p className="text-white font-bold text-2xl">Loading....</p>
-              )}
+                  <p className="text-white font-bold text-2xl">Loading....</p>
+                )}
+              </div>
             </div>
-          </div>
           </section>
         </>
       )}
-    </section>
+    </div>
   );
 };
 

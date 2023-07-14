@@ -19,7 +19,7 @@ export default async function MoviesPage() {
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}
-      <div className="w-full px-6 md:px-20 pt-[100px] lg:pt-[130px] flex flex-col gap-10">
+      <div className="w-full px-6 md:px-20 pt-[100px] pb-20 lg:p-[130px] flex flex-col gap-10">
         {/* Breadcrumbs */}
         <Breadcrumbs />
         {/* Mapping movie data into cards component */}
