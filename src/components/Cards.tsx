@@ -22,10 +22,12 @@ const Cards: React.FC<CardsProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  // Fetch information favorited and function to shooting api make favorite
   const { hasFavorited, toggleFavorite } = useFavorites({
     currentUser: currentUser,
     movieId: data.id,
   });
+  // Handle hover animation
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -33,6 +35,7 @@ const Cards: React.FC<CardsProps> = ({
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+  // Formatting date data
   const formattedDate = (dateTime: Date) => {
     return format(new Date(dateTime), "dd MMM yyyy");
   };
