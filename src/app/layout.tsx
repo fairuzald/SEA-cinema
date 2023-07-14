@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import RegisterModals from "@/components/modals/RegisterModal";
 import LoginModals from "@/components/modals/LoginModal";
 import { NextAuthProvider } from "@/components/NextAuthProvider";
+import Footer from "@/components/Footer";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
             <LoginModals />
             <div>{children}</div>
             <div id="portals"></div>
+            <Footer/>
           </NextAuthProvider>
         </ClientOnly>
       </body>
