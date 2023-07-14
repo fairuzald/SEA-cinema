@@ -103,6 +103,9 @@ Please ensure you have Node.js and npm installed on your system before proceedin
 To use Just Do List, go to
 [https://sea-cinema.fairuzald.com/](https://sea-cinema.fairuzald.com/).
 
+# Figma Design
+https://www.figma.com/file/SCBEjBCM9Tb6cexzFKXFub/SEA-CINEMA?type=design&node-id=0%3A1&mode=design&t=xvEFG2BpPAx8MFIC-1
+
 # Environment Variables
 https://gist.github.com/fairuzald/1d1d9cea22fd867673f2716a66e46e38
 
