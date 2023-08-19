@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // React and component imports
 import React, { useCallback } from "react";
@@ -95,8 +95,8 @@ const CardBalance = ({
               {title === "Share Balance"
                 ? "To : "
                 : title === "Received Balance"
-                  ? "From : "
-                  : "By : "}{" "}
+                ? "From : "
+                : "By : "}{" "}
               {userId}
             </h4>
             <h4 className="text-[#d9d9d9] font-medium text-xs lg:text-base">
@@ -111,10 +111,14 @@ const CardBalance = ({
         {/* Price and detail button */}
         <div className="flex items-center justify-center flex-col gap-2">
           <h4
-            className={`text-xs md:text-base lg:text-2xl font-bold ${title === "Received Balance" || title === "Top Up" ? "text-green-500" : "text-red"
-              } `}
+            className={`text-xs md:text-base lg:text-2xl font-bold ${
+              title === "Received Balance" || title === "Top Up"
+                ? "text-green-500"
+                : "text-red"
+            } `}
           >
-            {title === "Received Balance" || title === "Top Up" ? "+" : "-"}Rp. {amount?.toLocaleString("id-ID")}
+            {title === "Received Balance" || title === "Top Up" ? "+" : "-"}Rp.{" "}
+            {amount?.toLocaleString("id-ID")}
           </h4>
           <Button
             color="red"
@@ -122,8 +126,8 @@ const CardBalance = ({
               title === "Top Up"
                 ? onDeleteTopUp
                 : title === "Withdrawal"
-                  ? onDeleteWithdrawal
-                  : onDeleteSharedBalance
+                ? onDeleteWithdrawal
+                : onDeleteSharedBalance
             }
           >
             Delete

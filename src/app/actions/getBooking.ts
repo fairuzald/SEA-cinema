@@ -21,7 +21,7 @@ export default async function getBooking(userId: string) {
     });
 
     return transactions;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error);
   }
 }

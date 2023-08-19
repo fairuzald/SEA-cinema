@@ -60,7 +60,7 @@ export async function PUT(req: Request) {
   if (!currentUser) {
     return NextResponse.json(
       { error: "Invalid Current User" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

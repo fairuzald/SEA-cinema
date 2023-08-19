@@ -30,7 +30,7 @@ const Timer = ({
   }, [setStep]);
 
   // Convert the remaining time in seconds to {minutes, seconds} object
-  const getTimeLeft = () => {                                               
+  const getTimeLeft = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     return { minutes, seconds };

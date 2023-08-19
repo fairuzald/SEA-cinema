@@ -34,7 +34,9 @@ const UserFilter = ({
             <div>
               {option.name},
               <span className="text-neutral-500 ml-1">{option.username}</span>
-              <span className="text-neutral-500 ml-1">{option.telephoneNumber}</span>
+              <span className="text-neutral-500 ml-1">
+                {option.telephoneNumber}
+              </span>
             </div>
           </div>
         )}

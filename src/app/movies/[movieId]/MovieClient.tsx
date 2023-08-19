@@ -62,23 +62,24 @@ const MovieClient = ({
   const isExpired = lengthDate < 0;
 
   // Handle requirements to open seat modals
-  const checkDataEntry = selectedSeats.length === 0 || !selectedDate || !selectedTime;
+  const checkDataEntry =
+    selectedSeats.length === 0 || !selectedDate || !selectedTime;
 
   // Fetch the transactions for the selected location, date, and time if each component of selectedTime exists
   const filteredTransactions =
     selectedTime && selectedDate
       ? bookings?.filter(
-        (transaction) =>
-          transaction.locationId === selectedTime.id &&
-          getDate(transaction.watchDate) === getDate(selectedDate) &&
-          getMonth(transaction.watchDate) === getMonth(selectedDate) &&
-          transaction.watchTime === selectedTime.time
-      )
+          (transaction) =>
+            transaction.locationId === selectedTime.id &&
+            getDate(transaction.watchDate) === getDate(selectedDate) &&
+            getMonth(transaction.watchDate) === getMonth(selectedDate) &&
+            transaction.watchTime === selectedTime.time,
+        )
       : [];
 
   // Extract the seats from the filtered transactions
   const disabledSeats = filteredTransactions?.flatMap(
-    (transaction) => transaction.seat
+    (transaction) => transaction.seat,
   );
 
   // Handle formatting date
@@ -89,7 +90,7 @@ const MovieClient = ({
     const day = date.getDate();
 
     return `${day} ${month} ${year}`;
-  }
+  };
 
   // Handle datatime mongodb type
   const formattingISODateAPI = (timeString: string, selectedDate: Date) => {
@@ -103,7 +104,9 @@ const MovieClient = ({
     // If now at the payment step
     if (step === STEPS.PAYMENT) {
       if (checkDataEntry) {
-        return toast("Please select seats, date, and time before proceeding to payment.");
+        return toast(
+          "Please select seats, date, and time before proceeding to payment.",
+        );
       }
       seatModal.onClose();
       setStep(STEPS.DATE_SELECTION);
@@ -112,21 +115,36 @@ const MovieClient = ({
     else {
       // Prevent date and time selection if underage
       if (currentUser?.age && currentUser?.age < movie.age_rating) {
-        return toast.error("You are underage to watch this film, Please choose another film that is age appropriate");
+        return toast.error(
+          "You are underage to watch this film, Please choose another film that is age appropriate",
+        );
       }
       // Prevent seat modal open if date and time not selected
       if (!selectedDate || !selectedTime) {
-        return toast("Please select date and time before proceeding to seat selection.");
+        return toast(
+          "Please select date and time before proceeding to seat selection.",
+        );
       }
       setStep(STEPS.SEAT_SELECTION);
       seatModal.onOpen();
     }
-  }, [checkDataEntry, currentUser?.age, movie.age_rating, seatModal, selectedDate, selectedTime, step])
+  }, [
+    checkDataEntry,
+    currentUser?.age,
+    movie.age_rating,
+    seatModal,
+    selectedDate,
+    selectedTime,
+    step,
+  ]);
 
   // Handle mechanism booking toicket with shooting api booking
   const onSubmit = useCallback(async () => {
     // If the balance user is enough
-    if (currentUser?.balance && selectedSeats.length * movie.ticket_price < currentUser?.balance) {
+    if (
+      currentUser?.balance &&
+      selectedSeats.length * movie.ticket_price < currentUser?.balance
+    ) {
       // If all require data has been entered
       if (selectedSeats && selectedTime && selectedDate) {
         // Shooting booking api
@@ -145,7 +163,7 @@ const MovieClient = ({
               seats: selectedSeats,
             }),
           });
-          // Error handling 
+          // Error handling
           if (response.ok) {
             router.refresh();
             toast.success("Booking success");
@@ -167,7 +185,15 @@ const MovieClient = ({
       toast.error("Your balance is not enough, Top Up First");
       router.push(`/profile?topup&previous=${pathname}`);
     }
-  }, [router, movie, pathname, selectedDate, selectedSeats, selectedTime, currentUser?.balance]);
+  }, [
+    router,
+    movie,
+    pathname,
+    selectedDate,
+    selectedSeats,
+    selectedTime,
+    currentUser?.balance,
+  ]);
 
   return (
     <div className="w-full px-8 sm:px-20 lg:px-16 overflow-hidden my-20 2xl:px-28 lg:pt-[60px] flex flex-col gap-10">
@@ -287,8 +313,7 @@ const MovieClient = ({
                   </p>
                   <div className="w-[200px]">
                     <Button color="red" size="large" onClick={onNext}>
-                      <h4>
-                        Order Ticket Now</h4>
+                      <h4>Order Ticket Now</h4>
                     </Button>
                   </div>
                 </div>
@@ -378,7 +403,7 @@ const MovieClient = ({
                   <div className="text-white font-medium  text-sm lg:text-xl flex flex-col gap-3">
                     <p>
                       {selectedSeats.map((item, index) =>
-                        index === selectedSeats.length - 1 ? item : item + ", "
+                        index === selectedSeats.length - 1 ? item : item + ", ",
                       )}
                     </p>
                     <p>
@@ -419,14 +444,14 @@ const MovieClient = ({
                 <p className="text-white font-bold text-base lg:text-2xl">
                   Rp.{" "}
                   {(selectedSeats.length * movie.ticket_price).toLocaleString(
-                    "id-Id"
+                    "id-Id",
                   )}
                 </p>
               </div>
               <div className="flex mx-auto gap-7">
                 {currentUser ? (
                   currentUser?.balance <
-                    selectedSeats.length * movie.ticket_price ? (
+                  selectedSeats.length * movie.ticket_price ? (
                     <>
                       <Button
                         color="red"

@@ -29,7 +29,7 @@ const CardTransaction = ({ data }: { data: any }) => {
             <h3 className="text-white text-sm md:text-base lg:text-xl font-semibold capitalize">
               {data.movie.title}
             </h3>
-           
+
             {/* Location */}
             <div className="flex gap-2  items-center">
               <LocationIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
@@ -39,7 +39,6 @@ const CardTransaction = ({ data }: { data: any }) => {
             </div>
             {/* Ticket Count   */}
             <div className="flex gap-2  items-center">
-              
               <TicketIcon style="w-3 h-3 lg:w-5 lg:h-5 fill-red" />
               <h4 className="text-white font-medium text-xs md:text-sm lg:text-lg">
                 Ticket (
@@ -50,7 +49,8 @@ const CardTransaction = ({ data }: { data: any }) => {
               </h4>
             </div>
             <h4 className="text-white font-medium text-xs md:text-sm lg:text-lg">
-               Code Booking:  {data.bookingNumber}</h4>
+              Code Booking: {data.bookingNumber}
+            </h4>
             {/* Date */}
             <h4 className="text-[#d9d9d9] font-medium text-xs lg:text-base">
               {formattedDate(data.watchDate) + " | " + data.watchTime}
@@ -68,7 +68,7 @@ const CardTransaction = ({ data }: { data: any }) => {
           </h4>
 
           <Link href={`/booking/${data.id}`}>
-          <Button color="red">Details</Button>
+            <Button color="red">Details</Button>
           </Link>
         </div>
       </div>

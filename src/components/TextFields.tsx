@@ -29,7 +29,7 @@ const TextFields: React.FC<TextFieldsProps> = ({
   formatPrice,
 }) => {
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newValue = e.target.value;
 

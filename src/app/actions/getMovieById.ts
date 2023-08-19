@@ -14,7 +14,7 @@ export default async function getmovieById(params: { movieId: string }) {
         id: movieId,
       },
     });
-    
+
     // Error movie not found
     if (!movie) {
       return null;

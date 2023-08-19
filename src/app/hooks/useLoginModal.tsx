@@ -10,4 +10,4 @@ const useLoginModal = create<LoginModalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
-export default useLoginModal
+export default useLoginModal;

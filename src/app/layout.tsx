@@ -34,7 +34,7 @@ export default function RootLayout({
             <LoginModals />
             <div>{children}</div>
             <div id="portals"></div>
-            <Footer/>
+            <Footer />
           </NextAuthProvider>
         </ClientOnly>
       </body>

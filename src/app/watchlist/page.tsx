@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 // Generate metadata title filfill the templates
 export const metadata = {
-  title: "Watchlist Page"
-}
+  title: "Watchlist Page",
+};
 
 // WatchlistPage
 export default async function WatchListPage() {
@@ -47,7 +47,11 @@ export default async function WatchListPage() {
         ) : (
           // If there's no data watchlist found
           <section className="flex w-full items-center flex-col sm:w-[calc(100%-20px)] gap-10 lg:mx-auto lg:w-[650px] flex-auto font-bold justify-center text-white text-2xl text-center lg:text-3xl">
-           <h1> Not found your Watchlist Movie, Go to the movies page and press love to add it to your watchlist</h1>
+            <h1>
+              {" "}
+              Not found your Watchlist Movie, Go to the movies page and press
+              love to add it to your watchlist
+            </h1>
             <Link href="/movies">
               <Button color="trans-red" size="large">
                 <h2>Go Movie Page</h2>

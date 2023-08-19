@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 
 const Seat = ({
-  selectedSeats=[],
+  selectedSeats = [],
   setSelectedSeats,
   disabledSeats,
 }: {
@@ -19,7 +19,7 @@ const Seat = ({
         setSelectedSeats([...selectedSeats, seatNumber]);
       }
     },
-    [selectedSeats, setSelectedSeats]
+    [selectedSeats, setSelectedSeats],
   );
 
   const renderSeats = (key: "left" | "right") => {
@@ -32,7 +32,8 @@ const Seat = ({
           alphabet.charAt(row) + (key === "left" ? col + 1 : col + 5);
 
         const isSeatSelected = selectedSeats.includes(seatNumber);
-        const isSeatDisabled = disabledSeats && disabledSeats.includes(seatNumber);
+        const isSeatDisabled =
+          disabledSeats && disabledSeats.includes(seatNumber);
 
         seats.push(
           <button
@@ -52,7 +53,7 @@ const Seat = ({
             disabled={isSeatDisabled}
           >
             {seatNumber}
-          </button>
+          </button>,
         );
       }
     }

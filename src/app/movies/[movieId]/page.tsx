@@ -5,26 +5,26 @@ import getLocations from "@/app/actions/getLocations";
 import { SafeMovie } from "@/app/types";
 import { User } from "@prisma/client";
 import getCurrentUser from "@/app/actions/getCurrentuser";
-import { Metadata, ResolvingMetadata } from 'next'
+import { Metadata, ResolvingMetadata } from "next";
 import getAllBookings from "@/app/actions/getAllBookings";
 export const dynamic = "force-dynamic";
 
 // Generate dynamic metadata title
 type Props = {
   params: { movieId: string };
-  searchParams: { [key: string]: string | string[] | undefined }
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateMetadata(
   { params, searchParams }: Props,
-  parent?: ResolvingMetadata
+  parent?: ResolvingMetadata,
 ): Promise<Metadata> {
   // fetch data
-  const product = await getmovieById(params)
+  const product = await getmovieById(params);
 
   return {
     title: product?.title,
-  }
+  };
 }
 
 // Fallback blocking to make static page allowed based on id movie data
@@ -38,7 +38,10 @@ export async function generateStaticParams() {
 }
 
 // Page Movie Details
-export default async function MovieDetailsPage({ params, searchParams }: Props) {
+export default async function MovieDetailsPage({
+  params,
+  searchParams,
+}: Props) {
   // fetch required data to mapping detail moviess
   const movie = await getmovieById(params);
   const locations = await getLocations();
