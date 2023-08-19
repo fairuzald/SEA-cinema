@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 // Generate metadata title
 export const metadata = {
-  title: "Profile Page"
-}
+  title: "Profile Page",
+};
 
 export default async function ProfilePage() {
   // Fetch User and All Users data

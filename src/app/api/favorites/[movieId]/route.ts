@@ -3,7 +3,7 @@ import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentuser";
 export async function POST(
   req: Request,
-  { params }: { params: { movieId?: string } }
+  { params }: { params: { movieId?: string } },
 ) {
   // Get current user
   const currentUser = await getCurrentUser();
@@ -33,7 +33,7 @@ export async function POST(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { movieId?: string } }
+  { params }: { params: { movieId?: string } },
 ) {
   // Get current user and validate if they are logged in
   const currentUser = await getCurrentUser();

@@ -8,7 +8,9 @@ const NotFound = () => {
         Page not Found
       </h1>
       <Link href="/" className="w-[250px] mx-auto flex justify-center">
-        <Button color="trans-red"><h2>Back to Main Page</h2></Button>
+        <Button color="trans-red">
+          <h2>Back to Main Page</h2>
+        </Button>
       </Link>
     </main>
   );

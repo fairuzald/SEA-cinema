@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 // Generate metadata title
 export const metadata = {
-  title: "Booking Page"
-}
+  title: "Booking Page",
+};
 
 const BookingPage = async () => {
   const currentUser = await getCurrentUser();

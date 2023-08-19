@@ -10,4 +10,4 @@ const useSeatModal = create<SeatModalProps>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
-export default useSeatModal
+export default useSeatModal;

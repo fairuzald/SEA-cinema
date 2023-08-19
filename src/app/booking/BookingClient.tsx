@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // Component and React imports
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -26,10 +26,10 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
 
   // Filter upcoming and past bookings
   const upcomingBookings = bookings?.filter((data: any) =>
-    isAfter(new Date(data.watchDate), today)
+    isAfter(new Date(data.watchDate), today),
   );
   const pastBookings = bookings?.filter((data: any) =>
-    isBefore(new Date(data.watchDate), today)
+    isBefore(new Date(data.watchDate), today),
   );
 
   // Function to render bookings
@@ -74,10 +74,11 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
           {/* Active */}
           <Link href={params.has("active") ? "/booking" : "?active"}>
             <h2
-              className={`${params.has("active")
-                ? "text-red border border-red"
-                : "text-white"
-                } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4 rounded-t-lg`}
+              className={`${
+                params.has("active")
+                  ? "text-red border border-red"
+                  : "text-white"
+              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4 rounded-t-lg`}
             >
               Active
             </h2>
@@ -85,10 +86,11 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
           {/* Finish */}
           <Link href={params.has("finish") ? "/booking" : "?finish"}>
             <h2
-              className={`${params.has("finish")
-                ? "text-red border border-red"
-                : "text-white"
-                } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4 rounded-t-lg`}
+              className={`${
+                params.has("finish")
+                  ? "text-red border border-red"
+                  : "text-white"
+              } font-bold text-[15px] md:text-[17px] lg:text-xl md:px-10 py-3 px-9 lg:py-4 rounded-t-lg`}
             >
               Finish
             </h2>
@@ -98,18 +100,37 @@ const BookingClient = ({ bookings = [] }: { bookings?: Transaction[] }) => {
         <section className="flex flex-col w-full gap-2 lg:gap-4 px-5 md:px-10 lg:px-14 xl:px-16 2xl:px-20 pt-10 pb-10">
           {/* Search code booking */}
           <div className="flex flex-col gap-3 mb-4">
-            <h3 className="font-semibold text-lg lg:text-2xl text-red">Find Your Code Booking</h3>
+            <h3 className="font-semibold text-lg lg:text-2xl text-red">
+              Find Your Code Booking
+            </h3>
             <div className="flex gap-4">
-              <TextInput text={codeBooking} setText={setCodeBooking} type="text" placeholder="Code Booking" />
-              <button onClick={() => { setCodeBooking("") }}><CrossIcon style="w-5 h-5 fill-white" /></button>
+              <TextInput
+                text={codeBooking}
+                setText={setCodeBooking}
+                type="text"
+                placeholder="Code Booking"
+              />
+              <button
+                onClick={() => {
+                  setCodeBooking("");
+                }}
+              >
+                <CrossIcon style="w-5 h-5 fill-white" />
+              </button>
             </div>
           </div>
           {/* Render cards details */}
-          {!codeBooking ? params.has("active")
-            ? renderUpcomingBookings
-            : params.has("finish")
+          {!codeBooking
+            ? params.has("active")
+              ? renderUpcomingBookings
+              : params.has("finish")
               ? renderPastBookings
-              : renderBookings(bookings) : renderBookings(bookings.filter(booking => booking.bookingNumber.includes(codeBooking)))}
+              : renderBookings(bookings)
+            : renderBookings(
+                bookings.filter((booking) =>
+                  booking.bookingNumber.includes(codeBooking),
+                ),
+              )}
         </section>
       </div>
     </div>

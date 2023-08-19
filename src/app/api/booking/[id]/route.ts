@@ -4,7 +4,7 @@ import getCurrentUser from "@/app/actions/getCurrentuser";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id?: string } }
+  { params }: { params: { id?: string } },
 ) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
@@ -32,15 +32,15 @@ export async function DELETE(
   }
 
   // Check if the booking has expired
-  const currentDate = new Date(); 
-  const targetDate = new Date(booking.watchDate); 
-  const [hours, minutes] = booking.watchTime.split(':').map(Number);
+  const currentDate = new Date();
+  const targetDate = new Date(booking.watchDate);
+  const [hours, minutes] = booking.watchTime.split(":").map(Number);
   // Sets the target time to the given time, but with the same date as the current date
   targetDate.setHours(hours);
   targetDate.setMinutes(minutes);
   targetDate.setSeconds(0);
   targetDate.setMilliseconds(0);
-  const isExpired = targetDate.getTime() < currentDate.getTime()
+  const isExpired = targetDate.getTime() < currentDate.getTime();
 
   if (isExpired) {
     // If booking has expired, return a response indicating it's expired
@@ -48,7 +48,7 @@ export async function DELETE(
 
     return NextResponse.json(
       { message: "Booking has expired" },
-      { status: 200 }
+      { status: 200 },
     );
   }
 

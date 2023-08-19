@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if (!currentUser) {
     return NextResponse.json(
       { message: "Invalid CurrentUser" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   if (user.balance < amount) {
     return NextResponse.json(
       { message: "Insufficient Balance" },
-      { status: 503 }
+      { status: 503 },
     );
   }
 

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   if (!currentUser) {
     return NextResponse.json(
       { message: "Invalid CurrentUser" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   const { amount, receiverId } = body;
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   if (receiverId === currentUser.id) {
     return NextResponse.json(
       { message: "Unable to send balance to yourself" },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   if (sender.balance < amount) {
     return NextResponse.json(
       { message: "Insufficient balance" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

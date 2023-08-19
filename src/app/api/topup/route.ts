@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   if (!currentUser) {
     return NextResponse.json(
       { message: "Invalid Current User" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

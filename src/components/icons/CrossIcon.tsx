@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-interface IconProps{
+interface IconProps {
   style?: string;
 }
 const CrossIcon: React.FC<IconProps> = ({ style }) => {

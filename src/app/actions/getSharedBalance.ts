@@ -6,7 +6,7 @@ export default async function getReceivedBalance(userId: string) {
     if (!userId || typeof userId !== "string") {
       throw new Error("User not found");
     }
-    
+
     // Query the database using Prisma to retrieve shared balances
     const sharedBalances = await prisma.shareBalance.findMany({
       where: {
@@ -23,7 +23,7 @@ export default async function getReceivedBalance(userId: string) {
         createdAt: "desc",
       },
     });
-    
+
     // Format the retrieved shared balances into a new array
     const formattedSharedBalances = sharedBalances.map((balance) => {
       return {
@@ -35,7 +35,7 @@ export default async function getReceivedBalance(userId: string) {
         receiverName: balance.receiver.name,
       };
     });
-    
+
     // Return the formatted shared balances
     return formattedSharedBalances;
   } catch (error: any) {

@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 // Create metadata title for details booking
 export const metadata = {
-  title: "Details Booking"
-}
+  title: "Details Booking",
+};
 // Generate Static params from database
 export const dynamicParams = false;
 export async function generateStaticParams() {
@@ -20,7 +20,6 @@ export async function generateStaticParams() {
   }));
 }
 
-
 export default async function BookingDetailsPage({
   params,
 }: {
@@ -28,8 +27,8 @@ export default async function BookingDetailsPage({
 }) {
   const booking = await getBookingById(params);
   const currentUser = await getCurrentUser();
-  if(!currentUser){
-    return notFound()
+  if (!currentUser) {
+    return notFound();
   }
 
   return (

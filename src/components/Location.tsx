@@ -22,7 +22,7 @@ const Location = ({
     price: number,
     mall: string,
     address: string,
-    time: string
+    time: string,
   ) => {
     if (!selectedDate) {
       return toast("Select the date first");
@@ -49,7 +49,7 @@ const Location = ({
       date.getMonth(),
       date.getDate(),
       Number(hour),
-      Number(minute)
+      Number(minute),
     );
     return timeToCheck < currentTime;
   };
@@ -88,7 +88,7 @@ const Location = ({
                     price,
                     location.mall,
                     location.address,
-                    time
+                    time,
                   )
                 }
               >

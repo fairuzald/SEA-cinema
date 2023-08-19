@@ -24,7 +24,7 @@ const Navbar = () => {
         blackBgRef.current &&
         blackBgRef.current.contains(event.target as Node)
       ) {
-        setPopUp(false)
+        setPopUp(false);
       }
     }
 
@@ -44,7 +44,10 @@ const Navbar = () => {
           <ul className="flex items-center justify-between px-8 md:px-14 lg:px-16 xl:px-20 2xl:px-20 gap-1 lg:gap-8 w-full">
             {/* Logo */}
             <li>
-              <Link href="/" className="flex  items-center justify-between gap-4">
+              <Link
+                href="/"
+                className="flex  items-center justify-between gap-4"
+              >
                 <Image
                   src="/logo.png"
                   alt="Logo"
@@ -65,19 +68,21 @@ const Navbar = () => {
               <HamburgerIcon style="w-7 h-7 md:w-10 fill-white" />
             </button>
             <div
-              className={`flex-col ${popUp
-                ? "scale-100 opacity-100"
-                : "scale-0 opacity-0 pointer-events-none"
-                } transition duration-300 xl:flex-row bg-black xl:pointer-events-auto xl:bg-transparent absolute top-16 pt-2.5 pb-5 px-10 md:px-14 xl:p-0 xl:scale-100 lg:px-16 xl:opacity-100 rounded-xl text-center right-6 md:right-14 lg:top-24 xl:static xl:flex items-center justify-center gap-7 text-sm xl:text-lg`}
+              className={`flex-col ${
+                popUp
+                  ? "scale-100 opacity-100"
+                  : "scale-0 opacity-0 pointer-events-none"
+              } transition duration-300 xl:flex-row bg-black xl:pointer-events-auto xl:bg-transparent absolute top-16 pt-2.5 pb-5 px-10 md:px-14 xl:p-0 xl:scale-100 lg:px-16 xl:opacity-100 rounded-xl text-center right-6 md:right-14 lg:top-24 xl:static xl:flex items-center justify-center gap-7 text-sm xl:text-lg`}
             >
               {/* Movies */}
               <li className="py-2.5 md:py-3 lg:py-4">
                 <Link
                   href="/movies"
-                  className={`${pathname.split("/").includes("movies")
-                    ? "text-red"
-                    : "text-white"
-                    } hover:text-red transition duration-300 font-bold`}
+                  className={`${
+                    pathname.split("/").includes("movies")
+                      ? "text-red"
+                      : "text-white"
+                  } hover:text-red transition duration-300 font-bold`}
                 >
                   Movies
                 </Link>
@@ -86,10 +91,11 @@ const Navbar = () => {
               <li className="py-2.5 md:py-3 lg:py-4">
                 <Link
                   href="/booking"
-                  className={`${pathname.split("/").includes("booking")
-                    ? "text-red"
-                    : "text-white"
-                    } hover:text-red transition duration-300 font-bold`}
+                  className={`${
+                    pathname.split("/").includes("booking")
+                      ? "text-red"
+                      : "text-white"
+                  } hover:text-red transition duration-300 font-bold`}
                 >
                   Booking
                 </Link>
@@ -98,10 +104,11 @@ const Navbar = () => {
               <li className="py-2.5 md:py-3 lg:py-4">
                 <Link
                   href="/transactions?topup"
-                  className={`${pathname.split("/").includes("transactions")
-                    ? "text-red"
-                    : "text-white"
-                    } hover:text-red transition duration-300 font-bold`}
+                  className={`${
+                    pathname.split("/").includes("transactions")
+                      ? "text-red"
+                      : "text-white"
+                  } hover:text-red transition duration-300 font-bold`}
                 >
                   Transaction
                 </Link>
@@ -110,8 +117,9 @@ const Navbar = () => {
               <li className="py-2.5 md:py-3 lg:py-4">
                 <Link
                   href="/watchlist"
-                  className={`${pathname === "/watchlist" ? "text-red" : "text-white"
-                    } hover:text-red transition duration-300 font-bold`}
+                  className={`${
+                    pathname === "/watchlist" ? "text-red" : "text-white"
+                  } hover:text-red transition duration-300 font-bold`}
                 >
                   Watchlist
                 </Link>
@@ -120,8 +128,9 @@ const Navbar = () => {
               <li className="py-2.5 md:py-3 lg:py-4">
                 <Link
                   href="/profile?dashboard"
-                  className={`${pathname === "/profile" ? "text-red" : "text-white"
-                    } hover:text-red transition duration-300 font-bold`}
+                  className={`${
+                    pathname === "/profile" ? "text-red" : "text-white"
+                  } hover:text-red transition duration-300 font-bold`}
                 >
                   Profile
                 </Link>
@@ -143,13 +152,14 @@ const Navbar = () => {
             </div>
           </ul>
         </div>
-
-      </nav>{popUp && (
+      </nav>
+      {popUp && (
         <div
           ref={blackBgRef}
           className="fixed left-0 top-0 z-[19] h-screen w-full bg-[#111111] opacity-50 transition duration-300"
         />
-      )}</>
+      )}
+    </>
   );
 };
 

@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 
 export async function DELETE(
-    req: Request,
-    { params }: { params: { id?: string } }
-  ) {
+  req: Request,
+  { params }: { params: { id?: string } },
+) {
   const currentUser = await getCurrentUser();
 
   // Validating currentUser
@@ -13,7 +13,7 @@ export async function DELETE(
     // If currentUser is invalid, return a JSON response with an error message and status code 400
     return NextResponse.json(
       { error: "Invalid Current User" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
