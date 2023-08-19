@@ -8,14 +8,14 @@ export const dynamic = "force-dynamic";
 
 // Generate metadata title
 export const metadata = {
-  title: "Movies Page"
-}
+  title: "Movies Page",
+};
 
 // Movies Page
 export default async function MoviesPage() {
   const movies = await getMovies();
   const currentUser = await getCurrentUser();
-  
+
   return (
     <main className="w-full min-h-screen flex bg-background">
       {/* Container */}

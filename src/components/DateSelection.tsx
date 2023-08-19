@@ -57,7 +57,9 @@ const DateSelection = ({
   });
 
   return (
-    <div className="flex gap-5 overflow-x-scroll w-full py-3">{dateButtons}</div>
+    <div className="flex gap-5 overflow-x-scroll w-full py-3">
+      {dateButtons}
+    </div>
   );
 };
 

@@ -9,7 +9,7 @@ const Breadcrumbs = ({ currentText = "" }: { currentText?: string }) => {
 
   // Take title from pathname Url router with no empty string
   const [titlePages, setTitlePages] = useState(
-    pathname.split("/").filter((title) => title !== "")
+    pathname.split("/").filter((title) => title !== ""),
   );
 
   // DataUrl for href on Next Link
@@ -29,7 +29,7 @@ const Breadcrumbs = ({ currentText = "" }: { currentText?: string }) => {
           return [...array, `${prev}/${current}`];
         }
       },
-      []
+      [],
     );
 
     setDataUrls(newDataUrls);

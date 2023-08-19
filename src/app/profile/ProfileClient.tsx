@@ -21,7 +21,6 @@ import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 import { signOut, useSession } from "next-auth/react";
 
-
 // ProfileClient component
 const ProfileClient = ({
   currentUser,
@@ -38,7 +37,7 @@ const ProfileClient = ({
   const [name, setName] = useState(currentUser?.name as string);
   const [username, setUsername] = useState(currentUser?.username as string);
   const [telephoneNumber, setTelephoneNumber] = useState(
-    currentUser?.telephoneNumber as string
+    currentUser?.telephoneNumber as string,
   );
   // State handle nominals balance transaction
   const [topupNominals, setTopupNominals] = useState("");
@@ -49,7 +48,7 @@ const ProfileClient = ({
   const [withDrawalNominals, setWithDrawalNominals] = useState("");
   const [age, setAge] = useState(currentUser?.age.toString() as string);
   const [selectedUser, setSelectedUser] = useState<User | undefined | null>(
-    undefined
+    undefined,
   );
 
   // Function to format the date
@@ -73,7 +72,7 @@ const ProfileClient = ({
   const handlePriceSelect = (
     amount: string,
     setAmount: React.Dispatch<SetStateAction<string>>,
-    price: number
+    price: number,
   ) => {
     if (parseInt(amount.replace(/\./g, ""), 10) === price) {
       return setAmount("");
@@ -145,7 +144,7 @@ const ProfileClient = ({
         return toast("Give correct nominals");
       }
     },
-    [router]
+    [router],
   );
 
   // Function to handle share form submission
@@ -180,7 +179,14 @@ const ProfileClient = ({
 
   // Default redirect into dashboard
   useEffect(() => {
-    if (!params || (!params.has("dashboard") && !params.has("topup") && !params.has("withdrawal") && !params.has("settings") && !params.has("share-balance"))) {
+    if (
+      !params ||
+      (!params.has("dashboard") &&
+        !params.has("topup") &&
+        !params.has("withdrawal") &&
+        !params.has("settings") &&
+        !params.has("share-balance"))
+    ) {
       router.replace("?dashboard");
     }
   }, [params, router]);
@@ -196,31 +202,41 @@ const ProfileClient = ({
             <ul className="w-full flex-col px-10 gap-2 flex items-center justify-center text-center">
               {/* Dashboard link params */}
               <li
-                className={`w-full px-4 ${params.has("dashboard") ? "text-red" : "text-white"} py-2 font-semibold text-base lg:text-lg`}
+                className={`w-full px-4 ${
+                  params.has("dashboard") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
               >
                 <Link href="?dashboard">Dashboard</Link>
               </li>
               {/* Settings link params */}
               <li
-                className={`w-full px-4 ${params.has("settings") ? "text-red" : "text-white"} py-2 font-semibold text-base lg:text-lg`}
+                className={`w-full px-4 ${
+                  params.has("settings") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
               >
                 <Link href="?settings">Settings</Link>
               </li>
               {/* Topup link params */}
               <li
-                className={`w-full px-4 ${params.has("topup") ? "text-red" : "text-white"} py-2 font-semibold text-base lg:text-lg`}
+                className={`w-full px-4 ${
+                  params.has("topup") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
               >
                 <Link href="?topup">Topup</Link>
               </li>
               {/* Share Balance link params */}
               <li
-                className={`w-full px-4 ${params.has("share-balance") ? "text-red" : "text-white"} py-2 font-semibold text-base lg:text-lg`}
+                className={`w-full px-4 ${
+                  params.has("share-balance") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
               >
                 <Link href="?share-balance">Share Balance</Link>
               </li>
               {/* Withdrawal link params */}
               <li
-                className={`w-full px-4 ${params.has("withdrawal") ? "text-red" : "text-white"} py-2 font-semibold text-base lg:text-lg`}
+                className={`w-full px-4 ${
+                  params.has("withdrawal") ? "text-red" : "text-white"
+                } py-2 font-semibold text-base lg:text-lg`}
               >
                 <Link href="?withdrawal">Withdrawal</Link>
               </li>
@@ -228,8 +244,9 @@ const ProfileClient = ({
               <li
                 className={`w-full px-4 py-2 font-semibold text-base lg:text-lg`}
               >
-                <Button color="trans-red" onClick={() => signOut()}>Sign Out</Button>
-
+                <Button color="trans-red" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
               </li>
             </ul>
           </div>
@@ -365,16 +382,16 @@ const ProfileClient = ({
                   return (
                     <div
                       key={index}
-                      className={`border ${parseInt(topupNominals.replace(/\./g, ""), 10) ===
-                        price
-                        ? "bg-red border-red"
-                        : "border-gray bg-transparent"
-                        } rounded-xl p-5 lg:p-8 cursor-pointer`}
+                      className={`border ${
+                        parseInt(topupNominals.replace(/\./g, ""), 10) === price
+                          ? "bg-red border-red"
+                          : "border-gray bg-transparent"
+                      } rounded-xl p-5 lg:p-8 cursor-pointer`}
                       onClick={() =>
                         handlePriceSelect(
                           topupNominals,
                           setTopupNominals,
-                          price
+                          price,
                         )
                       }
                     >
@@ -412,18 +429,13 @@ const ProfileClient = ({
                 Top Up
               </Button>
             </div>
-            {previous &&
+            {previous && (
               <div className="w-[300px] mt-7 mx-auto flex items-center justify-center">
-                <Button
-                  color="red"
-                  size="large"
-                  onClick={() => router.back()}
-                >
+                <Button color="red" size="large" onClick={() => router.back()}>
                   Back to Movies
                 </Button>
               </div>
-            }
-
+            )}
           </section>
         )}
         {params.has("share-balance") && (
@@ -457,16 +469,16 @@ const ProfileClient = ({
                   return (
                     <div
                       key={index}
-                      className={`border ${parseInt(shareNominals.replace(/\./g, ""), 10) ===
-                        price
-                        ? "bg-red border-red"
-                        : "border-gray bg-transparent"
-                        } rounded-xl p-5 lg:p-8 cursor-pointer`}
+                      className={`border ${
+                        parseInt(shareNominals.replace(/\./g, ""), 10) === price
+                          ? "bg-red border-red"
+                          : "border-gray bg-transparent"
+                      } rounded-xl p-5 lg:p-8 cursor-pointer`}
                       onClick={() =>
                         handlePriceSelect(
                           shareNominals,
                           setShareNominals,
-                          price
+                          price,
                         )
                       }
                     >
@@ -529,18 +541,17 @@ const ProfileClient = ({
                   return (
                     <div
                       key={index}
-                      className={`border ${parseInt(
-                        withDrawalNominals.replace(/\./g, ""),
-                        10
-                      ) === price
-                        ? "bg-red border-red"
-                        : "border-gray bg-transparent"
-                        } rounded-xl p-5 lg:p-8 cursor-pointer`}
+                      className={`border ${
+                        parseInt(withDrawalNominals.replace(/\./g, ""), 10) ===
+                        price
+                          ? "bg-red border-red"
+                          : "border-gray bg-transparent"
+                      } rounded-xl p-5 lg:p-8 cursor-pointer`}
                       onClick={() =>
                         handlePriceSelect(
                           withDrawalNominals,
                           setWithDrawalNominals,
-                          price
+                          price,
                         )
                       }
                     >

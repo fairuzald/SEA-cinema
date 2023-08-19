@@ -35,7 +35,7 @@ const SeatModal = ({
     if (step === STEPS.SEAT_SELECTION) {
       if (requirement) {
         toast(
-          "Please select seats, date, and time before proceeding to payment."
+          "Please select seats, date, and time before proceeding to payment.",
         );
         return;
       }
@@ -129,7 +129,14 @@ const SeatModal = ({
       </div>
     </section>
   );
-  return <Modal header={header} isOpen={seatModal.isOpen} body={body} onClose={seatModal.onClose} />;
+  return (
+    <Modal
+      header={header}
+      isOpen={seatModal.isOpen}
+      body={body}
+      onClose={seatModal.onClose}
+    />
+  );
 };
 
 export default SeatModal;

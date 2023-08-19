@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // Component and React imports
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -20,16 +20,16 @@ const DetailsBookingClient = ({
   const router = useRouter();
 
   // Date handling
-  const currentDate = new Date(); 
-  const targetDate = new Date(booking.watchDate); 
-  const [hours, minutes] = booking.watchTime.split(':').map(Number);
+  const currentDate = new Date();
+  const targetDate = new Date(booking.watchDate);
+  const [hours, minutes] = booking.watchTime.split(":").map(Number);
   // Sets the target time to the given time, but with the same date as the current date
   targetDate.setHours(hours);
   targetDate.setMinutes(minutes);
   targetDate.setSeconds(0);
   targetDate.setMilliseconds(0);
-  const isExpired = targetDate.getTime() < currentDate.getTime()
-  
+  const isExpired = targetDate.getTime() < currentDate.getTime();
+
   // Function to format the date
   const formattedDate = (dateTime: Date) => {
     return format(new Date(dateTime), "EEEE, dd MMM yyyy");
@@ -136,7 +136,7 @@ const DetailsBookingClient = ({
               <p>{formattedDate(booking.createdAt)}</p>
               <p>
                 {booking.seat.map((item: string, index: number) =>
-                  index !== booking.seat.length - 1 ? item + ", " : item
+                  index !== booking.seat.length - 1 ? item + ", " : item,
                 )}
               </p>
               <p>
@@ -161,11 +161,12 @@ const DetailsBookingClient = ({
           </div>
         </section>
       </div>
-      { }
+      {}
       <div className="w-full px-6 sm:px-10 mx-auto md:px-14 lg:px-20 xl:px-24 py-7 lg:py-10  gap-5 flex flex-col items-center">
         {/* Cancel Order */}
         <p className="text-red font-semibold text-base lg:text-2xl">
-          Do you want to {isExpired ? "delete the history order" : "cancel this order"} ?
+          Do you want to{" "}
+          {isExpired ? "delete the history order" : "cancel this order"} ?
         </p>
         <Button color="red" onClick={handleCancel}>
           {isExpired ? "Delete History" : "Cancel Order"}

@@ -30,8 +30,7 @@ const useFavorites = ({
       try {
         let req;
         if (hasFavorited) {
-          req = () =>
-            fetch(`/api/favorites/${movieId}`, { method: "DELETE" });
+          req = () => fetch(`/api/favorites/${movieId}`, { method: "DELETE" });
         } else {
           req = () => fetch(`/api/favorites/${movieId}`, { method: "POST" });
         }
@@ -42,7 +41,7 @@ const useFavorites = ({
         toast.error("Something went wrong");
       }
     },
-    [currentUser, hasFavorited, movieId, loginModal, router]
+    [currentUser, hasFavorited, movieId, loginModal, router],
   );
 
   return {

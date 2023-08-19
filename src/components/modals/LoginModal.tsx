@@ -27,7 +27,6 @@ const LoginModal = () => {
     defaultValues: { username: "", password: "" },
   });
 
-
   // Register and login modal hooks
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
@@ -89,7 +88,9 @@ const LoginModal = () => {
       <p className="text-lg lg:text-xl font-semibold text-white">
         Welcome back to SEA CINEMA
       </p>
-      <p className="text-white text-sm lg:text-base">Fill out your username and password to sign in</p>
+      <p className="text-white text-sm lg:text-base">
+        Fill out your username and password to sign in
+      </p>
 
       <TextFields
         type="text"

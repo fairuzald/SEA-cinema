@@ -20,5 +20,4 @@ declare module "next-auth" {
   /**
    * User
    */
-  
 }
